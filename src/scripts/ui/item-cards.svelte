@@ -8,6 +8,7 @@
     import ContextMenu from "@ts/context-menu.svelte.ts"
     import { CreateSongContextMenu, CreateCollectionContextMenu, CreatePlaylistContextMenu } from "@ts/context-menus"
     import { MobileHoldSvelte } from "@ts/mobile-hold"
+    import EmoteText from "@ts/ui/emote-text.svelte"
 
     type item = Song | Collection | Playlist
 
@@ -59,7 +60,7 @@
             <div class="icon"><Icon size=20/></div>
             <Cover item={item} --size="100%" bind:colour />
         </div>
-        <h1>{"shortTitle" in item ? item.shortTitle ?? item.displayTitle : item.displayTitle}</h1>
+        <h1><EmoteText content={"shortTitle" in item ? item.shortTitle : item.displayTitle} /></h1>
     </div>
 {/snippet}
 

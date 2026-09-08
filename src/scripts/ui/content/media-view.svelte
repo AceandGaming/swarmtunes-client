@@ -10,6 +10,7 @@
     import PlaylistProvider from "@ts/playlist-provider"
     import { Playlist } from "@ts/models/playlist.ts"
     import { PlaylistDownloaded, AddPlaylist, RemovePlaylist, Downloading } from "@ts/download-manager.svelte.ts"
+    import EmoteText from "@ts/ui/emote-text.svelte"
 
     let loading = $state(true)
 
@@ -90,9 +91,11 @@
             <div class="overlay"><IconPlayerPlayFilled size="unset" /></div>
         </div>
         <div class="text-container">
-            <h1>{media?.displayTitle}</h1>
-            <h2>{media?.displayDate}</h2>
-            <h3>{media instanceof Song ? 1 : media?.songCount} Songs - {FormatDuration(media?.seconds ?? 0)}</h3>
+            {#if media}
+                <h1><EmoteText content={media.displayTitle} /></h1>
+                <h2>{media.displayDate}</h2>
+                <h3>{media instanceof Song ? 1 : media.songCount} Songs - {FormatDuration(media.seconds ?? 0)}</h3>
+            {/if}
         </div>
         <nav>
             <button class="icon-button play-button" onclick={OnCoverClick}><IconPlayerPlayFilled size=40 /></button>

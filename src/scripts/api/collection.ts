@@ -1,6 +1,5 @@
 import { Collection } from "@ts/models/collection"
 import { Get } from "./network"
-import { Song } from "@ts/models/song"
 
 export async function GetCollection(id: id): Promise<Collection> {
     const json = await Get(`/collections/${id}`)

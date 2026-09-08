@@ -20,7 +20,7 @@ export class Collection {
         return this.title
     }
     public get shortTitle() {
-        return this.displayDate
+        return this.displayDate ?? this.displayTitle
     }
     public get displayDate() {
         return this.date?.toLocaleDateString("en-AU", {
