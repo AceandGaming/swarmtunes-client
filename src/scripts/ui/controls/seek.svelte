@@ -33,7 +33,7 @@
         const absSeconds = Math.abs(seconds)
 
         const minutes = Math.floor(absSeconds / 60)
-        const secs = Math.floor(absSeconds % 60).toString().padStart(2, '0')
+        const secs = Math.ceil(absSeconds % 60).toString().padStart(2, '0')
         return `${seconds < 0 ? "-" : ""}${minutes}:${secs}`
     }
 </script>
@@ -83,7 +83,7 @@
     >
     </div>
     {#if showText }
-        <div class="time sub-text">{FormatTime(PlaybackState.played - Math.floor(PlaybackState.duration))}</div>
+        <div class="time sub-text">{FormatTime(PlaybackState.played - PlaybackState.duration)}</div>
     {/if}
     
 </div>
