@@ -7,7 +7,7 @@ import App from "@ts/app.svelte"
 import { mount } from "svelte"
 import { Initialize } from "@ts/login.svelte.ts"
 import { InitMediaSession } from "@ts/media-session.ts"
-import { ClearUrlBar, GetSongId } from "@ts/urlbar.ts"
+import { ClearParams, GetSongId } from "@ts/urlbar.svelte"
 import PlaybackController from "@ts/playback"
 import SongProvider from "@ts/song-provider"
 import { LoadEmotes } from "@ts/emotes.ts"
@@ -17,7 +17,7 @@ document.cookie = "cookie=A cookie for Neuro-sama; max-age=260000; secure; sames
 window.isMobile = window.matchMedia("(pointer: coarse)").matches
 
 const songId = GetSongId()
-ClearUrlBar()
+ClearParams()
 
 Initialize()
 InitMediaSession()

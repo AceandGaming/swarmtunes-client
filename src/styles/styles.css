@@ -66,6 +66,10 @@ button {
     background: none;
 }
 
+button * {
+    pointer-events: none;
+}
+
 button:not(.no-defaults, .icon-button) {
     padding: 3px 8px;
     background-color: var(--colour-surface-alt);

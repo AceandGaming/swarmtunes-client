@@ -6,7 +6,7 @@
 
     --colour-text: #fff;
     --colour-text-muted: #aaa;
-    --colour-text-link: #aaa;
+    --colour-text-link: #009dff;
 
     --colour-border: #404040;
     --colour-accent: #888;
@@ -44,7 +44,7 @@
 
     --colour-text: #fff;
     --colour-text-muted: #ffdddd;
-    --colour-text-link: #fff;
+    --colour-text-link: #0df;
 
     --colour-border: #ffb6bf;
     --colour-accent: #f9919f;
@@ -63,7 +63,6 @@
 
     --colour-text: #fff;
     --colour-text-muted: #ccc;
-    --colour-text-link: #aaa;
 
     --colour-border: #965159;
     --colour-accent: #8b4147;

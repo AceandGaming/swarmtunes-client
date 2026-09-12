@@ -1,30 +1,52 @@
 <script lang="ts" module>
-    import { IconLayoutGrid, IconWorld, IconSettings } from "@tabler/icons-svelte-runes";
-    const pages = {
-        playlists: {
-            icon: IconLayoutGrid,
-            import: () => import("@ts/ui/content/playlists-tab.svelte"),
-            label: "Libary"
-        },
-        discover: {
-            icon: IconWorld,
-            import: () => import("@ts/ui/content/discover.svelte"),
-            label: "Discover"
-        },
-        search: {
-            icon: IconSettings,
-            import: () => import("@ts/ui/content/settings.svelte"),
-            label: "Settings"
-        }
+    import { IconLayoutGrid, IconWorld, IconSettings, IconInfoCircle } from "@tabler/icons-svelte-runes";
+    import type { Component } from "svelte";
+    type Page = {
+        name: string
+        icon: Component,
+        import: () => Promise<{default: any}>,
+        label: string,
+        hidden: boolean
     }
-    function GetPage(page: keyof typeof pages) {
-        return pages[page]
+
+    const pages: {[key: string]: Page} = {}
+    function AddPage(page: Page) {
+        pages[page.name] = page
     }
+
+    AddPage({
+        name: "libary",
+        icon: IconLayoutGrid,
+        import: () => import("@ts/ui/content/playlists-tab.svelte"),
+        label: "Libary",
+        hidden: false
+    })
+    AddPage({
+        name: "discover",
+        icon: IconWorld,
+        import: () => import("@ts/ui/content/discover.svelte"),
+        label: "Discover",
+        hidden: false
+    })
+    AddPage({
+        name: "settings",
+        icon: IconSettings,
+        import: () => import("@ts/ui/content/settings.svelte"),
+        label: "Settings",
+        hidden: false
+    })
+    AddPage({
+        name: "about",
+        icon: IconInfoCircle,
+        import: () => import("@ts/ui/content/about.svelte"),
+        label: "About",
+        hidden: true
+    })
+    
 </script>
 
 
 <script lang="ts">
-    import { GetKeys } from "@ts/misc";
     import NowPlaying from "@ts/ui/now-playing.svelte"
     import CurrentSongBar from "@ts/ui/controls/current-song-bar/index.svelte"
     import Fullscreen from "@ts/ui/content/fullscreen.svelte"
@@ -36,9 +58,22 @@
     import { ConfirmAction, ShowLogin } from "@ts/ui/popup.svelte.ts";
     import ContextMenu from "@ts/ui/context-menu/index.svelte"
     import Toast from "@ts/ui/toast.svelte"
+    import { url, Navigate } from "@ts/urlbar.svelte.ts"
+    import Link from "@ts/ui/components/link.svelte"
+
+    let currentPage: Page = $state(pages.discover)
+    $effect(() => {
+        const name = url.pathname.split("/")[1]
+        console.log(name)
+        if (name in pages) {
+            currentPage = pages[name]
+        }
+        else {
+            url.pathname = "/discover"
+        }
+    })
 
 
-    let currentPage: keyof typeof pages = $state("discover")
     let mobile = new MediaQuery("max-width: 600px")
 
     const popup = $derived(GetPopup())
@@ -58,18 +93,22 @@
 
 {#snippet tabs()}
     <div class="tabs">
-        {#each GetKeys(pages) as name}
-            {const page = GetPage(name)}
-            <button class:active={currentPage === name} onclick={() => {MediaViewState.Hide(); currentPage = name}}>
-                <page.icon />
-                <p>{page.label}</p>
-            </button>
+        {#each Object.values(pages) as page}
+            {#if !page.hidden}
+                <button 
+                    class:active={currentPage.name === page.name} 
+                    onclick={() => {MediaViewState.Hide(); Navigate("/" + page.name)}}
+                >
+                    <page.icon />
+                    <p>{page.label}</p>
+                </button>
+            {/if}
         {/each}
     </div>
 {/snippet}
 {#snippet headerButtons()}
     <div class="buttons">
-        <a style="font-size: 1rem" class="about" href="about">About</a>
+        <Link style="font-size: 1rem" class="about" href="about">About</Link>
         <button onclick={OnLoginButtonClick}>{auth.loggedIn ? "Logout" : "Login"}</button>
     </div>
 {/snippet}
@@ -95,7 +134,7 @@
         {#if MediaViewState.visible}
             <MediaView />
         {:else}
-            {#await GetPage(currentPage).import() then page}
+            {#await currentPage.import() then page}
                 <page.default />
             {/await}
         {/if}
@@ -238,21 +277,6 @@
 
         #app > :global(#now-playing) {
             display: none !important;
-        }
-
-
-    }
-    @media (max-width: 600px) {
-        header {
-            justify-content: right;
-        }
-        header .buttons {
-            padding: 4px;
-            gap: 15px;
-        }
-        header .about {
-            position: absolute;
-            left: 10px;
         }
     }
 </style>
