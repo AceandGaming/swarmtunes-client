@@ -1,13 +1,11 @@
 import { Get } from "./network"
-import { Song } from "@ts/models/song"
-import { Collection } from "@ts/models/collection"
 
 export async function GetDiscoverPage() {
-    const json = await Get("/discover")
+    const json = await Get("/discover-ids")
     return {
-        setlists: json.setlists.map(Collection.FromDict) as Collection[],
-        discs: json.discs.map(Collection.FromDict) as Collection[],
-        originals: json.originals.map(Song.FromDict) as Song[],
-        mashups: json.mashups.map(Song.FromDict) as Song[]
+        setlists: json.setlists as id[],
+        discs: json.discs as id[],
+        originals: json.originals as id[],
+        mashups: json.mashups as id[]
     }
 }

@@ -1,17 +1,18 @@
 import { Song } from "@ts/models/song"
 import { Get, API_URL, Post, V1_API_URL } from "./network"
 
+type SongType = "original" | "collab" | "cover" | "mashup"
 
 export async function GetSong(id: id): Promise<Song> {
     const json = await Get(`/songs/${id}`)
     return Song.FromDict(json)
 }
-
 export async function GetSongs(ids: id[]): Promise<Song[]> {
     const json = await Post(`/songs/batch`, { ids })
     return json.map(Song.FromDict)
 }
-export async function GetAllSongs(ids?: id[], options: { title?: string, type?: string, offset?: number, limit?: number } = {}): Promise<Song[]> {
+
+export async function GetAllSongs(ids?: id[], options: { title?: string, type?: SongType, offset?: number, limit?: number } = {}): Promise<Song[]> {
     const params = new URLSearchParams()
 
     if (ids) {

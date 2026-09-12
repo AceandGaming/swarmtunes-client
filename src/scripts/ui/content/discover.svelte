@@ -9,22 +9,6 @@
     import ErrorScreen from "@ts/ui/error-screen.svelte"
     import IconSwarmFM from "@assets/swarmfm.svelte"
 
-    let setlists: Collection[] = $state([])
-    let discs: Collection[] = $state([])
-    let originals: Song[] = $state([])
-    let mashups: Song[] = $state([])
-
-    async function LoadDiscover() {
-        const data = await GetDiscover()
-
-        setlists = [...data.setlists].sort((a, b) => b.date!.getTime() - a.date!.getTime())
-        discs = [...data.discs].sort((a, b) => b.disc! - a.disc!)
-        originals = [...data.originals].sort((a, b) => b.dateReleased.getTime() - a.dateReleased.getTime())
-        mashups = [...data.mashups].sort((a, b) => b.dateReleased.getTime() - a.dateReleased.getTime())
-
-        return [setlists, discs, originals, mashups]
-    }
-
     let query: string = $state("")
     let debouncedQuery = $state('');
     let searching = $derived(query.length > 0)
@@ -60,9 +44,9 @@
             <ItemList items={songs} onItemClick={(song) => PlaybackState.Play({song, songs})}/>
         {/await}
     {:else}
-        {#await LoadDiscover()}
+        {#await GetDiscover()}
             <div class="loading-text"></div>
-        {:then [setlists, discs, originals, mashups]}
+        {:then {setlists, discs, originals, mashups}}
             <h1 class="neuro-text">Setlists</h1>
             <ItemCards items={setlists} />
 
@@ -75,6 +59,7 @@
             <h1 class="neuro-text">Discs</h1>
             <ItemCards items={discs} />
         {:catch error}
+            {console.error(error)}
             <ErrorScreen title="Error Loading Discover">{error}</ErrorScreen>
         {/await}
     {/if}

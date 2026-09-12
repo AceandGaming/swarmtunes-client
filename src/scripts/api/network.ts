@@ -33,7 +33,17 @@ async function FetchJson(url: string, method: string = "GET", body?: any): Promi
         return
     }
 
-    const json = await response.json()
+    let json
+    try {
+        json = await response.json()
+    } catch (e) {
+        throw new HttpError(
+            "UNKNOWN_ERROR",
+            "An Unknown error occured",
+            e
+        )
+    }
+
 
     if (response.ok) {
         return json

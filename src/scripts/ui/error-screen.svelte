@@ -25,6 +25,8 @@
         justify-content: center;
         align-items: center;
         gap: 20px;
+
+        background-color: var(--colour-surface);
     }
     .error-screen h1 {
         font-size: 2rem;

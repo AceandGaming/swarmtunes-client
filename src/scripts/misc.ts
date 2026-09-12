@@ -34,3 +34,14 @@ export async function GetSongColour(song: Song) {
     }
     return await ColourCache.GetColour(src)
 }
+
+export async function PromiseAllObject<T extends object>(obj: T): Promise<{ [K in keyof T]: Awaited<T[K]> }> {
+    return Object.fromEntries(
+        await Promise.all(
+            Object.entries(obj).map(async ([key, promise]) => [
+                key,
+                await promise,
+            ])
+        )
+    )
+}
