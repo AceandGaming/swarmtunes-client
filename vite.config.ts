@@ -15,7 +15,7 @@ export default defineConfig({
                 handler(warning)
             }
         }),
-        basicSsl(),
+        //basicSsl(),
     ],
     resolve: {
         alias: {
