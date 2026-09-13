@@ -12,7 +12,7 @@ export async function GetDiscover() {
     return await PromiseAllObject({
         setlists: CollectionProvider.GetMany(content.setlists, true),
         discs: CollectionProvider.GetMany(content.discs, true),
-        originals: SongProvider.GetMany(content.originals),
-        mashups: SongProvider.GetMany(content.mashups)
+        originals: SongProvider.GetMany(content.originals, true),
+        mashups: SongProvider.GetMany(content.mashups, true)
     })
 }
