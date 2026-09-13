@@ -99,6 +99,7 @@ button.icon-button :is(svg, img) {
     height: 100%;
     color: inherit;
     background: none;
+    margin: auto;
 }
 
 button.icon-button:active {

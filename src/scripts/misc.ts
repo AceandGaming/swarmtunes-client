@@ -45,3 +45,17 @@ export async function PromiseAllObject<T extends object>(obj: T): Promise<{ [K i
         )
     )
 }
+
+export function FormatDuration(seconds: number, compact = false) {
+    if (seconds > 3600) {
+        const hours = Math.floor(seconds / 3600)
+        const minutes = Math.floor((seconds % 3600) / 60)
+        return `${hours}h ${minutes}m`
+    }
+    if (compact) {
+        return `${Math.floor(seconds / 60)}:${seconds % 60}`
+    }
+    else {
+        return `${Math.floor(seconds / 60)}m ${seconds % 60}s`
+    }
+}

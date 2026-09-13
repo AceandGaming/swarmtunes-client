@@ -3,6 +3,11 @@ import PlaylistStore from "@ts/playlist-store.svelte.ts"
 import { GetPlaylist, AddSongsToPlaylist, RemoveSongsFromPlaylist, RenamePlaylist, DeletePlaylist, CreatePlaylist, GetPlaylists } from "@ts/api/playlist"
 
 export default class PlaylistProvider {
+    public static async Init() {
+        const playlists = await GetPlaylists()
+        PlaylistStore.Init(playlists)
+    }
+
     public static async Get(id: id): Promise<Playlist> {
         let playlist = PlaylistStore.Get(id)
         if (playlist) {
@@ -37,11 +42,24 @@ export default class PlaylistProvider {
         await AddSongsToPlaylist(playlistId, songIds)
         await PlaylistStore.AddSongsToPlaylist(playlistId, songIds)
     }
-
     public static async RemoveSongsFromPlaylist(playlistId: id, songIds: id[]) {
         await RemoveSongsFromPlaylist(playlistId, songIds)
         await PlaylistStore.RemoveSongsToPlaylist(playlistId, songIds)
     }
+    public static async ToggleSongInPlaylist(playlistId: id, songId: id, add?: boolean) {
+        const playlist = await this.Get(playlistId)
+
+        const inPlaylist = playlist.GetSongIds().includes(songId)
+        if ((add || add == undefined) && !inPlaylist) {
+            await this.AddSongsToPlaylist(playlistId, [songId])
+            return
+        }
+        if ((!add || add == undefined) && inPlaylist) {
+            await this.RemoveSongsFromPlaylist(playlistId, [songId])
+            return
+        }
+    }
+
     public static async RenamePlaylist(playlistId: id, title: string) {
         const newPlaylist = await RenamePlaylist(playlistId, title)
         PlaylistStore.Set(playlistId, newPlaylist)
@@ -56,5 +74,12 @@ export default class PlaylistProvider {
         const playlist = await CreatePlaylist(title, songIds)
         PlaylistStore.Set(playlist.id, playlist)
         return playlist
+    }
+
+    public static async GetWithSong(songId: id) {
+        const playlists = PlaylistStore.GetAll()
+        await Promise.all(playlists.map(playlist => playlist.LoadSongs()))
+
+        return playlists.filter(playlist => playlist.GetSongIds().includes(songId))
     }
 }

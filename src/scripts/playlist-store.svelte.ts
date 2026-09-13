@@ -36,6 +36,7 @@ class PlaylistStore {
     public async AddSongsToPlaylist(id: id, songIds: id[]) {
         const playlist = this.Get(id)
         if (!playlist) {
+            console.error("Playlist not found", id)
             return
         }
 
@@ -50,6 +51,7 @@ class PlaylistStore {
     public async RemoveSongsToPlaylist(id: id, songIds: id[]) {
         const playlist = this.Get(id)
         if (!playlist) {
+            console.error("Playlist not found", id)
             return
         }
 

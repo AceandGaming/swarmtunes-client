@@ -28,7 +28,7 @@
         {#await PlaylistProvider.GetAll()}
             <div class="loading-text"></div>
         {:then playlists}
-            <ItemList items={playlists} {onItemClick} contextMenuButton={false} />
+            <ItemList items={playlists} {onItemClick} ></ItemList>
         {/await}
     </div>
     

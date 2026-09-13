@@ -1,8 +1,14 @@
-import playlistStore from "@ts/playlist-store.svelte"
 import { auth } from "@ts/login.svelte.ts"
-import { GetPlaylists } from "@ts/api/playlist"
+import PlaylistProvider from "@ts/playlist-provider"
+import playlistStore from "@ts/playlist-store.svelte"
+import { Init as InitLiked } from "@ts/liked-songs.svelte"
 
 let loading = $state(false)
+
+async function OnLogin() {
+    await PlaylistProvider.Init()
+    await InitLiked()
+}
 
 $effect.root(() => {
     $effect(() => {
@@ -14,13 +20,7 @@ $effect.root(() => {
         }
 
         loading = true
-        GetPlaylists().then(playlists => {
-            if (auth.user?.id !== id) {
-                return
-            }
-            playlistStore.Init(playlists)
-
-        }).finally(() => {
+        OnLogin().finally(() => {
             loading = false
         })
     })

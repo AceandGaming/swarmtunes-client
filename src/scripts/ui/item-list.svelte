@@ -1,59 +1,53 @@
 <script lang="ts" generics="T extends Item">
-    import { Playlist, Song } from "@ts/models"
+    import { type Playlist, Song } from "@ts/models"
     import Cover from "@ts/ui/cover.svelte"
-    import { flipNoScale } from "@ts/misc"
-    import { IconDotsVertical, IconCircleArrowDownFilled as IconDown } from "@tabler/icons-svelte-runes"
-    import { CreateSongContextMenu, CreatePlaylistContextMenu } from "@ts/context-menus"
-    import ContextMenu, { type ContextMenuOption } from "@ts/context-menu.svelte.ts"
+    import { flipNoScale, FormatDuration } from "@ts/misc"
+    import { IconDotsVertical, IconCircleArrowDownFilled as IconDown, IconHeart, IconHeartFilled } from "@tabler/icons-svelte-runes"
     import { MobileHoldSvelte } from "@ts/mobile-hold"
     import { GetDownloads } from "@ts/song-downloads.svelte"
-    import Sortable from "sortablejs"
-    import { onMount } from "svelte"
+    import type Sortable from "sortablejs"
+    import { onMount, type Snippet } from "svelte"
+    import type { ContextMenuOption } from "@ts/context-menu.svelte"
+    import ContextMenu from "@ts/context-menu.svelte"
+    import PlaylistProvider from "@ts/playlist-provider"
+    import { ToggleSongLike, IsSongLiked } from "@ts/liked-songs.svelte"
 
     type Item = Playlist | Song
     type Props<T extends Item> = {
         items: T[]
         animate?: boolean
         extraInfo?: boolean
-        contextMenuButton?: boolean
-        draggable?: boolean
         contextMenu?: (item: T) => ContextMenuOption[]
         onItemClick?: (item: T) => void
         onReorder?: (items: T[]) => void
+        trailing?: Snippet<[T]>
     }
 
     let {
         items = $bindable(),
         animate = false,
         extraInfo = true,
-        contextMenuButton = true,
         contextMenu,
         onItemClick,
         onReorder,
-        draggable = false
+        trailing
+        
     }: Props<T> = $props();
 
     let element: HTMLElement
 
     let toggledFlip = $derived(animate ? flipNoScale : () => ({ duration: 0 }))
-    let sortable: Sortable
+    let draggable = $derived(onReorder !== undefined)
+
+    let sortable: Sortable | undefined
 
     let itemLookup = $derived(new Map(items.map(item => [item.id, item])))
 
     function OpenContextMenu(event: MouseEvent | TouchEvent, item: T) {
-        let menu
-        if (contextMenu) {
-            menu = contextMenu(item)
-        }
-        else if (item instanceof Song) {
-            menu = CreateSongContextMenu(item)
-        } 
-        else if (item instanceof Playlist) {
-            menu = CreatePlaylistContextMenu(item)
-        }
-        else {
+        if (!contextMenu) {
             return
         }
+        const menu = contextMenu(item)
 
         const x = event instanceof MouseEvent ? event.clientX : event.changedTouches[0].clientX
         const y = event instanceof MouseEvent ? event.clientY : event.changedTouches[0].clientY
@@ -61,7 +55,13 @@
         ContextMenu.Show({ options: menu, x: x, y: y })
     }
 
-    onMount(() => {
+    async function CreateSortable() {
+        if (!draggable) {
+            return
+        }
+
+        const Sortable = (await import("sortablejs")).default
+
         sortable = new Sortable(element, {
             animation: animate ? 150 : 0,
             disabled: !draggable,
@@ -73,15 +73,19 @@
                 onReorder?.(items)
             }
         })
+    }
+
+    onMount(() => {
+        CreateSortable()
 
         return () => {
-            sortable.destroy()
+            sortable?.destroy()
         }
     })
     $effect(() => {
-        sortable.option("disabled", !draggable);
+        CreateSortable()
+        sortable?.option("disabled", !draggable);
     })
-
 </script>
 
 <ul bind:this={element} class="item-list">
@@ -109,17 +113,27 @@
                 <h2 class="sub-text">{item instanceof Song ? (item.displayArtists) : `${item.songCount} songs`}</h2>
             </div>
             {#if extraInfo}
-                <div class="extra-info">
-                    <p class="sub-text">{item.displayDate}</p>
-                    {#if item instanceof Song}
-                        <p class="sub-text">{item.displaySingers}</p>
-                    {/if}
-                </div>
+                <p class="sub-text date-info">{item.displayDate}</p>
             {/if}
-            {#if contextMenuButton}
+            {#if extraInfo && item instanceof Song}
+                <button class="like-button icon-button" onclick={e => {e.stopPropagation(); ToggleSongLike(item.id)}}>
+                    {#if IsSongLiked(item.id)}
+                        <IconHeartFilled />
+                    {:else}
+                        <IconHeart />
+                    {/if}
+                </button>
+                <p class="sub-text duration">{FormatDuration(item.seconds, true)}</p>
+            {/if}
+            {#if contextMenu && extraInfo}
                 <button class="context-menu-button icon-button" onclick={(e) => {e.stopPropagation(); OpenContextMenu(e, item)}}>
                     <IconDotsVertical size="100%" />
                 </button>
+            {/if}
+            {#if trailing}
+                <div class="trailing">
+                    {@render trailing(item)}
+                </div>
             {/if}
 
         </li>
@@ -128,6 +142,8 @@
 
 <style>
     li {
+        container-type: inline-size;
+
         height: 55px;
 
         display: flex;
@@ -173,13 +189,30 @@
         height: 50%;
         aspect-ratio: 1;
     }
+    .duration {
+        text-align: center;
+    }
+    .like-button, .duration {
+        width: 30px;
+    }
+
     @media (hover: hover) {
-        li > button {
+        .context-menu-button {
             opacity: 0;
             transition: opacity 0.1s ease;
         }
-        li:hover > button {
+        .like-button {
+            display: none;
+        }
+        
+        li:hover > .context-menu-button{
             opacity: 1;
+        }
+        li:hover > .like-button {
+            display: block;
+        }
+        li:hover > .duration {
+            display: none;
         }
     }
     
@@ -192,12 +225,8 @@
         flex-direction: column;
         gap: 1px;
     }
-    li .extra-info {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    
-        justify-content: right;
+    li .date-info {
+        margin-right: 10%;
         text-align: right;
     }
 
@@ -216,5 +245,16 @@
     }
     li h2 {
         font-size: calc(var(--font-size, 1rem) * 0.8);
+    }
+
+    @container (max-width: 500px) {
+        .date-info {
+            display: none !important;
+        }
+    }
+    @container (max-width: 320px) {
+        .like-button, .duration {
+            display: none !important;
+        }
     }
 </style>

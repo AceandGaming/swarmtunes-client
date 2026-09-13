@@ -1,13 +1,12 @@
 <script lang="ts">
-    import type { Song, Collection } from "@ts/models"
     import ItemCards from "@ts/ui/item-cards.svelte"
     import PlaybackState from "@ts/playback.svelte"
     import { Search } from "@ts/api/song"
-    import ItemList from "@ts/ui/item-list.svelte"
     import { IconX } from "@tabler/icons-svelte-runes"
     import { GetDiscover } from "./discover.svelte.ts"
     import ErrorScreen from "@ts/ui/error-screen.svelte"
     import IconSwarmFM from "@assets/swarmfm.svelte"
+    import { CreateSongContextMenu } from "@ts/context-menus"
 
     let query: string = $state("")
     let debouncedQuery = $state('');
@@ -21,6 +20,11 @@
 
         return () => clearTimeout(timeout);
     })
+
+    async function ImportItemList() {
+        const { default: ItemList } = await import("@ts/ui/item-list.svelte")
+        return ItemList
+    }
 
 </script>
 
@@ -38,10 +42,10 @@
     </div>
 
     {#if searching}
-        {#await Search(debouncedQuery)}
+        {#await Promise.all([Search(debouncedQuery), ImportItemList()])}
             <div class="loading-text"></div>
-        {:then songs}
-            <ItemList items={songs} onItemClick={(song) => PlaybackState.Play({song, songs})}/>
+        {:then [songs, ItemList]}
+            <ItemList items={songs} onItemClick={(song) => PlaybackState.Play({song, songs})} contextMenu={CreateSongContextMenu}/>
         {/await}
     {:else}
         {#await GetDiscover()}

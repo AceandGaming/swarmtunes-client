@@ -11,6 +11,7 @@
     import { Playlist } from "@ts/models/playlist.ts"
     import { PlaylistDownloaded, AddPlaylist, RemovePlaylist, Downloading } from "@ts/download-manager.svelte.ts"
     import EmoteText from "@ts/ui/emote-text.svelte"
+    import { FormatDuration } from "@ts/misc.ts"
 
     let loading = $state(true)
 
@@ -26,12 +27,14 @@
         if (!MediaView.media) {
             return
         }
+
         loading = true
         if (MediaView.media instanceof Song) {
             songs = [MediaView.media]
             loading = false
             return
         }
+
         MediaView.media.GetSongs().then(s => {
             loading = false
             songs = s
@@ -48,14 +51,7 @@
         PlaybackController.Play({songs})
     }
 
-    function FormatDuration(seconds: number) {
-        if (seconds > 3600) {
-            const hours = Math.floor(seconds / 3600)
-            const minutes = Math.floor((seconds % 3600) / 60)
-            return `${hours}h ${minutes}m`
-        }
-        return `${Math.floor(seconds / 60)}m ${seconds % 60}s`
-    }
+
     function CreatePlaylistItemContextMenu(song: Song) {
         const menu = CreateSongContextMenu(song)
         menu.push({
@@ -77,7 +73,6 @@
         })
         return menu
     }
-
 </script>
 
 <div 
@@ -134,7 +129,7 @@
         {#if loading}
             <div class="loading-text"></div>
         {:else}
-            <SongList items={currentSongs} onItemClick={OnItemClick} contextMenu={media instanceof Playlist ? CreatePlaylistItemContextMenu : undefined }/>
+            <SongList items={currentSongs} onItemClick={OnItemClick} contextMenu={media instanceof Playlist ? CreatePlaylistItemContextMenu : CreateSongContextMenu }/>
         {/if}
     </div>
 </div>

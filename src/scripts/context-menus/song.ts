@@ -4,7 +4,7 @@ import { ShareSongV1, ExportSong } from "@ts/api/song"
 import { ContextMenuGroup, type ContextMenuOption } from "@ts/context-menu.svelte"
 import { IconPlus, IconShare3, IconPlaylistAdd, IconFileExport } from "@tabler/icons-svelte-runes"
 import type { Song } from "@ts/models/song"
-import { SelectPlaylist, CopyToClipboard } from "@ts/ui/popup.svelte.ts"
+import { AddToPlaylist, CopyToClipboard } from "@ts/ui/popup.svelte.ts"
 import { auth } from "@ts/login.svelte"
 import Toasts from "@ts/toast.svelte.ts"
 
@@ -24,20 +24,7 @@ export function CreateSongContextMenu(song: Song): ContextMenuOption[] {
             label: "Add to Playlist",
             group: ContextMenuGroup.Playlist,
             icon: IconPlaylistAdd,
-            Action: async () => {
-                const playlist = await SelectPlaylist()
-                if (!playlist) {
-                    return
-                }
-
-                try {
-                    await PlaylistProvider.AddSongsToPlaylist(playlist.id, [song.id])
-                    Toasts.Add(`Added ${song.title} to ${playlist.title}`, "success")
-                } catch (e) {
-                    console.error(e)
-                    Toasts.Add(`Failed to add ${song.title} to ${playlist.title}`, "failure")
-                }
-            },
+            Action: () => AddToPlaylist(song),
             visible: auth.loggedIn
         },
         {

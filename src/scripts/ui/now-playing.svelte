@@ -33,9 +33,7 @@
         <ItemList 
             items={PlaybackState.queue.slice(0, 20)}
             extraInfo={false} 
-            contextMenuButton={false} 
             animate={true}
-            draggable={true}
 
             onItemClick={(song) => PlaybackState.SkipTo(song)}
             contextMenu={ContextMenu}

@@ -3,7 +3,7 @@ import { GetCoverUrl } from "@ts/api/song"
 import type { Song } from "@ts/models/song"
 import SongProvider from "@ts/song-provider"
 
-type PlaylistType = "user" | "liked_songs"
+type PlaylistType = "user" | "likedSongs"
 type PlaylistDict = {
     id: id,
     title: string,
@@ -33,6 +33,9 @@ export class Playlist {
         }
         return this._songCount
     }
+    public get loaded() {
+        return this._loaded
+    }
 
 
     private constructor(
@@ -43,7 +46,8 @@ export class Playlist {
         public readonly type: PlaylistType,
         private readonly _songCount: number,
         public readonly seconds: number,
-        private items?: { song: id, dateAdded: Date }[]
+        private items?: { song: id, dateAdded: Date }[],
+        private _loaded: boolean = false
     ) { }
 
     public static FromDict(dict: PlaylistDict) {
@@ -69,11 +73,13 @@ export class Playlist {
         const items = await GetItemsOfPlaylist(this.id)
         this.items = items.map((item) => ({ song: item.songId, dateAdded: new Date(item.dateAdded) }))
         this.items.sort((a, b) => a.dateAdded.getTime() - b.dateAdded.getTime())
+
+        this._loaded = true
     }
     public async GetSongs(): Promise<Song[]> {
         await this.LoadSongs()
 
-        return await SongProvider.GetMany(this.GetSongIds())
+        return await SongProvider.GetMany(this.GetSongIds(), true)
     }
 
     public GetArtwork(size: "small" | "medium" | "large" = "medium") {
