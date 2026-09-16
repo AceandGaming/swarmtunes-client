@@ -26,7 +26,7 @@ modules:
 
     build-commands:
       - npm ci
-      - npm run tauri build
+      - npx tauri build
 
     sources:
       - type: dir
