@@ -31,10 +31,11 @@ modules:
       - npm run tauri build -- --no-bundle
 
       - install -Dm755 src-tauri/target/release/swarmtunes /app/bin/swarmtunes
+
       - install -Dm644 flatpak/com.swarmtunes.Swarmtunes.desktop /app/share/applications/com.swarmtunes.Swarmtunes.desktop
       - install -Dm644 flatpak/com.swarmtunes.Swarmtunes.metainfo.xml /app/share/metainfo/com.swarmtunes.Swarmtunes.metainfo.xml
 
-      - install -Dm644 public/icon.png /app/share/icons/hicolor/256x256/apps/com.swarmtunes.Swarmtunes.png
+      - install -Dm644 src-tauri/icons/256x256.png /app/share/icons/hicolor/256x256/apps/com.swarmtunes.Swarmtunes.png
       - install -Dm644 LICENSE /app/share/licenses/$FLATPAK_ID/swarmtunes/LICENSE
 
     sources:
