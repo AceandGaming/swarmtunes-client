@@ -23,5 +23,5 @@ jobs:
       - name: Build Flatpak
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          manifest-path: flatpak/com.swarmtunes.app.yml
-          bundle: com.swarmtunes.app.flatpak
+          manifest-path: flatpak/com.swarmtunes.Swarmtunes.yml
+          bundle: com.swarmtunes.Swarmtunes.flatpak

@@ -1,7 +1,7 @@
-id: com.swarmtunes.app
+id: com.swarmtunes.Swarmtunes
 
 runtime: org.gnome.Platform
-runtime-version: '48'
+runtime-version: '50'
 sdk: org.gnome.Sdk
 
 command: swarmtunes
