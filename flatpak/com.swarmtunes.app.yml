@@ -19,6 +19,8 @@ sdk-extensions:
 
 build-options:
   append-path: /usr/lib/sdk/node20/bin:/usr/lib/sdk/rust-stable/bin
+  build-args:
+    - --share=network
 
 modules:
   - name: swarmtunes
@@ -28,6 +30,7 @@ modules:
       - node --version
       - npm --version
       - npm config list
+      - npm ping
       - npm ci
       - npm run tauri build
 
