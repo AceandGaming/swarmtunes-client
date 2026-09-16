@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Swarmtunes
-Comment=A music app dedicated to Neuro-sama and Evil Neuro
-Exec=swarmtunes
-Icon=com.swarmtunes.app
-Terminal=false
-Type=Application
-Categories=AudioVideo;Audio;Player;

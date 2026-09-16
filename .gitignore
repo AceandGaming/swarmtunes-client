@@ -12,10 +12,6 @@ dist
 dist-ssr
 *.local
 
-#flatpak
-build-flatpak
-.flatpak-builder
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -32,4 +28,3 @@ build-flatpak
 
 @other
 todo.md
-
