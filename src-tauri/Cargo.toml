@@ -1,9 +1,9 @@
 [package]
-name = "app"
+name = "swarmtunes"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
+description = "A music app dedicated to covers of songs made by Neuro-sama and her twin Evil"
+authors = ["aceandgaming"]
+license = "MIT"
 repository = ""
 edition = "2021"
 rust-version = "1.77.2"

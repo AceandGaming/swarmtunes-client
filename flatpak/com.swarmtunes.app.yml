@@ -27,10 +27,6 @@ modules:
     buildsystem: simple
 
     build-commands:
-      - node --version
-      - npm --version
-      - npm config list
-      - npm ping
       - npm ci
       - npm run tauri build
 
