@@ -28,7 +28,9 @@ modules:
 
     build-commands:
       - npm ci
-      - npm run tauri build
+      - npm run tauri build -- --no-bundle
+
+      - install -Dm755 src-tauri/target/release/swarmtunes /app/bin/swarmtunes
 
     sources:
       - type: dir
