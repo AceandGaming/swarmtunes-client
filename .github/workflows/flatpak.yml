@@ -1,0 +1,28 @@
+name: Flatpak
+
+on:
+  push:
+    branches:
+      - tauri
+  pull_request:
+
+jobs:
+  flatpak:
+    name: Build Flatpak
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-48
+      options: --privileged
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Flatpak
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          manifest-path: flatpak/com.swarmtunes.app.yml
+          bundle: com.swarmtunes.app.flatpak
+          cache-key: flatpak-builder-${{ github.sha }}

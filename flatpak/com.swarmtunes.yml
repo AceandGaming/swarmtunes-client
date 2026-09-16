@@ -1,0 +1,33 @@
+id: com.swarmtunes.app
+
+runtime: org.gnome.Platform
+runtime-version: '48'
+sdk: org.gnome.Sdk
+
+command: swarmtunes
+
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  - --share=ipc
+  - --share=network
+
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.node20
+  - org.freedesktop.Sdk.Extension.rust-stable
+
+build-options:
+  append-path: /usr/lib/sdk/node20/bin:/usr/lib/sdk/rust-stable/bin
+
+modules:
+  - name: swarmtunes
+    buildsystem: simple
+
+    build-commands:
+      - npm ci
+      - npm run tauri build
+
+    sources:
+      - type: dir
+        path: ..
