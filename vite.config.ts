@@ -15,7 +15,7 @@ export default defineConfig({
                 handler(warning)
             }
         }),
-        basicSsl(),
+        //basicSsl(),
     ],
     resolve: {
         alias: {
@@ -32,7 +32,10 @@ export default defineConfig({
                 secure: true,
                 rewrite: (path) => path.replace(/^\/api/, ""),
             },
-        }
+        },
+        watch: {
+            ignored: ["**/src-tauri/**"],
+        },
     },
     build: {
         target: 'ios15',
