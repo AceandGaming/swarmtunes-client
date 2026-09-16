@@ -25,4 +25,3 @@ jobs:
         with:
           manifest-path: flatpak/com.swarmtunes.app.yml
           bundle: com.swarmtunes.app.flatpak
-          cache-key: flatpak-builder-${{ github.sha }}

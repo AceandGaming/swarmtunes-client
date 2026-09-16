@@ -25,8 +25,11 @@ modules:
     buildsystem: simple
 
     build-commands:
+      - node --version
+      - npm --version
+      - npm config list
       - npm ci
-      - npx tauri build
+      - npm run tauri build
 
     sources:
       - type: dir
