@@ -1,4 +1,4 @@
-import { Database } from "@ts/indexd-db.svelte"
+import { Database } from "@ts/indexed-db.svelte"
 type Item = {
     id: string,
 }

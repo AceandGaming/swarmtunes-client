@@ -1,5 +1,5 @@
 import { Song } from "@ts/models/song"
-import { Database } from "@ts/indexd-db.svelte"
+import { Database } from "@ts/indexed-db.svelte"
 import { GetSongAudioUrl as NetworkAudioUrl } from "@ts/api/song"
 import { SvelteSet } from "svelte/reactivity"
 import { auth } from "@ts/login.svelte"

@@ -36,7 +36,7 @@
         </select>
     </div>
     <div class="setting">
-        {@render settingInfo("Use Original Langauge", "Shows title and artist names of songs in their original language.")}
+        {@render settingInfo("Use Original Language", "Shows title and artist names of songs in their original language.")}
         <Toggle bind:value={Settings.useOriginalLanguage}/>
     </div>
 

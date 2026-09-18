@@ -14,7 +14,7 @@ export function CreateCollectionContextMenu(collection: Collection): ContextMenu
             Action: async () => PlaybackController.Play({ songs: await collection.GetSongs() })
         },
         {
-            label: "Add To Libary",
+            label: "Add To Library",
             group: ContextMenuGroup.Playlist,
             icon: IconPlaylistAdd,
             Action: async () => {

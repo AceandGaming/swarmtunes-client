@@ -1,5 +1,5 @@
 <script module lang="ts">
-    function GetFeildOfErrorCode(code: string): "username" | "password" | "all" | "none" | undefined {
+    function GetFieldOfErrorCode(code: string): "username" | "password" | "all" | "none" | undefined {
         switch (code) {
             case "USERNAME_TOO_SHORT":
                 return "username"
@@ -49,7 +49,7 @@
         }
         catch (e) {
             if (e instanceof HttpError) {
-                const error = GetFeildOfErrorCode(e.code)
+                const error = GetFieldOfErrorCode(e.code)
                 if (error) {
                     errorMessage = e.message
                     switch (error) {

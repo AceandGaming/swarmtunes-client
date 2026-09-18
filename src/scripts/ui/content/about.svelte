@@ -45,7 +45,7 @@
     <p>
         All of these artists are very talented!
         <br>
-        <i>If you feel you haven't been credited and should be, or have been miscredited, <b>please let me know!</b></i>
+        <i>If you feel you haven't been credited and should be, or have been mis-credited, <b>please let me know!</b></i>
     </p>
 
     <h2>DISC 1, 3, 5 - <b>@paccha_</b></h2>

@@ -39,7 +39,7 @@ async function FetchJson(url: string, method: string = "GET", body?: any): Promi
     } catch (e) {
         throw new HttpError(
             "UNKNOWN_ERROR",
-            "An Unknown error occured",
+            "An Unknown error occurred",
             e
         )
     }
@@ -58,7 +58,7 @@ async function FetchJson(url: string, method: string = "GET", body?: any): Promi
     }
     throw new HttpError(
         "UNKNOWN_ERROR",
-        "An Unknown error occured",
+        "An Unknown error occurred",
         json
     )
 }

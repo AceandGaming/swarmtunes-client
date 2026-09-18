@@ -196,12 +196,12 @@ class PlaybackController {
         this.player.played = this.player.duration * percent
         this.Trigger("timeUpdate", this.player.duration * percent, this.player.duration)
     }
-    public SeekSkip(relitive: number) {
+    public SeekSkip(relative: number) {
         if (!this.player) {
             return
         }
 
-        this.player.played += relitive
+        this.player.played += relative
         this.Trigger("timeUpdate", this.player.played, this.player.duration)
     }
 

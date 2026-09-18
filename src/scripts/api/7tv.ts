@@ -16,11 +16,11 @@ export type Emote = {
 }
 
 async function GetJSON(url: string) {
-    const reponse = await fetch(`${TV_API_URL}/${url}`)
-    if (!reponse.ok) {
+    const response = await fetch(`${TV_API_URL}/${url}`)
+    if (!response.ok) {
         throw new Error(`Failed to get ${url}`)
     }
-    return reponse.json()
+    return response.json()
 }
 
 export async function GetEmotesOfChannel(channelId: string): Promise<Emote[]> {

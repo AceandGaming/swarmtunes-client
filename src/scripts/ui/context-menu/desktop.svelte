@@ -61,7 +61,7 @@
 {/snippet}
 
 <div 
-    class="context-ancher"
+    class="context-anchor"
 
     style:--x="{MenuState.x}px"
     style:--y="{MenuState.y}px"
@@ -76,7 +76,7 @@
 </menu>
 
 <style>
-    .context-ancher {
+    .context-anchor {
         position: fixed;
         left: var(--x);
         top: var(--y);

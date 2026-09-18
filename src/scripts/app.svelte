@@ -15,10 +15,10 @@
     }
 
     AddPage({
-        name: "libary",
+        name: "library",
         icon: IconLayoutGrid,
         import: () => import("@ts/ui/content/playlists-tab.svelte"),
-        label: "Libary",
+        label: "Library",
         hidden: false
     })
     AddPage({

@@ -1,5 +1,4 @@
 import PlaybackController from "@ts/playback"
-import PlaylistProvider from "@ts/playlist-provider"
 import { ShareSongV1, ExportSong } from "@ts/api/song"
 import { ContextMenuGroup, type ContextMenuOption } from "@ts/context-menu.svelte"
 import { IconPlus, IconShare3, IconPlaylistAdd, IconFileExport } from "@tabler/icons-svelte-runes"
