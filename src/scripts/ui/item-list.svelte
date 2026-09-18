@@ -9,8 +9,8 @@
     import { onMount, type Snippet } from "svelte"
     import type { ContextMenuOption } from "@ts/context-menu.svelte"
     import ContextMenu from "@ts/context-menu.svelte"
-    import PlaylistProvider from "@ts/playlist-provider"
     import { ToggleSongLike, IsSongLiked } from "@ts/liked-songs.svelte"
+    import { auth } from "@ts/login.svelte"
 
     type Item = Playlist | Song
     type Props<T extends Item> = {
@@ -116,13 +116,15 @@
                 <p class="sub-text date-info">{item.displayDate}</p>
             {/if}
             {#if extraInfo && item instanceof Song}
-                <button class="like-button icon-button" onclick={e => {e.stopPropagation(); ToggleSongLike(item.id)}}>
-                    {#if IsSongLiked(item.id)}
-                        <IconHeartFilled />
-                    {:else}
-                        <IconHeart />
-                    {/if}
-                </button>
+                {#if auth.loggedIn}
+                    <button class="like-button icon-button" onclick={e => {e.stopPropagation(); ToggleSongLike(item.id)}}>
+                        {#if IsSongLiked(item.id)}
+                            <IconHeartFilled />
+                        {:else}
+                            <IconHeart />
+                        {/if}
+                    </button>
+                {/if}
                 <p class="sub-text duration">{FormatDuration(item.seconds, true)}</p>
             {/if}
             {#if contextMenu && extraInfo}
@@ -211,7 +213,7 @@
         li:hover > .like-button {
             display: block;
         }
-        li:hover > .duration {
+        li:hover:has(.like-button) > .duration {
             display: none;
         }
     }
