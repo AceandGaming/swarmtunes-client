@@ -2,15 +2,15 @@ import * as colourThief from 'colorthief'
 
 export default class ColourCache {
     private static cache = new Map<string, colourThief.Color>([
-        ["/api/v2/covers/default/neuro", colourThief.createColor(240, 225, 205, 0)],
-        ["/api/v2/covers/default/evil", colourThief.createColor(100, 0, 0, 0)],
-        ["/api/v2/covers/default/duet", colourThief.createColor(56, 0, 132, 0)],
+        ["default/neuro", colourThief.createColor(240, 225, 205, 0)],
+        ["default/evil", colourThief.createColor(100, 0, 0, 0)],
+        ["default/duet", colourThief.createColor(56, 0, 132, 0)],
     ]);
     private static pending = new Map<string, Promise<colourThief.Color>>();
 
     static GetColour(src: string): Promise<colourThief.Color> {
         const url = new URL(src, window.location.href)
-        const value = url.pathname
+        const value = url.pathname.replace(/^.*\/covers\//, "")
 
         if (this.cache.has(value)) {
             return Promise.resolve(this.cache.get(value)!)
