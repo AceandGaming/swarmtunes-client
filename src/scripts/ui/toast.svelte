@@ -2,17 +2,14 @@
     import { IconXboxXFilled as IconFail, IconCircleCheckFilled as IconSuccess} from '@tabler/icons-svelte-runes';
     import { fade, fly } from 'svelte/transition';
     import { GetToasts } from "@ts/toast.svelte.ts"
-    import { MediaQuery } from "svelte/reactivity"
     import { flip } from 'svelte/animate';
-
-    let mobileLayout = new MediaQuery("max-aspect-ratio: 1/1")
-
+    import Device from "@ts/device.svelte"
 </script>
 
 <ol id="toasts">
     {#each GetToasts() as toast (toast.id)}
         <li
-            in:fly={{delay: 100, ...(mobileLayout.current ? { y: 20 } : { x: 20 })}}
+            in:fly={{delay: 100, ...(Device.looksMobile ? { y: 20 } : { x: 20 })}}
             out:fade={{duration: 100}}
             animate:flip={{duration: 300}}
         >

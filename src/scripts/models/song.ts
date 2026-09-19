@@ -136,10 +136,10 @@ export class Song {
             return this.artworkOverride
         }
 
-        //temp
         const artworks = Object.fromEntries(Object.entries(this.artworks).map(([key, value]) => [key, `${key}/${value}`]))
         const art = (
             artworks["custom"]
+            || artworks[Settings.preferredArtwork]
             || artworks["default"]
             || artworks["disc"]
             || artworks["plush"]

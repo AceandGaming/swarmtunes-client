@@ -1,7 +1,6 @@
 <script lang="ts">
     import { state as MenuState } from "@ts/context-menu.svelte"
     import type { ContextMenuOption } from "@ts/context-menu.svelte"
-    import { onMount } from "svelte";
 
     let menu: HTMLElement
     let currentOptions: ContextMenuOption[] = $state([])
@@ -10,26 +9,19 @@
         currentOptions = MenuState.options
     })
 
-    onMount(() => {
-        function OnClick(event: TouchEvent) {
-            if (menu.contains(event.target as Node)) {
-                return
-            }
-
-            if (MenuState.visible) {
-                event.stopImmediatePropagation()
-            }
-            MenuState.visible = false
+    function OnClick(event: TouchEvent) {
+        if (menu.contains(event.target as Node)) {
+            return
         }
 
-        document.addEventListener("touchstart", OnClick, { capture: true, passive: false })
-
-        return () => {
-            document.removeEventListener("touchstart", OnClick)
+        if (MenuState.visible) {
+            event.stopImmediatePropagation()
         }
-    })
+        MenuState.visible = false
+    }
 </script>
 
+<svelte:document on:touchstart|capture|nonpassive={OnClick}/>
 <menu 
     id="context-menu"
     class:visible={MenuState.visible}
@@ -41,7 +33,6 @@
             {#if i > 0 && option.group !== currentOptions[i - 1].group}
                 <hr />
             {/if}
-            <!-- svelte-ignore a11y_click_events_have_key_events -->
             <li 
                 role="menuitem"
 

@@ -1,31 +1,19 @@
 <script lang="ts">
     import { state as MenuState } from "@ts/context-menu.svelte"
     import type { ContextMenuOption } from "@ts/context-menu.svelte"
-    import { onMount } from "svelte";
 
     let menu: HTMLElement
 
-    onMount(() => {
-        function OnClick(event: MouseEvent) {
-            if (menu.contains(event.target as Node)) {
-                return
-            }
-
-            MenuState.visible = false
-        }
-        function OnScroll() {
-            MenuState.visible = false
+    function OnClick(event: MouseEvent) {
+        if (menu.contains(event.target as Node)) {
+            return
         }
 
-        document.addEventListener("mousedown", OnClick)
-        window.addEventListener("scroll", OnScroll, true)
-
-        return () => {
-            document.removeEventListener("mousedown", OnClick)
-            window.removeEventListener("scroll", OnScroll)
-        }
-    })
+        MenuState.visible = false
+    }
 </script>
+
+<svelte:document onmousedown={OnClick} onscroll={() => MenuState.visible = false}></svelte:document>
 
 {#snippet CreateMenu(options: ContextMenuOption[], depth = 0)}
     {#each options as option, i}
@@ -33,7 +21,6 @@
             {#if i > 0 && option.group !== options[i - 1].group}
                 <hr />
             {/if}
-            <!-- svelte-ignore a11y_click_events_have_key_events -->
             <li 
                 role="menuitem"
                 style:anchor-name = {`--menu-${i}-${depth}`}

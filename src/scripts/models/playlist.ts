@@ -2,6 +2,7 @@ import { GetItemsOfPlaylist } from "@ts/api/playlist"
 import { GetCoverUrl } from "@ts/api/song"
 import type { Song } from "@ts/models/song"
 import SongProvider from "@ts/song-provider"
+import Settings from "@ts/settings.svelte.ts"
 
 type PlaylistType = "user" | "likedSongs"
 type PlaylistDict = {
@@ -83,10 +84,10 @@ export class Playlist {
     }
 
     public GetArtwork(size: "small" | "medium" | "large" = "medium") {
-        //temp
         const artworks = Object.fromEntries(Object.entries(this.artworks).map(([key, value]) => [key, `${key}/${value}`]))
         const art = (
             artworks["custom"]
+            || artworks[Settings.preferredArtwork]
             || artworks["default"]
             || artworks["disc"]
             || artworks["plush"]

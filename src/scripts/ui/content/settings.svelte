@@ -39,6 +39,14 @@
         {@render settingInfo("Use Original Language", "Shows title and artist names of songs in their original language.")}
         <Toggle bind:value={Settings.useOriginalLanguage}/>
     </div>
+    <div class="setting">
+        {@render settingInfo("Artwork", "Preferred Artwork for songs without a custom one")}
+        <select bind:value={Settings.preferredArtwork} >
+            <option value="default">Default</option>
+            <option value="disc">Discs</option>
+            <option value="plush">Plushy</option>
+        </select>
+    </div>
 
     {#if window.isMobile}
         <footer class="quick-access">

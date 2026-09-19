@@ -7,9 +7,6 @@ import type { SongRequester } from "@ts/song-requester"
 import type { MediaView } from "@ts/ui/content/media-view"
 
 declare global {
-    interface Window {
-        isMobile: boolean
-    }
     type id = string
 
     var YT: any

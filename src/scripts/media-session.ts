@@ -1,5 +1,6 @@
 import PlaybackController from "@ts/playback"
 import type { Song } from "@ts/models/song"
+import Device from "@ts/device.svelte"
 
 function UpdateMediaMetadata(song: Song) {
     if (!navigator.mediaSession) {
@@ -40,7 +41,7 @@ export function UpdateMediaControls({ playPause = false, skipping = false, seeki
         media.setActionHandler('previoustrack', () => PlaybackController.Previous())
     }
     if (seeking) {
-        if (!window.isMobile) {
+        if (!Device.behavesMobile) {
             media.setActionHandler('seekbackward', (details) => {
                 PlaybackController.SeekSkip(details.seekOffset ?? 0)
             })

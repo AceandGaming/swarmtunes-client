@@ -51,7 +51,6 @@
     import CurrentSongBar from "@ts/ui/controls/current-song-bar/index.svelte"
     import Fullscreen from "@ts/ui/content/fullscreen.svelte"
     import { GetPopup } from "@ts/ui/popup.svelte.ts"
-    import { MediaQuery } from "svelte/reactivity";
     import MediaView from "@ts/ui/content/media-view.svelte"
     import MediaViewState from "@ts/ui/content/media-view.svelte.ts"
     import { auth, Logout } from "@ts/login.svelte.ts"
@@ -60,6 +59,7 @@
     import Toast from "@ts/ui/toast.svelte"
     import { url, Navigate } from "@ts/urlbar.svelte.ts"
     import Link from "@ts/ui/components/link.svelte"
+    import Device from "@ts/device.svelte"
 
     let currentPage: Page = $state(pages.discover)
     $effect(() => {
@@ -72,9 +72,6 @@
             url.pathname = "/discover"
         }
     })
-
-
-    let mobile = new MediaQuery("max-width: 600px")
 
     const popup = $derived(GetPopup())
 
@@ -115,7 +112,7 @@
 
 
 <main id="app">
-    {#if mobile.current}
+    {#if Device.looksMobile}
         <footer>
             <CurrentSongBar />
             {@render tabs()}
@@ -199,8 +196,13 @@
         justify-content: center;
 
         padding: 0 5vw;
-        padding-bottom: 10px;
     }
+    @media (display-mode: standalone) {
+        footer .tabs {
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+        }
+    }
+
     .tabs button {
         flex: 1;
         max-width: 120px;

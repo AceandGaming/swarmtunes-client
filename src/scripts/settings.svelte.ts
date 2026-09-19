@@ -12,7 +12,8 @@ function Load() {
 }
 
 const settings = $state(Load() ?? {
-    useOriginalLanguage: false
+    useOriginalLanguage: false,
+    preferredArtwork: "default"
 })
 
 $effect.root(() => {

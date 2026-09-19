@@ -1,6 +1,7 @@
 import AudioPlayer from "@ts/audio/audio"
 import type { Song } from "@ts/models/song"
 import SongProvider from "@ts/song-provider"
+import Device from "@ts/device.svelte"
 
 export default class OggPlayer extends AudioPlayer {
     public get played(): number {
@@ -49,7 +50,7 @@ export default class OggPlayer extends AudioPlayer {
     }
 
     public Play(): void {
-        if (this.audio.readyState === 4 || window.isMobile) {
+        if (this.audio.readyState === 4 || Device.behavesMobile) {
             this.audio.play()
         }
         else {

@@ -1,10 +1,5 @@
-const logs: string[] = []
+import Device from "@ts/device.svelte"
 
-// function CreateLog() {
-//     const log = logs.join("\n")
-//     logs.length = 0
-//     return log
-// }
 function GetDebugInfo() {
     return {
         userAgent: navigator.userAgent,
@@ -29,7 +24,7 @@ function GetDebugInfo() {
         visualScale: window.visualViewport?.scale,
 
         isFullscreen: document.fullscreenElement != null,
-        isMobile: window.isMobile,
+        device: Device,
         orientation: screen.orientation?.type,
 
         features: {

@@ -14,8 +14,6 @@ import { LoadEmotes } from "@ts/emotes.ts"
 
 document.cookie = "cookie=A cookie for Neuro-sama; max-age=260000; secure; samesite=none; path=/"
 
-window.isMobile = window.matchMedia("(pointer: coarse)").matches
-
 const songId = GetSongId()
 ClearParams()
 

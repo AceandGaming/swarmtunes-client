@@ -1,12 +1,10 @@
 <script lang="ts">
-    import { MediaQuery } from "svelte/reactivity"
     import Desktop from "./desktop.svelte"
     import Mobile from "./mobile.svelte"
-
-    let mobileLayout = new MediaQuery("max-width: 600px")
+    import Device from "@ts/device.svelte"
 </script>
 
-{#if mobileLayout.current}
+{#if Device.behavesMobile}
     <Mobile />
 {:else}
     <Desktop />

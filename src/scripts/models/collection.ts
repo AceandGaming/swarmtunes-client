@@ -2,6 +2,7 @@ import { GetSongsOfCollection } from "@ts/api/collection"
 import { GetCoverUrl } from "@ts/api/song"
 import type { Song } from "@ts/models/song"
 import SongProvider from "@ts/song-provider"
+import Settings from "@ts/settings.svelte.ts"
 
 type CollectionDict = {
     id: id,
@@ -62,7 +63,6 @@ export class Collection {
         )
     }
     public GetArtwork(size: "small" | "medium" | "large" = "medium") {
-        //temp
         const artworks = Object.fromEntries(Object.entries(this.artworks).map(([key, value]) => [key, `${key}/${value}`]))
         let art
         if (this.disc != undefined) {
@@ -71,6 +71,7 @@ export class Collection {
         else {
             art = (
                 artworks["custom"]
+                || artworks[Settings.preferredArtwork]
                 || artworks["default"]
                 || artworks["disc"]
                 || artworks["plush"]
