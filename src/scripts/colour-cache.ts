@@ -1,7 +1,11 @@
 import * as colourThief from 'colorthief'
 
 export default class ColourCache {
-    private static cache = new Map<string, colourThief.Color>();
+    private static cache = new Map<string, colourThief.Color>([
+        ["/api/v2/covers/default/neuro", colourThief.createColor(240, 225, 205, 0)],
+        ["/api/v2/covers/default/evil", colourThief.createColor(100, 0, 0, 0)],
+        ["/api/v2/covers/default/duet", colourThief.createColor(56, 0, 132, 0)],
+    ]);
     private static pending = new Map<string, Promise<colourThief.Color>>();
 
     static GetColour(src: string): Promise<colourThief.Color> {
