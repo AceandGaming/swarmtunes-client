@@ -124,9 +124,8 @@
 
     h1 {
         margin: 0;
-        font-size: 40px;
-        font-weight: 700;
-
+        font-size: 2.5rem;
+        font-weight: 500;
     }
 
     .loading-text {
