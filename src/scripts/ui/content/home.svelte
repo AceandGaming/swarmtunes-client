@@ -320,7 +320,6 @@
     @media (max-width: 1200px) {
         .more, .recent {
             grid-template-columns: 1fr;
-            grid-template-rows: 1fr 1fr;
         }
         .swarmfm > .cover {
             max-width: unset;
