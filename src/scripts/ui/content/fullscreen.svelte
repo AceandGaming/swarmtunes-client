@@ -14,6 +14,7 @@
     import { ShareSongV1 } from "@ts/api/song.ts"
     import { GetSongColour } from "@ts/misc.ts";
     import Device from "@ts/device.svelte.ts"
+    import { auth } from "@ts/login.svelte.ts"
     
     let fullscreenElement: HTMLDivElement
 
@@ -231,9 +232,11 @@
             <span class="title">{Playback.currentSong?.displayTitle ?? "Title"}</span>
             <span class="artists sub-text">{Playback.currentSong?.displayArtists ?? "Artists"}</span>   
         </div>
-        <button class="add-to-playlist icon-button" onclick={OnAddToPlaylistClick}><IconPlaylistAdd size="unset"/></button>
+        {#if auth.loggedIn}
+            <button class="add-to-playlist icon-button" onclick={OnAddToPlaylistClick}><IconPlaylistAdd size="unset"/></button>
+        {/if}
     </div>
-    <Seek thinkness={10} />
+    <Seek played={Playback.played} duration={Playback.duration} thinkness={10} />
     <MediaControls iconSize={40} />
 
     {#if Device.looksMobile}
@@ -371,7 +374,7 @@
 
     .add-to-playlist {
         display: none;
-        max-width: 50px;
+        width: 50px;
     }
 
     .art-container {
