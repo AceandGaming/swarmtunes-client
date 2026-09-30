@@ -4,7 +4,7 @@
     <id>com.swarmtunes.Swarmtunes</id>
 
     <name>Swarmtunes</name>
-    <summary>A music app for songs from Neuro and Evil</summary>
+    <summary>A Neuro-sama music app</summary>
 
     <url type="homepage">https://swarmtunes.com/</url>
     <url type="vcs-browser">https://github.com/AceandGaming/swarmtunes-client</url>
@@ -20,8 +20,13 @@
     </developer>
 
     <description>
+        <p> Swarmtunes is a music app for all Neuro and Evil covers of songs, as well as official
+            releases and collaborations. It features accounts, playlists, and songs grouped by
+            streamer.
+        </p>
         <p>
-            A music app dedicated to covers of songs made by Neuro-sama and her twin Evil
+            <i>Swarmtunes is a <b>fan-made app</b> and is not associated with Vedal, Neuro-sama, or
+                SwarmFM.</i>
         </p>
     </description>
 
@@ -32,11 +37,11 @@
     <screenshots>
         <screenshot type="default">
             <image>https://swarmtunes.com/screenshots/main.png</image>
-            <caption>Swarmtunes Discover page</caption>
+            <caption>Swarmtunes Home page</caption>
         </screenshot>
         <screenshot>
             <image>https://swarmtunes.com/screenshots/1.png</image>
-            <caption>Colorful Array in Fullscreen</caption>
+            <caption>The song Colorful Array in Fullscreen</caption>
         </screenshot>
     </screenshots>
 
