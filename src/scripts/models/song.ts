@@ -36,6 +36,9 @@ export class Song {
         }
         return this.title
     }
+    public get subtitle() {
+        return this.displayArtists
+    }
     public get displayArtists() {
         if (Settings.useOriginalLanguage) {
             return this.artists.map(a => a.nameOriginal ?? a.name).join(", ")

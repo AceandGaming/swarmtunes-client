@@ -2,7 +2,7 @@
     import { Navigate } from "@ts/urlbar.svelte.ts"
     import type { Snippet } from "svelte"
 
-    let { href, children, ...props }: { href: string, children: Snippet, [prop: string]: any } = $props()
+    let { href = "", children, ...props }: { href?: string, children: Snippet, [prop: string]: any } = $props()
 </script>
 
 <a

@@ -13,6 +13,7 @@
     import ContextMenu from "@ts/context-menu.svelte.ts"
     import { ShareSongV1 } from "@ts/api/song.ts"
     import { GetSongColour } from "@ts/misc.ts";
+    import Device from "@ts/device.svelte.ts"
     
     let fullscreenElement: HTMLDivElement
 
@@ -235,13 +236,13 @@
     <Seek thinkness={10} />
     <MediaControls iconSize={40} />
 
-    {#if window.isMobile}
+    {#if Device.looksMobile}
         <div class="dragger" ontouchend={fullscreen.Hide}><span></span></div>
     {:else}
         <button class="close icon-button" onclick={fullscreen.Hide}><IconX size={40} /></button>
     {/if}
 
-    {#if window.isMobile && Playback.currentSong}
+    {#if Device.behavesMobile && Playback.currentSong}
         <button class="share icon-button" onclick={Share}><IconShare3 size={35} /></button>
         <button class="context-menu icon-button" onclick={ShowContextMenu}><IconDots size={35} /></button>
     {/if}

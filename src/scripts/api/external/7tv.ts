@@ -1,4 +1,4 @@
-const TV_API_URL = "https://7tv.io/v3"
+const TV_API_URL = import.meta.env.VITE_7TV_API_URL
 
 type EmoteFile = {
     name: string

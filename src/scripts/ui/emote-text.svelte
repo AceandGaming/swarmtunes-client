@@ -11,7 +11,7 @@
 
 <script lang="ts">
     import { GetEmoteByName } from "@ts/emotes"
-    import { GetEmoteUrl } from "@ts/api/7tv"
+    import { GetEmoteUrl } from "@ts/api/external/7tv"
 
     const { content }: {content: string} = $props()
 

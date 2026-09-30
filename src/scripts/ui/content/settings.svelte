@@ -5,6 +5,7 @@
     import Settings from "@ts/settings.svelte.ts"
 
     import Theme from "@ts/theme.svelte.ts"
+    import Device from "@ts/device.svelte.ts"
 
     async function OnDebugButtonClick() {
         const { CreateDebugDump } = await import("@ts/debug.ts")
@@ -48,7 +49,7 @@
         </select>
     </div>
 
-    {#if window.isMobile}
+    {#if Device.behavesMobile}
         <footer class="quick-access">
             {#if auth.loggedIn}
                 <button onclick={() => Logout()}>Logout</button>

@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import { IconLayoutGrid, IconWorld, IconSettings, IconInfoCircle } from "@tabler/icons-svelte-runes";
+    import { IconLayoutGrid, IconWorld, IconSettings} from "@tabler/icons-svelte-runes";
     import type { Component } from "svelte";
     type Page = {
         name: string
@@ -18,14 +18,14 @@
         name: "library",
         icon: IconLayoutGrid,
         import: () => import("@ts/ui/content/playlists-tab.svelte"),
-        label: "Library",
+        label: "Playlists",
         hidden: false
     })
     AddPage({
-        name: "discover",
+        name: "home",
         icon: IconWorld,
-        import: () => import("@ts/ui/content/discover.svelte"),
-        label: "Discover",
+        import: () => import("@ts/ui/content/home.svelte"),
+        label: "Home",
         hidden: false
     })
     AddPage({
@@ -37,9 +37,16 @@
     })
     AddPage({
         name: "about",
-        icon: IconInfoCircle,
+        icon: IconSettings,
         import: () => import("@ts/ui/content/about.svelte"),
         label: "About",
+        hidden: true
+    })
+    AddPage({
+        name: "setlists",
+        icon: IconSettings,
+        import: () => import("@ts/ui/content/setlists.svelte"),
+        label: "Setlists",
         hidden: true
     })
     
@@ -61,7 +68,7 @@
     import Link from "@ts/ui/components/link.svelte"
     import Device from "@ts/device.svelte"
 
-    let currentPage: Page = $state(pages.discover)
+    let currentPage: Page = $state(pages.home)
     $effect(() => {
         const name = url.pathname.split("/")[1]
         console.log(name)
@@ -69,7 +76,7 @@
             currentPage = pages[name]
         }
         else {
-            url.pathname = "/discover"
+            url.pathname = "/home"
         }
     })
 
@@ -223,8 +230,7 @@
 
     header .tabs button { 
         padding: 2px;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        border-radius: 10px 10px 0 0;
         font-size: 0.8rem;
     }
     footer .tabs button {
@@ -235,6 +241,8 @@
 
         background-color: var(--colour-surface);
         font-size: 0.6rem;
+
+        border-radius: 5px;
     }
     footer .tabs button.active {
         background-color: var(--colour-background);

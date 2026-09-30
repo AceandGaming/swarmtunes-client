@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="bottom">
-        <Seek showText={false} thinkness={4} />
+        <Seek played={PlaybackState.played} duration={PlaybackState.duration} showText={false} thinkness={4} />
     </div>
     <div class="right">
         <div style="display: contents" bind:this={controls}><MediaControls extraButtons={false} iconSize={26} gap={10} /></div>

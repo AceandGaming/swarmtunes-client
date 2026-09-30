@@ -12,7 +12,7 @@
 
     type item = Song | Collection | Playlist
 
-    let { items, grid = false}: {items: Song[] | Collection[] | Playlist[], grid?: boolean} = $props()
+    let { items, grid = false}: {items: item[], grid?: boolean} = $props()
 
     function OnCardClick(item: item) {
         MediaView.Show(item)
@@ -44,7 +44,7 @@
             return undefined
         }
         const hsl = colour.hsl()
-        return `hsl(${hsl.h} ${hsl.s}% ${Math.min(hsl.l / 1.1, 60)}%)`
+        return `hsl(${hsl.h} ${Math.min(hsl.s, 60)}% ${Math.min(hsl.l / 1.1, 60)}%)`
     })}
 
     <div 
@@ -85,8 +85,9 @@
         overflow-x: auto;
 
         padding: 10px;
-        background-color: var(--colour-background);
-        
+
+        background-color: color-mix(var(--colour-surface-raised), transparent 20%);
+        border: solid 1px var(--colour-border);
         border-radius: 20px;
     }
     .item-cards.grid {

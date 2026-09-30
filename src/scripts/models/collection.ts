@@ -23,6 +23,9 @@ export class Collection {
     public get shortTitle() {
         return this.displayDate ?? this.displayTitle
     }
+    public get subtitle() {
+        return `${this.songCount} Songs`
+    }
     public get displayDate() {
         return this.date?.toLocaleDateString("en-AU", {
             day: "numeric",

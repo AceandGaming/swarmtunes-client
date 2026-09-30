@@ -1,4 +1,4 @@
-import { GetEmotesOfChannel, type Emote } from "@ts/api/7tv"
+import { GetEmotesOfChannel, type Emote } from "@ts/api/external/7tv"
 
 const CHANEL_IDS = [
     "01K1H87ZZVE92Y3Z37H3ES6BK8",   //Swarmfm

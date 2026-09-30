@@ -8,6 +8,7 @@ import type { MediaView } from "@ts/ui/content/media-view"
 
 declare global {
     type id = string
+    type ItemArrays<T> = T extends unknown ? T[] : never
 
     var YT: any
     var onYouTubeIframeAPIReady: () => void

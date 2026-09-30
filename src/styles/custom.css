@@ -7,6 +7,7 @@
     font-family: "Neuro", var(--font);
     -webkit-text-stroke: 5px var(--colour-accent);
     paint-order: stroke fill;
+    letter-spacing: 0.1rem;
 }
 
 .spinner {

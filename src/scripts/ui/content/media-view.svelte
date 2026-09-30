@@ -89,7 +89,7 @@
             {#if media}
                 <h1><EmoteText content={media.displayTitle} /></h1>
                 <h2>{media.displayDate}</h2>
-                <h3>{media instanceof Song ? 1 : media.songCount} Songs - {FormatDuration(media.seconds ?? 0)}</h3>
+                <h3>{`${media.subtitle} - ${FormatDuration(media.seconds)}`}</h3>
             {/if}
         </div>
         <nav>

@@ -65,6 +65,7 @@ button {
     border: none;
     color: var(--colour-text);
     background: none;
+    border-radius: 999px;
 }
 
 button * {
@@ -72,9 +73,13 @@ button * {
 }
 
 button:not(.no-defaults, .icon-button) {
-    padding: 3px 8px;
+    padding: 0.3em 0.8em;
     background-color: var(--colour-surface-alt);
-    border-radius: 10px;
+}
+
+button:not(.no-defaults, .icon-button).primary {
+    background-color: white;
+    color: var(--colour-surface);
 }
 
 @media (hover: hover) {
@@ -89,7 +94,6 @@ button:active {
 
 button.icon-button {
     display: inline-block;
-    border-radius: 999px;
     color: var(--colour-icon);
     aspect-ratio: 1;
 

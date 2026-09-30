@@ -21,6 +21,9 @@ export class Playlist {
     public get displayTitle() {
         return this.title
     }
+    public get subtitle() {
+        return `${this.songCount} Songs`
+    }
     public get displayDate() {
         return this.dateCreated.toLocaleDateString("en-AU", {
             day: "numeric",

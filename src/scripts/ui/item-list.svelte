@@ -1,5 +1,5 @@
 <script lang="ts" generics="T extends Item">
-    import { type Playlist, Song } from "@ts/models"
+    import { type Collection, type Playlist, Song } from "@ts/models"
     import Cover from "@ts/ui/cover.svelte"
     import { flipNoScale, FormatDuration } from "@ts/misc"
     import { IconDotsVertical, IconCircleArrowDownFilled as IconDown, IconHeart, IconHeartFilled } from "@tabler/icons-svelte-runes"
@@ -12,7 +12,7 @@
     import { ToggleSongLike, IsSongLiked } from "@ts/liked-songs.svelte"
     import { auth } from "@ts/login.svelte"
 
-    type Item = Playlist | Song
+    type Item = Playlist | Song | Collection
     type Props<T extends Item> = {
         items: T[]
         animate?: boolean
@@ -110,7 +110,7 @@
                 <h1>
                     {item.displayTitle}
                 </h1>
-                <h2 class="sub-text">{item instanceof Song ? (item.displayArtists) : `${item.songCount} songs`}</h2>
+                <h2 class="sub-text">{item.subtitle}</h2>
             </div>
             {#if extraInfo}
                 <p class="sub-text date-info">{item.displayDate}</p>
@@ -125,6 +125,9 @@
                         {/if}
                     </button>
                 {/if}
+                
+            {/if}
+            {#if extraInfo}
                 <p class="sub-text duration">{FormatDuration(item.seconds, true)}</p>
             {/if}
             {#if contextMenu && extraInfo}
@@ -193,9 +196,10 @@
     }
     .duration {
         text-align: center;
+        white-space: nowrap;
     }
     .like-button, .duration {
-        width: 30px;
+        min-width: 30px;
     }
 
     @media (hover: hover) {

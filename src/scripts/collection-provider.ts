@@ -34,4 +34,18 @@ export default class CollectionProvider {
 
         return result
     }
+    public static async GetBatched(batches: id[][], retainCollectionOrder = false): Promise<Collection[][]> {
+        const merged = batches.flat()
+
+        const songs = await this.GetMany(merged, retainCollectionOrder)
+        const lookup = new Map(songs.map(song => [song.id, song]))
+
+        const result = batches.map(batch =>
+            batch
+                .map(id => lookup.get(id))
+                .filter((song): song is Collection => song !== undefined)
+        )
+
+        return result
+    }
 }

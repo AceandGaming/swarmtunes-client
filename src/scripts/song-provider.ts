@@ -60,6 +60,20 @@ export default class SongProvider {
     public static async Get(id: id): Promise<Song | undefined> {
         return (await this.GetMany([id]))[0]
     }
+    public static async GetBatched(batches: id[][], retainSongOrder = false): Promise<Song[][]> {
+        const merged = batches.flat()
+
+        const songs = await this.GetMany(merged, retainSongOrder)
+        const lookup = new Map(songs.map(song => [song.id, song]))
+
+        const result = batches.map(batch =>
+            batch
+                .map(id => lookup.get(id))
+                .filter((song): song is Song => song !== undefined)
+        )
+
+        return result
+    }
 
     public static async GetAudio(id: id): Promise<AudioSource> {
         const audio = await SongDatabase.GetSongAudio(id)

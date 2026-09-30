@@ -35,27 +35,30 @@ export async function GetSongColour(song: Song) {
     return await ColourCache.GetColour(src)
 }
 
-export async function PromiseAllObject<T extends object>(obj: T): Promise<{ [K in keyof T]: Awaited<T[K]> }> {
-    return Object.fromEntries(
-        await Promise.all(
-            Object.entries(obj).map(async ([key, promise]) => [
-                key,
-                await promise,
-            ])
-        )
-    )
-}
-
 export function FormatDuration(seconds: number, compact = false) {
-    if (seconds > 3600) {
-        const hours = Math.floor(seconds / 3600)
-        const minutes = Math.floor((seconds % 3600) / 60)
-        return `${hours}h ${minutes}m`
+    if (!isFinite(seconds)) {
+        return "0:00"
     }
-    if (compact) {
-        return `${Math.floor(seconds / 60)}:${seconds % 60}`
+
+    const negative = seconds < 0
+    const absSeconds = Math.abs(seconds)
+
+    const hours = Math.floor(absSeconds / 3600)
+    const minutes = Math.floor((absSeconds % 3600) / 60)
+    const secs = Math.ceil(absSeconds % 60)
+
+    if (compact && hours === 0) {
+        return `${negative ? "-" : ""}${minutes}:${secs.toString().padStart(2, "0")}`
     }
-    else {
-        return `${Math.floor(seconds / 60)}m ${seconds % 60}s`
+
+    if (hours >= 24) {
+        const days = Math.floor(hours / 24)
+        const remainingHours = hours % 24
+        return `${negative ? "-" : ""}${days}d ${remainingHours}h`
     }
+    if (hours > 0) {
+        return `${negative ? "-" : ""}${hours}h ${minutes.toString().padStart(2, "0")}m`
+    }
+
+    return `${negative ? "-" : ""}${minutes}m ${secs}s`
 }

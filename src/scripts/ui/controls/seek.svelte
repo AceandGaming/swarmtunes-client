@@ -1,14 +1,27 @@
 <script lang="ts">
-    import PlaybackState from "@ts/playback.svelte"
+    import { FormatDuration } from "@ts/misc"
 
-    let { showText = true, thinkness = 8, class: className = "seek" } = $props()
+    type Props = {
+        played: number
+        duration: number
+        showText?: boolean
+        thinkness?: number
+        class?: string
+        onSeek?: (fraction: number) => void
+    }
 
-    let playedPercent = $derived(PlaybackState.played / PlaybackState.duration || 0)
+    let { played, duration, showText = true, thinkness = 8, class: className = "seek", onSeek = undefined }: Props = $props()
+
+    let playedPercent = $derived(played / duration || 0)
 
     let bar: HTMLDivElement
     let seeking = false
 
     function OnSeek(event: MouseEvent | TouchEvent) {
+        if (!onSeek) {
+            return
+        }
+
         let x
         if (event instanceof MouseEvent) {
             x = event.clientX
@@ -24,17 +37,7 @@
         let fraction = (x - rect.left) / rect.width
         fraction = Math.min(1, Math.max(0, fraction))
 
-        PlaybackState.SeekPercent(fraction)
-    }
-    function FormatTime(seconds: number) {
-        if (!isFinite(seconds)) {
-            return "0:00"
-        }
-        const absSeconds = Math.abs(seconds)
-
-        const minutes = Math.floor(absSeconds / 60)
-        const secs = Math.ceil(absSeconds % 60).toString().padStart(2, '0')
-        return `${seconds < 0 ? "-" : ""}${minutes}:${secs}`
+        onSeek(fraction)
     }
 </script>
 <svelte:document
@@ -63,7 +66,7 @@
     style:--thinkness={`${thinkness}px`}
 >
     {#if showText }
-        <div class="time sub-text">{FormatTime(PlaybackState.played)}</div>
+        <div class="time sub-text">{FormatDuration(played, true)}</div>
     {/if}
     <div 
         class="bar"
@@ -83,7 +86,7 @@
     >
     </div>
     {#if showText }
-        <div class="time sub-text">{FormatTime(PlaybackState.played - PlaybackState.duration)}</div>
+        <div class="time sub-text">{FormatDuration(played - duration, true)}</div>
     {/if}
     
 </div>
@@ -96,6 +99,8 @@
     }
 
     .seek {
+        container-type: inline-size;
+
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -105,7 +110,6 @@
     .bar {
         flex: 1;
         height: var(--thinkness);
-        min-width: 100px;
 
         background: linear-gradient(
             to right,
@@ -125,5 +129,11 @@
         width: 45px;
         text-align: center;
         font-size: medium;
+    }
+
+    @container (max-width: 200px) {
+        .time {
+            display: none;
+        }
     }
 </style>

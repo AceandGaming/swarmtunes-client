@@ -7,6 +7,7 @@
     import SongFullscreen from "@ts/ui/content/fullscreen.svelte.ts"
     import VolumeButton from "@ts/ui/controls/volume-button.svelte";
     import Cover from "@ts/ui/cover.svelte"
+    import Device from "@ts/device.svelte"
 </script>
 
 <div class="current-song-bar">
@@ -25,12 +26,12 @@
             <span>{PlaybackState.currentSong?.displayTitle || "Title"}</span>
             <span class="sub-text">{PlaybackState.currentSong?.displayArtists || "Artists"}</span>
         </div>
-        <Seek />
+        <Seek played={PlaybackState.played} duration={PlaybackState.duration} onSeek={(f: number) => PlaybackState.SeekPercent(f)} />
     </div>
     <div class="right">
         <div class="controls">
             <MediaControls />
-            {#if !window.isMobile}
+            {#if !Device.behavesMobile}
                 <VolumeButton />
             {/if}
         </div>
