@@ -5,6 +5,10 @@ import OggPlayer from "@ts/audio/ogg"
 import YoutubePlayer from "@ts/audio/youtube"
 import SwarmFMRadio from "@ts/audio/swarmfm"
 import StoredValue from "@ts/stored-value"
+import { Connect, GetState, type WSClientPacket } from "@ts/api/player"
+import SongProvider from "@ts/song-provider"
+import type { PlayState } from "@ts/models/state"
+import { HttpError } from "@ts/api/network"
 
 type Callbacks = {
     loadedSong: (song: Song, iframe?: HTMLIFrameElement) => void
@@ -61,6 +65,8 @@ class PlaybackController {
 
     private callbacks: { [K in keyof Callbacks]?: Function[] } = {}
 
+    private SendPacket: (packet: WSClientPacket) => void
+
     private LoadPreloaded() {
         this.player = this.preload
         this.preload = undefined
@@ -75,6 +81,52 @@ class PlaybackController {
             this.player.played,
             this.player.duration,
         )
+    }
+
+    private async OnStatePacket(state: PlayState) {
+        if (state.shuffleActive != this.shuffle) {
+            this.shuffle = state.shuffleActive
+            this.Trigger("shuffle", state.shuffleActive)
+        }
+        if (state.playing != this.player?.isPlaying) {
+            if (state.playing) {
+                this.player?.Play()
+            } else {
+                this.player?.Pause()
+            }
+            this.Trigger("playPause", state.playing)
+        }
+
+        const lastSong = this.currentSong
+        const [queueSongs, loadedSongs] = await SongProvider.GetBatched([state.queue, state.loaded], true)
+        this.queue.Override(queueSongs, loadedSongs)
+        if (lastSong !== this.currentSong) {
+            this.PlaySong(this.currentSong!)
+        }
+
+        this.Trigger("queueChange", queueSongs, loadedSongs)
+
+        if (Math.abs(state.currentTime - (this.player?.played ?? 0)) > 2) {
+            if (this.player) {
+                this.player.played = state.currentTime
+            }
+            this.Trigger("timeUpdate", state.currentTime, queueSongs[0].seconds)
+        }
+    }
+
+    constructor() {
+        GetState().then(state => {
+            if (state) {
+                this.OnStatePacket(state)
+            }
+        })
+        this.SendPacket = Connect((p) => {
+            if (p instanceof HttpError) {
+                throw p
+            } else {
+                this.OnStatePacket(p)
+            }
+        })
     }
 
     private async UpdatePlayer(song: Song): Promise<AudioPlayer> {
@@ -108,8 +160,8 @@ class PlaybackController {
             this.player?.Destroy()
             // @ts-ignore
             this.player = new SwarmFMRadio(
-                () => this.Trigger("playPause", true),
-                () => this.Trigger("playPause", false),
+                () => { this.Trigger("playPause", true) },
+                () => { this.Trigger("playPause", false) },
                 () => this.OnTimeUpdate(),
                 () => this.Next(),
                 (song) => this.Trigger("loadedSong", song, this.player!.GetIframe()),
@@ -163,14 +215,18 @@ class PlaybackController {
         if (song || songs) {
             this.TriggerQueue()
             this.PlaySong(this.currentSong!)
+            this.SendQueue()
         }
         else {
             this.player?.Play()
         }
 
+        this.SendPacket({ type: "play", data: {} })
     }
     public Pause() {
         this.player?.Pause()
+
+        this.SendPacket({ type: "pause", data: {} })
     }
     public PlayPause() {
         if (this.player?.isPlaying) {
@@ -186,23 +242,27 @@ class PlaybackController {
         }
 
         this.player.played = time
+
         this.Trigger("timeUpdate", time, this.player.duration)
+        this.SendPacket({
+            type: "skip", data: {
+                time: time
+            }
+        })
     }
     public SeekPercent(percent: number) {
         if (!this.player) {
             return
         }
 
-        this.player.played = this.player.duration * percent
-        this.Trigger("timeUpdate", this.player.duration * percent, this.player.duration)
+        this.Seek(this.player.duration * percent)
     }
     public SeekSkip(relative: number) {
         if (!this.player) {
             return
         }
 
-        this.player.played += relative
-        this.Trigger("timeUpdate", this.player.played, this.player.duration)
+        this.Seek(this.player.played + relative)
     }
 
     public SetShuffle(shuffle: boolean) {
@@ -213,6 +273,12 @@ class PlaybackController {
 
         this.shuffle = shuffle
         this.Trigger("shuffle", shuffle)
+        this.SendPacket({
+            type: "shuffle", data: {
+                active: shuffle,
+                queue: this.queue.queue.map(s => s.id)
+            }
+        })
     }
     public ToggleShuffle() {
         this.SetShuffle(!this.shuffle)
@@ -247,6 +313,7 @@ class PlaybackController {
         }
 
         this.PlaySong(nextSong)
+        this.SendPacket({ type: "next", data: {} })
     }
     public async Previous() {
         if (this.repeat || (this.player && this.player.played > 10)) {
@@ -263,6 +330,7 @@ class PlaybackController {
         this.TriggerQueue()
 
         this.PlaySong(nextSong)
+        this.SendQueue()
     }
 
     public SkipTo(song: Song) {
@@ -270,10 +338,13 @@ class PlaybackController {
         this.TriggerQueue()
 
         this.PlaySong(this.currentSong!)
+        this.SendQueue()
     }
     public AddToQueue(song: Song) {
         this.queue.Add(song)
         this.TriggerQueue()
+
+        this.SendQueue()
     }
     public RemoveFromQueue(song: Song) {
         const previousSong = this.queue.currentSong
@@ -284,6 +355,7 @@ class PlaybackController {
         }
 
         this.TriggerQueue()
+        this.SendQueue()
     }
     public ReorderQueue(ids: id[]) {
         const previousSong = this.currentSong
@@ -294,6 +366,7 @@ class PlaybackController {
         }
 
         this.TriggerQueue()
+        this.SendQueue()
     }
 
     public AddCallback<K extends keyof Callbacks>(event: K, callback: Callbacks[K]) {
@@ -311,6 +384,14 @@ class PlaybackController {
     }
     private TriggerQueue() {
         this.Trigger("queueChange", this.queue.queue, this.queue.loaded)
+    }
+    private SendQueue() {
+        this.SendPacket({
+            type: "updateQueue", data: {
+                queue: this.queue.queue.map(s => s.id),
+                loaded: this.queue.loaded.map(s => s.id)
+            }
+        })
     }
 }
 

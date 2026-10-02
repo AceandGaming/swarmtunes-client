@@ -71,7 +71,7 @@
     let currentPage: Page = $state(pages.home)
     $effect(() => {
         const name = url.pathname.split("/")[1]
-        console.log(name)
+        console.log("Navigating to", name)
         if (name in pages) {
             currentPage = pages[name]
         }

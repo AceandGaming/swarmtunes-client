@@ -37,6 +37,10 @@ export default class SongQueue {
         this.LoadSongs(songs)
         this.UpdateQueue(shuffle)
     }
+    public Override(queue: Song[], loaded: Song[]) {
+        this.songs = queue
+        this.loadedSongs = loaded
+    }
 
     public Add(song: Song) {
         this.songs.splice(this.queuePointer + 1, 0, song)
