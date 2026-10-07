@@ -19,6 +19,7 @@ export default class SwarmFMRadio extends AudioPlayer {
 
     private iframe: HTMLIFrameElement
     private api: SwarmFMApi
+    private RemoveToast: undefined | (() => void)
 
     public GetIframe() {
         return this.iframe
@@ -98,12 +99,13 @@ export default class SwarmFMRadio extends AudioPlayer {
     }
 
     public async Load(song: Song): Promise<void> {
-        const RemoveToast = Toasts.AddPersistent("Loading...")
+        this.RemoveToast?.()
+        this.RemoveToast = Toasts.AddPersistent("Loading...")
         try {
             await this.api.WaitForReady()
         }
         finally {
-            RemoveToast()
+            this.RemoveToast()
         }
     }
 
@@ -116,6 +118,7 @@ export default class SwarmFMRadio extends AudioPlayer {
     }
     public Destroy(): Promise<void> | void {
         this.iframe.remove()
+        this.RemoveToast?.()
     }
     public SetVolume(volume: number): void {
         this.api.volume = volume

@@ -8,7 +8,6 @@
     import ItemCards from "@ts/ui/item-cards.svelte"
     import ItemList from "@ts/ui/item-list.svelte"
     import Link from "@ts/ui/components/link.svelte"
-    import Device from "@ts/device.svelte"
     import Seek from "@ts/ui/controls/seek.svelte"
     import { IconPlayerPlayFilled, IconX } from "@tabler/icons-svelte-runes"
     import { Search } from "@ts/api/song"
@@ -80,31 +79,30 @@
                             </div>
                         </div>
                     {/if}
-                    {#if !Device.behavesMobile}
-                        <div class="box">
-                            {const meta = $derived(GetSwarmFMMetadata())}
-                            <div class="text">
-                                <h2>SwarmFM</h2>
-                            </div>
-                            {#if meta === undefined}
-                                <div class="loading-text"></div>
-                            {:else}
-                                <div class="swarmfm">
-                                    {const song = $derived(meta.current)}
-                                    
-                                    <div class="cover" onclick={() => PlaybackState.Play({swarmfm: true})} role="button" tabindex="0">
-                                        <img src="/swarmfm.png" alt="">
-                                        <div class="overlay"><IconPlayerPlayFilled size="unset" /></div>
-                                    </div>
-                                    <div class="info">
-                                        <h1>{song.name}</h1>
-                                        <h2 class="sub-text">{song.artist}</h2>
-                                    </div>
-                                    <Seek played={GetSwarmFMTime()} duration={song.duration} />
-                                </div>
-                            {/if}
+                    <div class="box">
+                        <div class="text">
+                            <h2>SwarmFM</h2>
                         </div>
-                    {/if}
+                        <div class="swarmfm">
+                            {const meta = $derived(GetSwarmFMMetadata())}
+                            {const song = $derived(meta ? meta.current : undefined)}
+                            
+                            <div class="cover" onclick={() => PlaybackState.Play({swarmfm: true})} role="button" tabindex="0">
+                                <img src="/swarmfm.png" alt="">
+                                <div class="overlay"><IconPlayerPlayFilled size="unset" /></div>
+                            </div>
+                            <div class="info">
+                                {#if song === undefined}
+                                    <div class="loading-text"></div>
+                                {:else}
+                                    <h1>{song.name}</h1>
+                                    <h2 class="sub-text">{song.artist}</h2>
+                                {/if}
+                            </div>
+                            <Seek played={GetSwarmFMTime()} duration={song ? song.duration : 0} />
+                        </div>
+         
+                    </div>
                 </div>
             </section>
             <section>

@@ -23,6 +23,7 @@ export default class YoutubePlayer extends AudioPlayer {
     private paused = true
     private updateId: number
     private ready = false
+    private RemoveToast: undefined | (() => void)
 
     public GetIframe() {
         return this.iframe
@@ -118,12 +119,13 @@ export default class YoutubePlayer extends AudioPlayer {
 
 
     public async Load(song: Song) {
-        const RemoveToast = Toasts.AddPersistent("Loading...")
+        this.RemoveToast?.()
+        this.RemoveToast = Toasts.AddPersistent("Loading...")
         try {
             await this.WaitForReady()
         }
         catch (e) {
-            RemoveToast()
+            this.RemoveToast()
             throw e
         }
 
@@ -141,7 +143,7 @@ export default class YoutubePlayer extends AudioPlayer {
         })
         this.player.setPlaybackQuality('small')
 
-        RemoveToast()
+        this.RemoveToast()
     }
     public Play(): void {
         this.player.playVideo()
@@ -157,6 +159,8 @@ export default class YoutubePlayer extends AudioPlayer {
 
         this.player.destroy()
         this.iframe.remove()
+
+        this.RemoveToast?.()
     }
 
 }
