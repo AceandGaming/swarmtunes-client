@@ -45,6 +45,7 @@ select {
 
 p {
     user-select: text;
+    -webkit-user-select: text;
     white-space: pre-wrap;
 }
 

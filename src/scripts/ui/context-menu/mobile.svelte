@@ -14,14 +14,12 @@
             return
         }
 
-        if (MenuState.visible) {
-            event.stopImmediatePropagation()
-        }
         MenuState.visible = false
     }
 </script>
 
 <svelte:document on:touchstart|capture|nonpassive={OnClick}/>
+
 <menu 
     id="context-menu"
     class:visible={MenuState.visible}
@@ -59,6 +57,10 @@
     {/each}
 </menu>
 
+<div class="background">
+
+</div>
+
 <style>
     #context-menu {
         position: fixed;
@@ -86,6 +88,32 @@
     }
     #context-menu.visible {
         transform: translateY(0);
+    }
+
+    .background {
+        position: fixed;
+        inset: 0;
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: all;
+
+        background-color: #00000055;
+        backdrop-filter: blur(2px);
+
+        transition:
+            opacity 0.2s ease,
+            visibility 0s linear 0.2s;
+    }
+
+    #context-menu.visible ~ .background {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+
+        transition:
+            opacity 0.2s ease,
+            visibility 0s linear 0s;
     }
 
     li {

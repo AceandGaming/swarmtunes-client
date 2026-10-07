@@ -58,6 +58,7 @@ body > iframe {
     font-size: inherit;
 
     user-select: none;
+    -webkit-user-select: none;
 }
 
 button {
