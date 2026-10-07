@@ -6,8 +6,6 @@
     import Playback from "@ts/playback.svelte"
     import fullscreen from "./fullscreen.svelte.ts"
     import type { Color } from "colorthief"
-    import PlaylistProvider from "@ts/playlist-provider.ts"
-    import { SelectPlaylist } from "@ts/ui/popup.svelte.ts"
     import { CreateSongContextMenu } from "@ts/context-menus/song.ts"
     import { CopyToClipboard } from "@ts/ui/popup.svelte.ts"
     import ContextMenu from "@ts/context-menu.svelte.ts"
@@ -15,6 +13,8 @@
     import { GetSongColour } from "@ts/misc.ts";
     import Device from "@ts/device.svelte.ts"
     import { auth } from "@ts/login.svelte.ts"
+    import PlaybackState from "@ts/playback.svelte"
+    import { AddToPlaylist } from "@ts/ui/popup.svelte.ts";
     
     let fullscreenElement: HTMLDivElement
 
@@ -111,23 +111,6 @@
     function OnFullscreenChange() {
         if (document.fullscreenElement != fullscreenElement) {
             fullscreen.Hide()
-        }
-    }
-
-    async function OnAddToPlaylistClick(e: MouseEvent) {
-        if (!Playback.currentSong) {
-            return
-        }
-
-        const playlist = await SelectPlaylist()
-        if (!playlist) {
-            return
-        }
-
-        try {
-            await PlaylistProvider.AddSongsToPlaylist(playlist.id, [Playback.currentSong.id])
-        } catch (e) {
-            console.error(e)
         }
     }
 
@@ -232,14 +215,14 @@
             <span class="title">{Playback.currentSong?.displayTitle ?? "Title"}</span>
             <span class="artists sub-text">{Playback.currentSong?.displayArtists ?? "Artists"}</span>   
         </div>
-        {#if auth.loggedIn}
-            <button class="add-to-playlist icon-button" onclick={OnAddToPlaylistClick}><IconPlaylistAdd size="unset"/></button>
+        {#if auth.loggedIn && Playback.currentSong}
+            <button class="add-to-playlist icon-button" onclick={() => AddToPlaylist(Playback.currentSong!)}><IconPlaylistAdd size="unset"/></button>
         {/if}
     </div>
-    <Seek played={Playback.played} duration={Playback.duration} thinkness={10} />
-    <MediaControls iconSize={40} />
+    <Seek played={Playback.played} duration={Playback.duration} thinkness={10} onSeek={(f: number) => PlaybackState.SeekPercent(f)} />
+    <MediaControls iconSize={40} gap={Device.behavesMobile ? 15 : 5}/>
 
-    {#if Device.looksMobile}
+    {#if Device.behavesMobile}
         <div class="dragger" ontouchend={fullscreen.Hide}><span></span></div>
     {:else}
         <button class="close icon-button" onclick={fullscreen.Hide}><IconX size={40} /></button>
@@ -490,7 +473,7 @@
             
 
         .art > :global(.cover){
-            width: min(45vh, 90vw);
+            width: min(35vh, 45dvh, 90vw);
         }
     }
 </style>

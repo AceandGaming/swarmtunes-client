@@ -142,11 +142,12 @@
                 <page.default />
             {/await}
         {/if}
-        <Toast />
     </div>
 </main>
 <ContextMenu />
 <Fullscreen />
+<Toast />
+
 {#key popup}
     {#if popup}
         {const Comp = popup.component}

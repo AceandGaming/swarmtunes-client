@@ -2,7 +2,7 @@
     import { type Collection, type Playlist, Song } from "@ts/models"
     import Cover from "@ts/ui/cover.svelte"
     import { flipNoScale, FormatDuration } from "@ts/misc"
-    import { IconDotsVertical, IconCircleArrowDownFilled as IconDown, IconHeart, IconHeartFilled } from "@tabler/icons-svelte-runes"
+    import { IconDotsVertical, IconDots, IconCircleArrowDownFilled as IconDown, IconHeart, IconHeartFilled } from "@tabler/icons-svelte-runes"
     import { MobileHoldSvelte } from "@ts/mobile-hold"
     import { GetDownloads } from "@ts/song-downloads.svelte"
     import type Sortable from "sortablejs"
@@ -11,6 +11,7 @@
     import ContextMenu from "@ts/context-menu.svelte"
     import { ToggleSongLike, IsSongLiked } from "@ts/liked-songs.svelte"
     import { auth } from "@ts/login.svelte"
+    import Device from "@ts/device.svelte"
 
     type Item = Playlist | Song | Collection
     type Props<T extends Item> = {
@@ -131,7 +132,7 @@
                 <p class="sub-text duration">{FormatDuration(item.seconds, true)}</p>
             {/if}
             {#if contextMenu && extraInfo}
-                <button class="context-menu-button icon-button" onclick={(e) => {e.stopPropagation(); OpenContextMenu(e, item)}}>
+                <button class="context-menu-button icon-button" style:--button-height={Device.behavesMobile ? "65%" : "50%"} onclick={(e) => {e.stopPropagation(); OpenContextMenu(e, item)}}>
                     <IconDotsVertical size="100%" />
                 </button>
             {/if}
@@ -191,7 +192,7 @@
     }
 
     li > button {
-        height: 50%;
+        height: var(--button-height, 50%);
         aspect-ratio: 1;
     }
     .duration {

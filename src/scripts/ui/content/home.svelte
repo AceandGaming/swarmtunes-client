@@ -265,7 +265,7 @@
         cursor: pointer;
     }
     .swarmfm > .cover img {
-        width: 100%;
+        width: auto;
         height: 100%;
         object-fit: cover;
     }
