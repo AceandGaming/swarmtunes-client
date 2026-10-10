@@ -473,7 +473,7 @@
             
 
         .art > :global(.cover){
-            width: min(35vh, 45dvh, 90vw);
+            width: min(45dvh, 90vw);
         }
     }
 </style>

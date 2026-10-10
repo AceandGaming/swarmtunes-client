@@ -1,6 +1,18 @@
 import PlaybackController from "@ts/playback"
 import type { Song } from "@ts/models/song"
 import Device from "@ts/device.svelte"
+import { isTauri, invoke } from '@tauri-apps/api/core'
+
+function UpdateTauriMetadata(song: Song) {
+    if (!isTauri()) {
+        return
+    }
+
+    invoke("update_metadata", {
+        title: song.displayTitle,
+        subtitle: song.displayArtists,
+    })
+}
 
 function UpdateMediaMetadata(song: Song) {
     if (!navigator.mediaSession) {
@@ -78,6 +90,7 @@ export function InitMediaSession() {
     })
     PlaybackController.AddCallback('loadedSong', (song) => {
         UpdateMediaMetadata(song)
+        UpdateTauriMetadata(song)
     })
     PlaybackController.AddCallback('queueChange', (_, loaded) => {
         UpdateMediaControls({

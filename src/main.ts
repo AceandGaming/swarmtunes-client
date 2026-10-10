@@ -12,6 +12,7 @@ import PlaybackController from "@ts/playback"
 import SongProvider from "@ts/song-provider"
 import { LoadEmotes } from "@ts/emotes.ts"
 
+
 document.cookie = "cookie=A cookie for Neuro-sama; max-age=260000; secure; samesite=none; path=/"
 
 const songId = GetSongId()
