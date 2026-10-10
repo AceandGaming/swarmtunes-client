@@ -1,5 +1,5 @@
 use discord_rich_presence::{
-    activity::{Activity, ActivityType, Assets},
+    activity::{Activity, ActivityType, Assets, Button},
     DiscordIpc, DiscordIpcClient,
 };
 
@@ -15,6 +15,7 @@ pub fn start_discord() -> Result<DiscordIpcClient, Box<dyn std::error::Error>> {
 
 pub fn update_activity(
     discord: &mut DiscordIpcClient,
+    song_id: &str,
     details: &str,
     state: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -23,7 +24,11 @@ pub fn update_activity(
             .activity_type(ActivityType::Listening)
             .details(details)
             .state(state)
-            .assets(Assets::new().large_image("icon").large_text("Swarmtunes")),
+            .assets(Assets::new().large_image("icon").large_text("Swarmtunes"))
+            .buttons(vec![Button::new(
+                "Listen on Swarmtunes",
+                format!("https://swarmtunes.com/?song={}", song_id),
+            )]),
     )?;
 
     Ok(())

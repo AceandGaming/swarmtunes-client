@@ -6,13 +6,14 @@ use tauri::Manager;
 
 #[tauri::command]
 fn update_metadata(
+    id: String,
     title: String,
     subtitle: String,
     discord: tauri::State<'_, Mutex<discord_rich_presence::DiscordIpcClient>>,
 ) -> Result<(), String> {
     let mut client = discord.lock().map_err(|e| e.to_string())?;
 
-    update_activity(&mut client, &title, &subtitle).map_err(|e| e.to_string())
+    update_activity(&mut client, &id, &title, &subtitle).map_err(|e| e.to_string())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

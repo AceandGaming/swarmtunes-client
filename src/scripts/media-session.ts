@@ -9,6 +9,7 @@ function UpdateTauriMetadata(song: Song) {
     }
 
     invoke("update_metadata", {
+        id: song.id,
         title: song.displayTitle,
         subtitle: song.displayArtists,
     })
