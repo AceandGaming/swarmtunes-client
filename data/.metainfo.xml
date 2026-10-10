@@ -19,15 +19,11 @@
         <name>Ace and Gaming</name>
     </developer>
 
-    <description>
-        <p> Swarmtunes is a music app for all Neuro and Evil covers of songs, as well as official
-            releases and collaborations. It features accounts, playlists, and songs grouped by
-            streamer.
-        </p>
-        <p>
-            <i>Swarmtunes is a <b>fan-made app</b> and is not associated with Vedal, Neuro-sama, or
-                SwarmFM.</i>
-        </p>
+    <description> Swarmtunes is a music app for all Neuro and Evil covers of songs, as well as
+        official releases and collaborations. It features accounts, playlists, and songs grouped by
+        streamer. <em>Swarmtunes is a fan-made app and is not associated with Vedal, Neuro-sama, or
+        SwarmFM.</em>
+
     </description>
 
     <launchable type="desktop-id">
