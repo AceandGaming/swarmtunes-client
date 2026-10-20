@@ -21,6 +21,9 @@
 html {
     scrollbar-color: var(--colour-accent) transparent;
     scrollbar-width: thin;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+
 }
 
 ::-webkit-scrollbar {
@@ -43,13 +46,33 @@ body {
 
 body > iframe {
     position: fixed;
+    position-anchor: --iframe-dock;
+
     top: 0;
+
+    width: 0;
+    height: 0;
+
     z-index: -100;
-    pointer-events: none;
+
     border: none;
-    pointer-events: none !important;
     border-radius: 10px;
+
+    pointer-events: none !important;
 }
+
+body > iframe.docked {
+    position-anchor: --iframe-dock;
+
+    top: anchor(top);
+    left: anchor(left);
+
+    width: anchor-size(width);
+    height: anchor-size(height);
+
+    z-index: 12;
+}
+
 
 * {
     margin: 0;

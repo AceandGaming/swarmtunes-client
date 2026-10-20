@@ -2,6 +2,7 @@ import { quintOut } from 'svelte/easing'
 import type { AnimationConfig, FlipParams } from 'svelte/animate'
 import type { Song } from '@ts/models'
 import ColourCache from '@ts/colour-cache'
+import type { Color } from 'colorthief'
 
 export function flipNoScale(node: Element, { from, to }: { from: DOMRect; to: DOMRect }, params: FlipParams = {}): AnimationConfig {
     const dx = from.left - to.left
@@ -61,4 +62,11 @@ export function FormatDuration(seconds: number, compact = false) {
     }
 
     return `${negative ? "-" : ""}${minutes}m ${secs}s`
+}
+export function ColourCss(colour: Color, func?: (h: number, s: number, l: number) => [number, number, number]) {
+    let { h, s, l} = colour.hsl()
+    if (func) {
+        [h, s, l] = func(h, s, l)
+    }
+    return `hsl(${h}, ${s}%, ${l}%)`
 }

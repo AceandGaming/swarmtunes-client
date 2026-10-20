@@ -1,99 +1,64 @@
 <script lang="ts">
-    import { IconPlaylistAdd, IconX, IconShare3, IconDots, IconBrandYoutube as IconVideo } from "@tabler/icons-svelte-runes";
+    import Visability from "./fullscreen.svelte.ts"
+    import PlaybackState from "@ts/playback.svelte.ts"
+    import MediaControls from "@ts/ui/controls/media-controls.svelte"
+    import Seek from "@ts/ui/controls/seek.svelte"
     import Cover from "@ts/ui/cover.svelte"
-    import Seek from "@ts/ui/controls/seek.svelte";
-    import MediaControls from "@ts/ui/controls/media-controls.svelte";
-    import Playback from "@ts/playback.svelte"
-    import fullscreen from "./fullscreen.svelte.ts"
-    import type { Color } from "colorthief"
-    import { CreateSongContextMenu } from "@ts/context-menus/song.ts"
-    import { CopyToClipboard } from "@ts/ui/popup.svelte.ts"
-    import ContextMenu from "@ts/context-menu.svelte.ts"
-    import { ShareSongV1 } from "@ts/api/song.ts"
-    import { GetSongColour } from "@ts/misc.ts";
     import Device from "@ts/device.svelte.ts"
+    import { IconDots, IconPlaylistAdd, IconShare3, IconBrandYoutube as IconVideo, IconBrandYoutubeFilled as IconVideoFilled, IconX } from "@tabler/icons-svelte-runes"
+    import { ColourCss, GetSongColour } from "@ts/misc"
+    import type { Color } from "colorthief"
     import { auth } from "@ts/login.svelte.ts"
-    import PlaybackState from "@ts/playback.svelte"
-    import { AddToPlaylist } from "@ts/ui/popup.svelte.ts";
-    
-    let fullscreenElement: HTMLDivElement
+    import { DockIFrame } from "@ts/iframe-dock.svelte.ts"
+    import { CreateSongContextMenu } from "@ts/context-menus/song.ts"
+    import ContextMenu, { ContextMenuGroup } from "@ts/context-menu.svelte.ts"
+    import { AddToPlaylist, CopyToClipboard } from "@ts/ui/popup.svelte.ts"
+    import { ShareSongV1 } from "@ts/api/song.ts"
+
+    let videoEnabled: boolean = $state(false)
+    let showVideo = $derived(PlaybackState.iframe !== undefined && videoEnabled && Visability.visible)
+
+    const info = $derived.by(() => {
+        const song = PlaybackState.currentSong
+        return {
+            title: song?.displayTitle ?? "Title",
+            artists: song?.displayArtists ?? "Artists",
+            singers: song?.displaySingers,
+            date: song?.displayDate
+        }
+    })
 
     let colour: Color | undefined = $state()
-
-    let topColour = $state("var(--colour-surface)");
-    let bottomColour = $state("var(--colour-surface)");
-
-    let wakeLock: any
-
-    let showVideo: boolean = $state(false)
-
     $effect(() => {
-        if (!Playback.iframe || !fullscreen.visible) {
-            showVideo = false
-        }
-    })
-    $effect(() => {
-        if (!Playback.currentSong) {
+        const song = PlaybackState.currentSong
+        if (!song) {
+            colour = undefined
             return
         }
-        GetSongColour(Playback.currentSong).then(c => colour = c)
+        GetSongColour(song).then(c => colour = c)
     })
 
-    $effect(() => {
+    const colours: {top?: string, bottom?: string} = $derived.by(() => {
         if (!colour) {
-            return
-        }
-        const hsl = colour.hsl()
-        topColour = `hsl(${hsl.h}, ${hsl.s * 2}%, ${Math.min(hsl.l * 1.2, 80)}%)`
-        bottomColour = `hsl(${hsl.h}, ${hsl.s * 1.5}%, ${Math.min(hsl.l / 1.5, 40)}%)`
-    })
-
-    async function UpdateWakeLock() {
-        if (!('wakeLock' in navigator)) {
-            console.warn('Screen Wake Lock API not supported.');
-            return
-        }
-        if (document.visibilityState !== 'visible') {
-            return
+            return { }
         }
 
-        if (fullscreen.visible) {
-            if (wakeLock) {
-                return
-            }
-            console.log("Requesting wake lock")
-
-            wakeLock = await navigator.wakeLock.request('screen')
-            wakeLock.addEventListener('release', () => {
-                console.log("Wake lock released")
-                wakeLock = undefined
-                if (fullscreen.visible) {
-                    UpdateWakeLock()
-                }
-            })
-            console.log("Wake lock acquired")
+        return {
+            top: ColourCss(colour, (h, s, l) => [h, s * 2, Math.min(l * 1.2, 80)]),
+            bottom: ColourCss(colour, (h, s, l) => [h, s * 1.5, Math.min(l / 1.5, 40)])
         }
-        else {
-            console.log("Releasing wake lock")
-            wakeLock?.release()
-            wakeLock = undefined
-        }
-    }
-
-    $effect(() => {
-        UpdateWakeLock()
     })
 
     let offset = $state(0)
-    let startOffset = 0
+    let startY = 0
 
     function OnTouchStart(e: TouchEvent) {
         offset = 0
-        startOffset = e.touches[0].clientY
+        startY = e.touches[0].clientY
     }
     function OnTouchMove(e: TouchEvent) {
         const y = e.touches[0].clientY
-        const diff = y - startOffset
+        const diff = y - startY
 
         if (diff > 20 || offset > 0) {
             offset = diff
@@ -104,21 +69,17 @@
     }
     function OnTouchEnd() {
         if (offset > window.innerHeight * 0.1) {
-            fullscreen.Hide()
+            Visability.Hide()
         }
         offset = 0
     }
-    function OnFullscreenChange() {
-        if (document.fullscreenElement != fullscreenElement) {
-            fullscreen.Hide()
-        }
-    }
 
     function ShowContextMenu(event: MouseEvent|TouchEvent) {
-        if (!Playback.currentSong) {
+        if (!PlaybackState.currentSong) {
             return   
         }
-        const options = CreateSongContextMenu(Playback.currentSong)
+        const options = CreateSongContextMenu(PlaybackState.currentSong).filter(o => o.group !== ContextMenuGroup.Queue)
+
 
         const x = event instanceof MouseEvent ? event.clientX : event.changedTouches[0].clientX
         const y = event instanceof MouseEvent ? event.clientY : event.changedTouches[0].clientY
@@ -126,11 +87,11 @@
         ContextMenu.Show({ options, x, y })
     }
     async function Share() {
-        if (!Playback.currentSong) {
+        if (!PlaybackState.currentSong) {
             return
         }
 
-        const url = "https://share.swarmtunes.com/?s=" + (await ShareSongV1(Playback.currentSong.id))
+        const url = "https://share.swarmtunes.com/?s=" + (await ShareSongV1(PlaybackState.currentSong.id))
         try {
             CopyToClipboard(url)
         }
@@ -139,49 +100,28 @@
         }
     }
 
-    // svelte-ignore non_reactive_update
-    let fullscreenAnchor: HTMLDivElement
-
-    function UpdateIFrame() {
-        if (!Playback.iframe) {
-            return
-        }
-        if (!fullscreen.visible || !fullscreenAnchor) {
-            Playback.iframe.style = ""
-            return
-        }
-
-        const rect = fullscreenAnchor.getBoundingClientRect()
-    
-        Playback.iframe.style = `
-            left: ${rect.left}px;
-            top: ${rect.top}px;
-            width: ${rect.width}px;
-            height: ${rect.height}px;
-            z-index: 15;
-        `
-    }
-    $effect(() => {
-        showVideo;
-        UpdateIFrame()
-    })
-
 </script>
 
-<svelte:document onfullscreenchange={OnFullscreenChange} onvisibilitychange={UpdateWakeLock}></svelte:document>
-<svelte:window onresize={UpdateIFrame} />
+{#snippet videoButton()}
+    {#if PlaybackState.iframe}
+        <button class="video-button icon-button" onclick={() => videoEnabled = !videoEnabled}>
+            {#if showVideo}
+                <IconVideoFilled size="40" />
+            {:else}
+                <IconVideo size="40" />
+            {/if}
+        </button>
+    {/if}
+{/snippet}
 
-
-<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div 
     id="fullscreen"
-    class:visible={fullscreen.visible}
+    class:visible={Visability.visible}
     class:dragging={offset > 0}
     class:video={showVideo}
-    inert={!fullscreen.visible}
 
-    style:--tc={topColour}
-    style:--bc={bottomColour}
+    style:--c1={colours.top}
+    style:--c2={colours.bottom}
     style:--offset={`${offset}px`}
 
     ontouchstart={OnTouchStart}
@@ -189,73 +129,122 @@
     ontouchend={OnTouchEnd}
 
     oncontextmenu={ShowContextMenu}
-
-    bind:this={fullscreenElement}
 >
-    <div class="date">{Playback.currentSong?.displayDate ?? ""}</div>
-    <div class="art-container">
-        <div class="art">
-            {#if !showVideo}
-                <Cover item={Playback.currentSong} />
+    {#if Device.behavesMobile}
+        <div class="dragger"></div>
+    {/if}
+    <div class="top">
+        <div>
+            {#if showVideo}
+                {@render videoButton()}
             {:else}
-                <div class="iframe-anchor" bind:this={fullscreenAnchor}></div>
-            {/if}
-            {#if Playback.iframe}
-                <button class="video-button icon-button" onclick={() => showVideo = !showVideo}><IconVideo size="40" /></button>
+                {#if PlaybackState.currentSong}
+                    <button class="context-menu icon-button" onclick={ShowContextMenu}><IconDots size="100%" /></button>
+                {/if}
             {/if}
         </div>
+        <h3>{info.date}</h3>
+        <div>
+            {#if Device.behavesMobile}
+                {#if PlaybackState.currentSong}
+                    <button class="share icon-button" onclick={Share}><IconShare3 size="100%" /></button>
+                {/if}
+            {:else}
+                <button class="close icon-button" onclick={Visability.Hide}><IconX size="100%" /></button>
+            {/if}
+        </div>
+    </div>
 
+    <div class="content-container">
+        <div class="content">
+            {#if showVideo}
+                <div class="video" {@attach offset == 0 && DockIFrame()}></div>
+            {:else}
+                <Cover item={PlaybackState.currentSong}/>
+            {/if}
+            {#if !showVideo}
+                {@render videoButton()}
+            {/if}
+        </div>
         {#if !showVideo}
-            <span style="font-size: medium; font-weight: bold">{Playback.currentSong?.displaySingers ?? ""}</span>
+            <h3>{info.singers}</h3>
         {/if}
     </div>
-    
     <div class="info-container">
         <div class="info">
-            <span class="title">{Playback.currentSong?.displayTitle ?? "Title"}</span>
-            <span class="artists sub-text">{Playback.currentSong?.displayArtists ?? "Artists"}</span>   
+            <h1>{info.title}</h1>
+            <h2>{info.artists}</h2>
         </div>
-        {#if auth.loggedIn && Playback.currentSong}
-            <button class="add-to-playlist icon-button" onclick={() => AddToPlaylist(Playback.currentSong!)}><IconPlaylistAdd size="unset"/></button>
+        
+        {#if auth.loggedIn && PlaybackState.currentSong}
+            <button class="add-to-playlist icon-button" onclick={() => AddToPlaylist(PlaybackState.currentSong!)}><IconPlaylistAdd size="50"/></button>
         {/if}
     </div>
-    <Seek played={Playback.played} duration={Playback.duration} thinkness={10} onSeek={(f: number) => PlaybackState.SeekPercent(f)} />
-    <MediaControls iconSize={40} gap={Device.behavesMobile ? 15 : 5}/>
-
-    {#if Device.behavesMobile}
-        <div class="dragger" ontouchend={fullscreen.Hide}><span></span></div>
-    {:else}
-        <button class="close icon-button" onclick={fullscreen.Hide}><IconX size={40} /></button>
-    {/if}
-
-    {#if Device.behavesMobile && Playback.currentSong}
-        <button class="share icon-button" onclick={Share}><IconShare3 size={35} /></button>
-        <button class="context-menu icon-button" onclick={ShowContextMenu}><IconDots size={35} /></button>
-    {/if}
+    <div class="seek">
+        <Seek played={PlaybackState.played} duration={PlaybackState.duration} onSeek={(f: number) => PlaybackState.SeekPercent(f)} />
+    </div>
+    <div class="controls">
+        <MediaControls iconSize={40} gap={Device.behavesMobile ? 15 : 5}/>
+    </div>
 </div>
 
 <style>
+    @property --c1 {
+        syntax: "<color>";
+        inherits: false;
+        initial-value: #000;
+    }
+    @property --c2 {
+        syntax: "<color>";
+        inherits: false;
+        initial-value: #000;
+    }
+
+
+    #fullscreen {
+        --c1: var(--colour-surface);
+        --c2: var(--colour-surface);
+
+        position: fixed;
+        inset: 0;
+        z-index: 5;
+
+        padding: clamp(1rem, 5vw, 2rem);
+        gap: clamp(1rem, 5vh, 2rem);
+
+        font-size: clamp(1rem, 3vmin, 2rem);
+
+        display: grid;
+        background: linear-gradient(
+            to bottom,
+            var(--c1),
+            var(--c2)
+        );
+
+        transform: translateY(var(--offset));
+
+        grid-template-rows: auto 5fr auto auto 1fr;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "top"
+            "content"
+            "info"
+            "seek"
+            "controls";
+
+        transition: --c1 1s ease, --c2 1s ease, transform 0.2s ease;
+    }
+    #fullscreen.dragging {
+        transition: --c1 1s ease, --c2 1s ease;
+    }
+    #fullscreen:not(.visible) {
+        transform: translateY(100dvh);
+    }
     #fullscreen :global(*) {
-        color: white !important;
+        color: white;
     }
 
-    .share {
-        position: absolute;
-        top: var(--gap);
-        right: var(--gap);
-    }
 
-    .context-menu {
-        position: absolute;
-        top: var(--gap);
-        left: var(--gap);
-    }
-
-    .close {
-        position: absolute;
-        top: var(--gap);
-        right: var(--gap);
-    }
     .dragger {
         position: absolute;
         top: 0;
@@ -263,65 +252,73 @@
         transform: translateX(-50%);
 
         padding: 12px;
+    
+        &:after {
+            content: "";
+            display: block;
+            width: 20vw;
+            height: 3px;
+
+            background-color: white;
+            border-radius: 99px;
+        }
     }
-    .dragger span {
-        display: block;
-        width: 20vw;
-        height: 3px;
-
-        background-color: white;
-        border-radius: 99px;
-    }
-
-    @property --tc {
-        syntax: "<color>";
-        inherits: false;
-        initial-value: #000;
-    }
-
-    @property --bc {
-        syntax: "<color>";
-        inherits: false;
-        initial-value: #000;
-    }
-
-    #fullscreen {
-        --gap: clamp(30px, 8vw, 80px);
-
-        position: fixed;
-        inset: 0;
-        z-index: 10;
-
-        display: grid;
-        padding: var(--gap);
-        gap: var(--gap);
-
-        background: linear-gradient(to bottom right, var(--tc), var(--bc));
-
-        transform: translateY(100%);
-        transition: --tc 1s ease, --bc 1s ease, transform 0.2s ease;
+    .top {
+        grid-area: top;
         
-        grid-template-rows: auto 2fr auto 1fr;
-        grid-template-columns: auto 1fr;
-        grid-template-areas:
-        "date date"
-        "art info"
-        "art controls"
-        "art seek";
-    }
-    #fullscreen.visible {
-        transform: translateY(var(--offset));
-    }
-    #fullscreen.visible.dragging {
-        transition: --tc 1s ease, --bc 1s ease; 
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+        
+        >div {
+            flex: 0 0 32px;
+        }
+        h3 {
+            flex: 1;
+            text-align: center;
+            font-size: 1rem;
+        }
     }
 
-    .date {
-        grid-area: date;
+    .content-container {
+        grid-area: content;
+        container-type: size;
 
-        font-size: medium; 
-        font-weight: bold;
-        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        gap: 5px;
+
+        .content {
+            position: relative;
+            display: inline;
+
+            filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.3));
+
+            > :global(.cover) {
+                height: min(100cqw, 100cqh);
+            }
+            > .video {
+                width: min(100cqw, 16/9 * 100cqh);
+                height: auto;
+                aspect-ratio: 16/9;
+            }
+            
+            .video-button {
+                position: absolute;
+                bottom: 2%;
+                right: 2%;
+                z-index: 20;
+            }
+        }
+        h3 {
+            font-size: 1rem;
+        }
     }
 
     .info-container {
@@ -329,151 +326,83 @@
 
         display: flex;
         flex-direction: row;
-
-        align-items: center;
-
-        gap: 10px;
-    }
-    .info-container .info {
-        flex: 1;
-
-        display: flex;
-        flex-direction: column;
-
-        justify-content: center;
-        text-align: center;
-        white-space: pre-wrap;
-
-        gap: 5px;
-    }
-    .info-container .title {
-        font-size: xx-large;
-        font-weight: 900;
-    }
-    .info-container .artists {
-        font-size: large;
-        font-weight: bold;
-    }
-
-    .add-to-playlist {
-        display: none;
-        width: 50px;
-    }
-
-    .art-container {
-        grid-area: art;
         
-        display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
 
-        gap: 20px;
-    }
-    .art {
-        position: relative;
-        filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.3))
-    }
-    .art .iframe-anchor {
-        aspect-ratio: 16/9;
-        width: auto;
-        max-width: 90vw;
-        height: 60vh;
-        background-color: var(--colour-surface-alt);
-        border-radius: 10px;
+        .info {
+            flex: 1;
+
+            h1, h2 {
+                min-width: 0;
+                white-space: wrap;
+            }
+            h1 {
+                font-size: 1.5em;
+                font-weight: 900;
+            }
+            h2 {
+                font-size: 1em;
+                font-weight: bold;
+            }
+        }
     }
 
-    .art > :global(.cover){
-        width: min(40vw, 80dvh - var(--gap));
-    }
-    .video-button {
-        position: absolute;
-        bottom: 2%;
-        right: 2%;
-        z-index: 20;
-    }
-
-    #fullscreen > :global(.seek) {
-        grid-area: seek;
-    }
-    #fullscreen > :global(.media-controls) {
+    .controls {
         grid-area: controls;
-    }
 
-    #fullscreen.video {
-        --gap: 10px;
+        display: flex;
 
         justify-content: center;
-        grid-template-rows: auto auto 5px auto;
-        grid-template-columns: min-content;
-        grid-template-areas:
-        "info"
-        "art"
-        "seek"
-        "controls"
     }
-    #fullscreen.video .date {
-        display: none;
+    
+    .seek {
+        grid-area: seek;
+
+        display: flex;
+        justify-content: center;
+
+        :global(.seek) {
+            height: 100%;
+            width: 100%;
+        }
     }
 
-    @media (max-width: 500px), (max-height: 500px) {
+    @media (min-aspect-ratio: 1/1) {
         #fullscreen {
-            --gap: clamp(10px, 1dvh, 80px);
-            padding: max(var(--gap), 4dvh) var(--gap);
-        }
+            background: linear-gradient(
+                to bottom right,
+                var(--c1),
+                var(--c2)
+            );
 
-        .info-container .title {
-            font-size: x-large;
-        }
-        .info-container .artists {
-            font-size: medium;
-        }
-        .art-container {
-            gap: 2px;
-        }
-    }
-
-    @media (max-aspect-ratio: 7/5) {
-        #fullscreen {
-            --gap: clamp(30px, 8vmin, 80px);
-
-            grid-template-rows: auto 1fr 1fr auto;
-            grid-template-columns: auto 1fr;
+            grid-template-rows: auto 1fr 1fr 1fr;
+            grid-template-columns: 2fr 3fr;
             grid-template-areas:
-            "date date"
-            "art info"
-            "art controls"
-            "seek seek";
+                "top top"
+                "content info"
+                "content controls"
+                "content seek";
         }
-    }
-
-    @media (max-aspect-ratio: 9/10) {
-        #fullscreen {
-            background: linear-gradient(to bottom, var(--tc), var(--bc));
-
-            justify-content: center;
-
-            grid-template-rows: repeat(5, auto);
-            grid-template-columns: min-content;
+        #fullscreen.video {
+            grid-template-rows: 0 auto 6fr auto 1fr;
+            grid-template-columns: 1fr;
             grid-template-areas:
-            "date"
-            "art"
-            "info"
-            "seek"
-            "controls";
-        }
-        #fullscreen:not(.video) {
-            .add-to-playlist {
-                display: block;
-            }
-            .info-container .info {
-                text-align: left;
-            }
-        }
-            
+                "top"
+                "info"
+                "content"
+                "seek"
+                "controls";
 
-        .art > :global(.cover){
-            width: min(45dvh, 90vw);
+            gap: 1rem;
+        }
+
+        .info-container  {
+            text-align: center;
+
+            button {
+                display: none;
+            }
         }
     }
 </style>
