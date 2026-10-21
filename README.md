@@ -11,7 +11,7 @@ Alternatively, you can use Swarmtunes on the [official website](https://swarmtun
 Swarmtunes welcomes contributions! The guides below will help you set up and run Swarmtunes locally.
 
 - [Client setup](https://github.com/AceandGaming/swarmtunes-client/blob/main/setup.md)
-- [Server setup](https://github.com/AceandGaming/swarmtunes-server/blob/main/server.md)
+- [Server setup](https://github.com/AceandGaming/swarmtunes-server/blob/main/setup.md)
 
 Once you've pushed your changes to your fork, you can open a [Pull Request](https://github.com/AceandGaming/swarmtunes-client/pulls).
 
