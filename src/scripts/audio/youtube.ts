@@ -11,7 +11,7 @@ export default class YoutubePlayer extends AudioPlayer {
         this.audio.currentTime = value
     }
     public get duration(): number {
-        const duration = this.audio.duration
+        const duration = this.currentSong ? this.currentSong.seconds : this.audio.duration
         return (duration > 0) ? duration : 0
     }
     public get isPlaying(): boolean {
@@ -26,6 +26,7 @@ export default class YoutubePlayer extends AudioPlayer {
 
 
     private audio: HTMLAudioElement
+    private currentSong: Song | undefined
 
     constructor(onPlay: () => void, onPause: () => void, onUpdate: () => void, onEnded: () => void) {
         super(onPlay, onPause, onUpdate, onEnded)
@@ -34,8 +35,16 @@ export default class YoutubePlayer extends AudioPlayer {
 
         this.audio.onplay = onPlay
         this.audio.onpause = onPause
-        this.audio.ontimeupdate = onUpdate
         this.audio.onended = onEnded
+
+        this.audio.ontimeupdate = () => {
+            
+            if (this.currentSong && this.audio.currentTime > this.currentSong.seconds) {
+                onEnded()
+            }
+
+            onUpdate()
+        }
     }
 
     public async Load(song: Song) {
@@ -45,6 +54,7 @@ export default class YoutubePlayer extends AudioPlayer {
         }
 
         const url = GetURLFromId(info.id)
+        this.currentSong = song
 
         this.audio.src = url
     }
