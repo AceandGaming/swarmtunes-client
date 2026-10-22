@@ -46,7 +46,7 @@ export function FormatDuration(seconds: number, compact = false) {
 
     const hours = Math.floor(absSeconds / 3600)
     const minutes = Math.floor((absSeconds % 3600) / 60)
-    const secs = Math.ceil(absSeconds % 60)
+    const secs = Math.floor(absSeconds % 60)
 
     if (compact && hours === 0) {
         return `${negative ? "-" : ""}${minutes}:${secs.toString().padStart(2, "0")}`
