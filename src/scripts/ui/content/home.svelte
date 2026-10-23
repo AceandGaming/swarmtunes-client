@@ -12,6 +12,7 @@
     import { IconPlayerPlayFilled, IconX } from "@tabler/icons-svelte-runes"
     import { Search } from "@ts/api/song"
     import { CreateSongContextMenu } from "@ts/context-menus"
+    import { type Collection } from "@ts/models"
 
     let query: string = $state("")
     let debouncedQuery = $state('');
@@ -30,6 +31,8 @@
         const { default: ItemList } = await import("@ts/ui/item-list.svelte")
         return ItemList
     }
+
+    GetSwarmFMMetadata()
 </script>
 
 
@@ -48,81 +51,106 @@
             <ItemList items={songs} onItemClick={(song) => PlaybackState.Play({song, songs})} contextMenu={CreateSongContextMenu}/>
         {/await}
     {:else}
-        {#await GetHome()}
-            <div class="loading-text"></div>
-        {:then {recentlyPlayed, setlists, discs, originals, mashups}}
+        {const {recentlyPlayed, setlists, discs, originals, mashups} = GetHome()}
+        {#await recentlyPlayed then recentlyPlayed}
             {#if recentlyPlayed.length > 0}
                 <section class="recently-played">
                     <ItemSticks items={recentlyPlayed} --height="70px"/>
                 </section>
             {/if}
-            <section>
-                <div class="recent">
-                    {const recent = setlists[0]}
-                    {#if recent}
-                        <div class="box">
-                            <div class="text">
-                                <h2>Recent Setlist</h2>
-                                <Link class="sub-text" href="setlists">More Setlists</Link>
+        {/await}
+        <section>
+            <div class="recent">
+                <div class="box">
+                    <div class="text">
+                        <h2>Recent Setlist</h2>
+                        <Link class="sub-text" href="setlists">More Setlists</Link>
+                    </div>
+                    <div class="recent-setlist">
+                        {#await setlists}
+                            <Cover />
+                            <div class="info">
+                                <div class="loading-text"></div>
                             </div>
-                            <div class="recent-setlist">
-                                <Cover item={recent} />
-                                <div class="info">
+                        {:then setlists}
+                            {const recent = setlists[0]}
+                            <Cover item={recent} />
+                            <div class="info">
+                                {#if recent}
                                     <h1><EmoteText content={recent.displayTitle} /></h1>
                                     <h2><EmoteText content={recent.displayDate!} /></h2>
                                     <h2>{recent.subtitle}</h2>
-                                </div>
+                                {:else}
+                                    <h1>No new setlist</h1>
+                                {/if}
+                            </div>
+                            {#if recent}
                                 <div class="buttons">
                                     <button class="primary" onclick={async () => PlaybackState.Play({songs: await recent.GetSongs()})}>Play</button>
                                     <button onclick={() => MediaView.Show(recent)}>View</button>
                                 </div>
-                            </div>
-                        </div>
-                    {/if}
-                    <div class="box">
-                        <div class="text">
-                            <h2>SwarmFM</h2>
-                        </div>
-                        <div class="swarmfm">
-                            {const meta = $derived(GetSwarmFMMetadata())}
-                            {const song = $derived(meta ? meta.current : undefined)}
-                            
-                            <div class="cover" onclick={() => PlaybackState.Play({swarmfm: true})} role="button" tabindex="0">
-                                <img src="/swarmfm.png" alt="">
-                                <div class="overlay"><IconPlayerPlayFilled size="unset" /></div>
-                            </div>
-                            <div class="info">
-                                {#if song === undefined}
-                                    <div class="loading-text"></div>
-                                {:else}
-                                    <h1>{song.name}</h1>
-                                    <h2 class="sub-text">{song.artist}</h2>
-                                {/if}
-                            </div>
-                            <Seek played={GetSwarmFMTime()} duration={song ? song.duration : 0} />
-                        </div>
-         
+                            {/if}
+                        {/await}
                     </div>
                 </div>
-            </section>
-            <section>
-                <h1 class="neuro-text">Originals</h1>
+                <div class="box">
+                    <div class="text">
+                        <h2>SwarmFM</h2>
+                    </div>
+                    <div class="swarmfm">
+                        {const meta = $derived(GetSwarmFMMetadata())}
+                        {const song = $derived(meta ? meta.current : undefined)}
+                        
+                        <div class="cover" onclick={() => PlaybackState.Play({swarmfm: true})} role="button" tabindex="0">
+                            <img src="/swarmfm.png" alt="">
+                            <div class="overlay"><IconPlayerPlayFilled size="unset" /></div>
+                        </div>
+                        <div class="info">
+                            {#if song === undefined}
+                                <div class="loading-text"></div>
+                            {:else}
+                                <h1>{song.name}</h1>
+                                <h2 class="sub-text">{song.artist}</h2>
+                            {/if}
+                        </div>
+                        <Seek played={GetSwarmFMTime()} duration={song ? song.duration : 0} />
+                    </div>
+        
+                </div>
+            </div>
+        </section>
+        <section>
+            <h1 class="neuro-text">Originals</h1>
+            {#await originals}
+                <div class="box" style="height: 200px">
+                    <div class="loading-text"></div>
+                </div>
+            {:then originals} 
                 <ItemCards items={originals} />
-            </section>
-            <section>
-                <h1 class="neuro-text">Explore</h1>
-                <div class="more">
-                    <div class="box">
-                        <h2>Mashups</h2>
+            {/await}
+            
+        </section>
+        <section>
+            <h1 class="neuro-text">Explore</h1>
+            <div class="more">
+                <div class="box">
+                    <h2>Mashups</h2>
+                    {#await mashups }
+                        <div class="loading-text"></div>
+                    {:then mashups}
                         <ItemList items={mashups} onItemClick={(song) => PlaybackState.Play({song, songs: mashups})} />
-                    </div>
-                    <div class="box">
-                        <h2>Discs</h2>
-                        <ItemList items={discs} onItemClick={(collection) => MediaView.Show(collection)}/>
-                    </div>
+                    {/await}
                 </div>
-            </section>
-        {/await}
+                <div class="box">
+                    <h2>Discs</h2>
+                    {#await discs}
+                        <div class="loading-text"></div>
+                    {:then discs}
+                        <ItemList items={discs} onItemClick={(collection) => MediaView.Show(collection)}/>
+                    {/await}
+                </div>
+            </div>
+        </section>
     {/if}
 </div>
 

@@ -4,30 +4,38 @@ import CollectionProvider from "@ts/collection-provider"
 import { type SwarmFMMetadata } from "@aceandgaming/swarmfm-api"
 import { api as SwarmFM } from "@ts/api/external/swarmfm"
 
-let content: Awaited<ReturnType<typeof GetHomePage>> | undefined
 
 let swarmfm: SwarmFMMetadata | undefined = $state.raw()
 let swarmfmLoopActive = false
 let swarmfmTime = $state(0)
 
-export async function GetHome() {
-    if (!content) {
-        content = await GetHomePage()
-    }
+export function GetHome() {
+    const contentPromise = GetHomePage()
 
-    const [[setlists, discs, recentlyPlayed], [originals, mashups]] = await Promise.all([
-        CollectionProvider.GetBatched([content.setlists, content.discs, content.recentlyPlayed], true),
-        SongProvider.GetBatched([content.originals, content.mashups], true)
-    ])
+    const collectionsPromise = contentPromise.then(content =>
+        CollectionProvider.GetBatched(
+            [content.setlists, content.discs, content.recentlyPlayed],
+            true
+        )
+    )
+
+    const songsPromise = contentPromise.then(content =>
+        SongProvider.GetBatched(
+            [content.originals, content.mashups],
+            true
+        )
+    )
 
     return {
-        recentlyPlayed,
-        setlists,
-        discs,
-        originals,
-        mashups
+        setlists: collectionsPromise.then(([setlists]) => setlists),
+        discs: collectionsPromise.then(([, discs]) => discs),
+        recentlyPlayed: collectionsPromise.then(([, , recentlyPlayed]) => recentlyPlayed),
+
+        originals: songsPromise.then(([originals]) => originals),
+        mashups: songsPromise.then(([, mashups]) => mashups)
     }
 }
+
 export function GetSwarmFMMetadata() {
     if (!swarmfmLoopActive) {
         swarmfmLoopActive = true
