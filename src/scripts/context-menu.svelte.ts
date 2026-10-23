@@ -1,4 +1,5 @@
 import type { Component } from "svelte"
+import { auth } from "@ts/login.svelte"
 
 export const ContextMenuGroup = {
     Default: 0,
@@ -35,7 +36,7 @@ export default class ContextMenu {
             return
         }
         state.visible = true
-        state.options = [...options].sort((a, b) => (a.group ?? 0) - (b.group ?? 0))
+        state.options = [...options].sort((a, b) => (a.group ?? 0) - (b.group ?? 0)).filter(o => o.group !== ContextMenuGroup.Admin || auth.admin)
         state.x = x
         state.y = y
     }

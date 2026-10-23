@@ -1,5 +1,5 @@
 import type { Component } from "svelte"
-import type { Playlist, Song } from "@ts/models"
+import { Playlist, type Song } from "@ts/models"
 
 import LoginPopup from "@ts/ui/popups/login.svelte"
 import ConfirmPopup from "@ts/ui/popups/confirm-action.svelte"
@@ -8,6 +8,7 @@ import CopyLinkPopup from "@ts/ui/popups/copy-link.svelte"
 import CreatePlaylistPopup from "@ts/ui/popups/create-playlist.svelte"
 import RenamePlaylistPopup from "@ts/ui/popups/rename-playlist.svelte"
 import AddToPlaylistPopup from "@ts/ui/popups/add-to-playlist.svelte"
+import EditSongPopup from "@ts/ui/popups/edit-song.svelte"
 
 import Toasts from "@ts/toast.svelte.ts"
 
@@ -82,6 +83,14 @@ export function RenamePlaylist(playlist: Playlist) {
 export function AddToPlaylist(song: Song) {
     currentPopup = {
         component: AddToPlaylistPopup,
+        props: {
+            song
+        }
+    }
+}
+export function EditSong(song: Song) {
+    currentPopup = {
+        component: EditSongPopup,
         props: {
             song
         }

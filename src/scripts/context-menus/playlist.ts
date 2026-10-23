@@ -5,6 +5,7 @@ import type { Playlist } from "@ts/models/playlist"
 import { IconPlus, IconPlaylistAdd, IconTrash, IconEdit, IconPlayerPlayFilled } from "@tabler/icons-svelte-runes"
 import * as Popups from "@ts/ui/popup.svelte.ts"
 
+
 export function CreatePlaylistContextMenu(playlist: Playlist): ContextMenuOption[] {
     return [
         {

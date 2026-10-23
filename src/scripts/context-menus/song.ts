@@ -1,9 +1,9 @@
 import PlaybackController from "@ts/playback"
 import { ShareSongV1, ExportSong } from "@ts/api/song"
 import { ContextMenuGroup, type ContextMenuOption } from "@ts/context-menu.svelte"
-import { IconPlus, IconShare3, IconPlaylistAdd, IconFileExport } from "@tabler/icons-svelte-runes"
+import { IconPlus, IconShare3, IconPlaylistAdd, IconFileExport, IconEdit } from "@tabler/icons-svelte-runes"
 import type { Song } from "@ts/models/song"
-import { AddToPlaylist, CopyToClipboard } from "@ts/ui/popup.svelte.ts"
+import { AddToPlaylist, CopyToClipboard, EditSong  } from "@ts/ui/popup.svelte.ts"
 import { auth } from "@ts/login.svelte"
 import Toasts from "@ts/toast.svelte.ts"
 
@@ -48,6 +48,12 @@ export function CreateSongContextMenu(song: Song): ContextMenuOption[] {
                     RemoveToast()
                 }
             }
+        },
+        {
+            label: "Edit Song",
+            group: ContextMenuGroup.Admin,
+            icon: IconEdit,
+            Action: () => EditSong(song)
         }
     ]
 }

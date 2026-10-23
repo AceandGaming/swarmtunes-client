@@ -76,6 +76,16 @@ export function GetSongAudioUrl(id: id) {
 export function GetCoverUrl(path: string, size: "small" | "medium" | "large" = "medium") {
     return `${API_URL}/covers/${path}?size=${size}`
 }
+export async function UploadCover(path: string, file: File) {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    await fetch(`${API_URL}/covers/${path}`, {
+        method: "POST",
+        credentials: "include",
+        body: formData
+    })
+}
 
 export async function GetPlaylistsWithSong(songId: id): Promise<id[]> {
     const ids = await Get(`/songs/${songId}/playlists`)
@@ -84,11 +94,11 @@ export async function GetPlaylistsWithSong(songId: id): Promise<id[]> {
 
 type PutArtist = {
     name: string
-    originalName: string | null
+    originalName: string | undefined
 }
-type PutData = {
+export type PutData = {
     title: string,
-    titleOriginal: string | null,
+    titleOriginal: string | undefined,
 
     artists: PutArtist[],
     singers: PutArtist[],
@@ -97,7 +107,7 @@ type PutData = {
     dateReleased: string,
     seconds: number,
 
-    custom_artwork: string | null
+    customArtwork: string | undefined
 }
 
 export async function PutSong(songId: id, data: PutData) {
