@@ -27,6 +27,7 @@
   },
   "bundle": {
     "active": true,
+    "createUpdaterArtifacts": true,
     "targets": "all",
     "icon": [
       "icons/32x32.png",
@@ -36,6 +37,17 @@
     ],
     "android": {
       "debugApplicationIdSuffix": ".debug"
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IERCRUIyNzcxOUE0OUY1MjAKUldRZzlVbWFjU2ZyMnphZUw3Q0tlVEJGaWtDelB2b0R3T1VNSFdTY29rQ3ZLcXI1a3ZERWFiNEQK",
+      "endpoints": [
+        "https://github.com/AceandGaming/swarmtunes-client/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
     }
   }
 }

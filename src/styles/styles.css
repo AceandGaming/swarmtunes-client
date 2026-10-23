@@ -24,6 +24,7 @@ html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
 
+    background-color: var(--colour-background);
 }
 
 ::-webkit-scrollbar {
