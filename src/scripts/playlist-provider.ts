@@ -1,6 +1,7 @@
 import { Playlist } from "@ts/models/playlist"
 import PlaylistStore from "@ts/playlist-store.svelte.ts"
 import { GetPlaylist, AddSongsToPlaylist, RemoveSongsFromPlaylist, RenamePlaylist, DeletePlaylist, CreatePlaylist, GetPlaylists } from "@ts/api/playlist"
+import { GetPlaylistsWithSong } from "@ts/api/song"
 
 export default class PlaylistProvider {
     public static async Init() {
@@ -78,8 +79,14 @@ export default class PlaylistProvider {
 
     public static async GetWithSong(songId: id) {
         const playlists = PlaylistStore.GetAll()
-        await Promise.all(playlists.map(playlist => playlist.LoadSongs()))
-
-        return playlists.filter(playlist => playlist.GetSongIds().includes(songId))
+    
+        if (playlists.every(playlist => playlist.loaded)) {
+            await Promise.all(playlists.map(playlist => playlist.LoadSongs()))
+            return playlists.filter(playlist => playlist.GetSongIds().includes(songId))
+        }
+        else {
+            const ids = await GetPlaylistsWithSong(songId)
+            return playlists.filter(playlist => ids.includes(playlist.id))
+        }
     }
 }

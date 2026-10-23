@@ -1,5 +1,5 @@
 import { Song } from "@ts/models/song"
-import { Get, API_URL, Post, V1_API_URL } from "./network"
+import { Get, API_URL, Post, V1_API_URL, Put } from "./network"
 
 type SongType = "original" | "collab" | "cover" | "mashup"
 
@@ -77,3 +77,29 @@ export function GetCoverUrl(path: string, size: "small" | "medium" | "large" = "
     return `${API_URL}/covers/${path}?size=${size}`
 }
 
+export async function GetPlaylistsWithSong(songId: id): Promise<id[]> {
+    const ids = await Get(`/songs/${songId}/playlists`)
+    return ids
+}
+
+type PutArtist = {
+    name: string
+    originalName: string | null
+}
+type PutData = {
+    title: string,
+    titleOriginal: string | null,
+
+    artists: PutArtist[],
+    singers: PutArtist[],
+    type: "original" | "collab" | "cover" | "mashup",
+
+    dateReleased: string,
+    seconds: number,
+
+    custom_artwork: string | null
+}
+
+export async function PutSong(songId: id, data: PutData) {
+    await Put(`/songs/${songId}`, data)
+}
