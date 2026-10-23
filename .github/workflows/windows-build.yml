@@ -1,12 +1,15 @@
 name: Windows Build and Release
 
 on:
+    # push:
+    #     branches:
+    #         - main
+    #     tags:
+    #         - "v*"
+    # workflow_dispatch:
     push:
         branches:
-            - main
-        tags:
-            - "v*"
-    workflow_dispatch:
+            - "*"
 
 permissions:
     contents: write
@@ -14,7 +17,7 @@ permissions:
 jobs:
     build-windows:
         name: Build Windows app
-        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+        #if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         runs-on: windows-latest
 
         steps:
@@ -58,7 +61,7 @@ jobs:
 
     release:
         name: Publish GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
+        #if: startsWith(github.ref, 'refs/tags/v')
         runs-on: windows-latest
 
         steps:
