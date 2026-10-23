@@ -86,6 +86,19 @@ jobs:
             - name: Install frontend dependencies
               run: npm ci
 
+            - name: Get version from tag
+              id: version
+              shell: bash
+              run: |
+                  VERSION="${GITHUB_REF_NAME#v}"
+
+                  if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                    echo "Invalid release tag: $GITHUB_REF_NAME"
+                    exit 1
+                  fi
+
+                  echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
             - name: Build and publish release
               uses: tauri-apps/tauri-action@v1
               env:
@@ -93,6 +106,7 @@ jobs:
                   TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
                   TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
               with:
+                  args: --config "{\"version\":\"${{ steps.version.outputs.version }}\"}"
                   tagName: ${{ github.ref_name }}
                   releaseName: "Swarmtunes ${{ github.ref_name }}"
                   releaseBody: "See the release assets to download and install this version."
