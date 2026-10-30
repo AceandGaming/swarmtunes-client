@@ -48,17 +48,6 @@
             <option value="plush">Plushy</option>
         </select>
     </div>
-
-    {#if Device.behavesMobile}
-        <footer class="quick-access">
-            {#if auth.loggedIn}
-                <button onclick={() => Logout()}>Logout</button>
-            {:else}
-                <button onclick={() => ShowLogin()}>Login</button>
-            {/if}
-        </footer>
-    {/if}
-    <button class="debug-button" onclick={OnDebugButtonClick}>Debug</button>
 </div>
 
 <style>
@@ -72,16 +61,6 @@
         gap: var(--gap);
 
         padding: var(--gap);
-    }
-    .quick-access {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
-
-        align-items: center;
-        justify-content: center;
-
-        margin-top: auto;
     }
 
     .setting {
@@ -111,11 +90,5 @@
         p {
             font-size: 0.8rem;
         }
-    }
-
-    .debug-button {
-        position: absolute;
-        bottom: var(--gap);
-        left: var(--gap);
     }
 </style>
