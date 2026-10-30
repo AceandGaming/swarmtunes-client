@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Release version (e.g. 1.0.2)"
+        description: "Release version"
         required: true
         type: string
 
@@ -53,11 +53,6 @@ jobs:
             VERSION="$INPUT_VERSION"
           else
             VERSION="${GITHUB_REF_NAME#v}"
-          fi
-
-          if [[ ! "$VERSION" =~ ^v.*$ ]]; then
-            echo "Invalid release tag: $VERSION"
-            exit 1
           fi
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
