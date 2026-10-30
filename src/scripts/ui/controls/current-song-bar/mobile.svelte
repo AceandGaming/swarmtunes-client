@@ -7,7 +7,7 @@
 
     let controls: HTMLDivElement
 
-    function OnClick(event: TouchEvent) {
+    function OnClick(event: TouchEvent | MouseEvent) {
         if (controls.contains(event.target as Node)) {
             return
         }
@@ -17,7 +17,7 @@
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
-<div class="current-song-bar" ontouchend={OnClick} ontouchmove={OnClick} role="presentation">
+<div class="current-song-bar" onclick={OnClick} ontouchmove={OnClick} role="presentation">
     <div class="left">
         <Cover item={PlaybackState.currentSong} />
         

@@ -11,8 +11,7 @@
     import Seek from "@ts/ui/controls/seek.svelte"
     import { IconPlayerPlayFilled, IconX } from "@tabler/icons-svelte-runes"
     import { Search } from "@ts/api/song"
-    import { CreateSongContextMenu } from "@ts/context-menus"
-    import { type Collection } from "@ts/models"
+    import { CreateSongContextMenu, CreateCollectionContextMenu } from "@ts/context-menus"
 
     let query: string = $state("")
     let debouncedQuery = $state('');
@@ -38,7 +37,7 @@
 
 <div id="home">
     <div class="search">
-        <input type="search" bind:value={query} placeholder="search for a song!">
+        <input type="text" bind:value={query} placeholder="search for a song!">
         {#if searching}
             <button class="clear-search icon-button" onclick={() => query = ""}><IconX /></button>
         {/if}
@@ -138,7 +137,7 @@
                     {#await mashups }
                         <div class="loading-text"></div>
                     {:then mashups}
-                        <ItemList items={mashups} onItemClick={(song) => PlaybackState.Play({song, songs: mashups})} />
+                        <ItemList items={mashups} onItemClick={(song) => PlaybackState.Play({song, songs: mashups})} contextMenu={CreateSongContextMenu} />
                     {/await}
                 </div>
                 <div class="box">
@@ -146,7 +145,7 @@
                     {#await discs}
                         <div class="loading-text"></div>
                     {:then discs}
-                        <ItemList items={discs} onItemClick={(collection) => MediaView.Show(collection)}/>
+                        <ItemList items={discs} onItemClick={(collection) => MediaView.Show(collection)} contextMenu={CreateCollectionContextMenu}  />
                     {/await}
                 </div>
             </div>

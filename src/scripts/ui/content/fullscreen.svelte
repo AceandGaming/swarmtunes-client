@@ -18,6 +18,9 @@
     let videoEnabled: boolean = $state(false)
     let showVideo = $derived(PlaybackState.iframe !== undefined && videoEnabled && Visability.visible)
 
+    let beingResized = $state(false)
+    let resizeTimeout: number | null = null
+
     const info = $derived.by(() => {
         const song = PlaybackState.currentSong
         return {
@@ -102,6 +105,18 @@
 
 </script>
 
+<svelte:window onresize={() => {
+    if (resizeTimeout) {
+        clearTimeout(resizeTimeout)
+    }
+
+    beingResized = true
+
+    resizeTimeout = setTimeout(() => {
+        beingResized = false
+    }, 100)
+}} />
+
 {#snippet videoButton()}
     {#if PlaybackState.iframe}
         <button class="video-button icon-button" onclick={() => videoEnabled = !videoEnabled}>
@@ -117,7 +132,7 @@
 <div 
     id="fullscreen"
     class:visible={Visability.visible}
-    class:dragging={offset > 0}
+    class:no-animate={offset > 0 || beingResized}
     class:video={showVideo}
 
     style:--c1={colours.top}
@@ -234,7 +249,7 @@
 
         transition: --c1 1s ease, --c2 1s ease, transform 0.2s ease;
     }
-    #fullscreen.dragging {
+    #fullscreen.no-animate {
         transition: --c1 1s ease, --c2 1s ease;
     }
     #fullscreen:not(.visible) {

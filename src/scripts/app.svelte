@@ -119,7 +119,7 @@
 
 
 <main id="app">
-    {#if Device.looksMobile}
+    {#if Device.behavesMobile}
         <footer>
             <CurrentSongBar />
             {@render tabs()}
