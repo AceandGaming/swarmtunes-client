@@ -58,7 +58,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
         with:
-          args: --config "{\"version\":\"${{ steps.version.outputs.version }}\"}"
+          args: --config '{"version":"${{ steps.version.outputs.version }}"}'
           tagName: ${{ github.ref_name }}
           releaseName: "Swarmtunes ${{ github.ref_name }}"
           releaseBody: "See the release assets to download and install this version."
