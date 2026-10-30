@@ -39,7 +39,7 @@
         name: "about",
         icon: IconSettings,
         import: () => import("@ts/ui/content/about.svelte"),
-        label: "About",
+        label: "Credits",
         hidden: true
     })
     AddPage({
@@ -112,7 +112,7 @@
 {/snippet}
 {#snippet headerButtons()}
     <div class="buttons">
-        <Link style="font-size: 1rem" class="about" href="about">About</Link>
+        <Link style="font-size: 1rem" class="about" href="about">Credits</Link>
         <button onclick={OnLoginButtonClick}>{auth.loggedIn ? "Logout" : "Login"}</button>
     </div>
 {/snippet}

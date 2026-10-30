@@ -1,23 +1,10 @@
 <div class="about">
-    <h1>About</h1>
-    <p>
-        Swarmtunes is a music app for all Neuro and Evil covers of songs, as well as official releases and collaborations. It features accounts, playlists, and songs grouped by streamer.
-        <br><br>
-        Unlike a cover drive, this contains its own UI, and audio can be streamed without downloading.
-        <br><br>
-        Swarmtunes is fully supported on desktop and mostly supported on mobile. It also features PWA support, which means it can be downloaded as an app (though it is not available in app stores!).
-        <br><br>
-        I made this because I got tired of Spotify's terrible MP3 support. It was also an excuse to learn web development.
-        <br><br>
-        <i>Swarmtunes is a <b>fan-made site</b> and is not associated with Vedal, Neuro-sama, or SwarmFM.</i>
-    </p>
-
     <h1>Music Credits</h1>
     <p>
         Swarmtunes would not be possible without the music below.
     </p>
 
-    <h2>Neuro-sama Covers</h2>
+    <h2>Neuro-sama/Evil Neuro Covers</h2>
     <p>All karaoke covers are collected from <b>An Unofficial Neuro Karaoke Archive</b></p>
     <ul>
         <li><a href="https://discord.com/channels/574720535888396288/1337588612845539349">Discord</a></li>
@@ -39,7 +26,6 @@
         <li><a href="https://discord.gg/swarm-fm-1327042091200807024">Discord</a></li>
         <li><a href="https://player.sw.arm.fm/">Website</a></li>
     </ul>
-    <p>In hindsight, I should have asked for permission before making an integration, so I'm glad they seem okay with it!</p>
 
     <h1>Art Credits</h1>
     <p>
@@ -84,6 +70,10 @@
     <ul>
         <li><a href="https://twitter.com/lukuwo2333">Twitter</a></li>
         <li><a href="https://space.bilibili.com/626079830">Bilibili</a></li>
+    </ul>
+    <h2>DISC 9 - <b>@lingyouzzz</b></h2>
+    <ul>
+
     </ul>
 
     <h2>Extras</h2>
