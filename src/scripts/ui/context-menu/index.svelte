@@ -4,7 +4,7 @@
     import Device from "@ts/device.svelte"
 </script>
 
-{#if Device.behavesMobile}
+{#if Device.looksMobile}
     <Mobile />
 {:else}
     <Desktop />

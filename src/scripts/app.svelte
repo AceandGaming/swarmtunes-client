@@ -119,7 +119,7 @@
 
 
 <main id="app">
-    {#if Device.behavesMobile}
+    {#if Device.behavesMobile && Device.looksMobile}
         <footer>
             <CurrentSongBar />
             {@render tabs()}
@@ -202,6 +202,7 @@
         height: 100%;
     }
     footer .tabs {
+
         justify-content: center;
 
         padding: 0 5vw;

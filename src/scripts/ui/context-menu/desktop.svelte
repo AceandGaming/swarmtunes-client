@@ -129,6 +129,7 @@
 
         list-style: none;
     }
+
     li:hover {
         background-color: #ffffff20;
     }
@@ -145,6 +146,15 @@
         width: calc(100% - 10px);
         margin: 4px auto;
         color: var(--text-colour-muted);
+    }
+
+    @media (pointer: coarse) {
+        menu {
+            min-width: 200px;
+        }
+        li {
+            height: 40px;
+        }
     }
 
 </style>
