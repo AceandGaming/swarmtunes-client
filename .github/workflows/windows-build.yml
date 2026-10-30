@@ -5,6 +5,11 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g. 1.0.2)"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -38,14 +43,20 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      - name: Get version from tag
+      - name: Get version
         id: version
         shell: bash
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            VERSION="$INPUT_VERSION"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
 
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Invalid release tag: $GITHUB_REF_NAME"
+          if [[ ! "$VERSION" =~ ^v.*$ ]]; then
+            echo "Invalid release tag: $VERSION"
             exit 1
           fi
 
