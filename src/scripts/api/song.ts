@@ -58,7 +58,7 @@ export async function Search(query: string, limit = 10): Promise<Song[]> {
     }
 
     const params = new URLSearchParams({
-        q: query,
+        q: query.slice(0, 30),
         limit: String(limit)
     })
 

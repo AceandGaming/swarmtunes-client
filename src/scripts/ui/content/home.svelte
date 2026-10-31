@@ -12,24 +12,28 @@
     import { IconPlayerPlayFilled, IconX } from "@tabler/icons-svelte-runes"
     import { Search } from "@ts/api/song"
     import { CreateSongContextMenu, CreateCollectionContextMenu } from "@ts/context-menus"
+    import type { Song } from "@ts/models"
 
     let query: string = $state("")
-    let debouncedQuery = $state('');
     let searching = $derived(query.length > 0)
+    let songs: Song[] | undefined = $state()
+
+    async function SearchSongs(query: string) {
+        songs = await Search(query)
+    }
 
     $effect(() => {
         query;
-        const timeout = setTimeout(() => {
-            debouncedQuery = query
-        }, 200)
-
-        return () => clearTimeout(timeout);
+        if (query.length === 0) {
+            songs = undefined
+        }
+        else {
+            const timeout = setTimeout(() => {
+                SearchSongs(query)
+            }, 200)
+            return () => clearTimeout(timeout)
+        }
     })
-
-    async function ImportItemList() {
-        const { default: ItemList } = await import("@ts/ui/item-list.svelte")
-        return ItemList
-    }
 
     GetSwarmFMMetadata()
 </script>
@@ -44,11 +48,11 @@
     </div>
 
     {#if searching}
-        {#await Promise.all([Search(debouncedQuery), ImportItemList()])}
+        {#if !songs}
             <div class="loading-text"></div>
-        {:then [songs, ItemList]}
+        {:else}
             <ItemList items={songs} onItemClick={(song) => PlaybackState.Play({song, songs})} contextMenu={CreateSongContextMenu}/>
-        {/await}
+        {/if}
     {:else}
         {const {recentlyPlayed, setlists, discs, originals, mashups} = GetHome()}
         {#await recentlyPlayed then recentlyPlayed}

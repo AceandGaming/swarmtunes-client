@@ -36,3 +36,7 @@ export async function GetSongsOfCollection(id: id): Promise<id[]> {
     const json = await Get(`/collections/${id}/songs`)
     return json
 }
+export async function SearchSongsOfCollection(id: id, query: string): Promise<id[]> {
+    const json = await Get(`/collections/${id}/search?q=${query}`)
+    return json
+}

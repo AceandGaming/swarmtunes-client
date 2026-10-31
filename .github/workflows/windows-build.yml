@@ -66,7 +66,7 @@ jobs:
         with:
           args: --config '{"version":"${{ steps.version.outputs.version }}"}'
           tagName: ${{ github.ref_name }}
-          releaseName: "Swarmtunes ${{ github.ref_name }}"
-          releaseBody: "See the release assets to download and install this version."
+          releaseName: "Swarmtunes v${{ steps.version.outputs.version }}"
+          releaseBody: "Download the below binaries for your platform. (ignore json and sig files)"
           releaseDraft: false
           prerelease: false

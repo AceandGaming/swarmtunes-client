@@ -12,16 +12,45 @@
     import { PlaylistDownloaded, AddPlaylist, RemovePlaylist, Downloading } from "@ts/download-manager.svelte.ts"
     import EmoteText from "@ts/ui/emote-text.svelte"
     import { FormatDuration } from "@ts/misc.ts"
+    import { SearchSongsOfCollection } from "@ts/api/collection.ts"
+    import { SearchItemsOfPlaylist } from "@ts/api/playlist.ts"
+    import { Collection } from "@ts/models/collection.ts"
+    import SongProvider from "@ts/song-provider.ts"
 
     let loading = $state(true)
 
     let songs: Song[] = $state([])
     let media = $derived(MediaView.media)
 
-    let search: string = $state("")
-    let currentSongs: Song[] = $derived(
-        songs.filter(song => song.title.toLowerCase().includes(search.toLowerCase()))
-    )
+    let query: string = $state("")
+    let currentSongs: Song[] = $state([])
+
+    async function SearchSongs(query: string) {
+        if (media instanceof Song) {
+            currentSongs = songs
+        }
+        else if (media instanceof Collection) {
+            const ids = await SearchSongsOfCollection(media.id, query)
+            currentSongs = await SongProvider.GetMany(ids)
+        }
+        else if (media instanceof Playlist) {
+            const ids = (await SearchItemsOfPlaylist(media.id, query)).map(i => i.songId)
+            currentSongs = await SongProvider.GetMany(ids)
+        }
+    }
+
+    $effect(() => {
+        query;
+        if (query.length === 0) {
+            currentSongs = songs
+        }
+        else {
+            const timeout = setTimeout(() => {
+                SearchSongs(query)
+            }, 200)
+            return () => clearTimeout(timeout)
+        }
+    })
 
     $effect(() => {
         if (!MediaView.media) {
@@ -94,7 +123,7 @@
         </div>
         <nav>
             <button class="icon-button play-button" onclick={OnCoverClick}><IconPlayerPlayFilled size=40 /></button>
-            <input class="search" bind:value={search} placeholder="Search" type="text">
+            <input class="search" bind:value={query} placeholder="Search" type="text">
             {#if media instanceof Playlist}
                 {const downloading = $derived(Downloading())}
                 {#key downloading}

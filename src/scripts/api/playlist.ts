@@ -25,6 +25,10 @@ export async function GetItemsOfPlaylist(id: id): Promise<{ songId: id, dateAdde
     const json = await Get(`/playlists/${id}/songs`)
     return json
 }
+export async function SearchItemsOfPlaylist(id: id, query: string): Promise<{ songId: id, dateAdded: string }[]> {
+    const json = await Get(`/playlists/${id}/search?q=${query}`)
+    return json
+}
 
 export async function AddSongsToPlaylist(playlistId: id, songIds: id[]) {
     await Post(`/playlists/${playlistId}/songs`, { songIds })
