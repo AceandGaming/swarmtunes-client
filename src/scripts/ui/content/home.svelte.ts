@@ -58,7 +58,7 @@ async function UpdateSwarmfm() {
     swarmfmTime = meta.position
     swarmfm = meta
 
-    swarmfmInterval = setInterval(UpdateSwarmfm, (meta.current.duration - meta.position) * 1000)
+    swarmfmInterval = setInterval(UpdateSwarmfm, Math.max((meta.current.duration - meta.position) * 1000, 30))
 }
 setInterval(() => {
     swarmfmTime++
