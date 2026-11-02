@@ -15,6 +15,8 @@
     --colour-icon: #aaa;
 
     --surface-image: none;
+
+    color-scheme: dark;
 }
 
 :root[data-theme="light"] {
@@ -34,6 +36,8 @@
     --colour-icon: #666;
 
     --surface-image: none;
+
+    color-scheme: light;
 }
 
 :root[data-theme="neuro"] {
