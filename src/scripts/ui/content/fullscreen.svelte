@@ -5,7 +5,17 @@
     import Seek from "@ts/ui/controls/seek.svelte"
     import Cover from "@ts/ui/cover.svelte"
     import Device from "@ts/device.svelte.ts"
-    import { IconDots, IconPlaylistAdd, IconShare3, IconBrandYoutube as IconVideo, IconBrandYoutubeFilled as IconVideoFilled, IconX } from "@tabler/icons-svelte-runes"
+    import { 
+        IconDots, 
+        IconPlaylistAdd,
+        IconPlaylist as IconQueue, 
+        IconShare3, 
+        IconBrandYoutube as IconVideo, 
+        IconBrandYoutubeFilled as IconVideoFilled, 
+        IconX,
+        IconEdit,
+        IconEditFilled
+    } from "@tabler/icons-svelte-runes"
     import { ColourCss, GetSongColour } from "@ts/misc"
     import type { Color } from "colorthief"
     import { auth } from "@ts/login.svelte.ts"
@@ -14,9 +24,14 @@
     import ContextMenu, { ContextMenuGroup } from "@ts/context-menu.svelte.ts"
     import { AddToPlaylist, CopyToClipboard } from "@ts/ui/popup.svelte.ts"
     import { ShareSongV1 } from "@ts/api/song.ts"
+    import ItemList from "@ts/ui/item-list.svelte"
+
+    let queueVisable = $state(false)
+    let largeQueue = $state(false)
+    let editQueue = $state(false)
 
     let videoEnabled: boolean = $state(false)
-    let showVideo = $derived(PlaybackState.iframe !== undefined && videoEnabled && Visability.visible)
+    let showVideo = $derived(PlaybackState.iframe !== undefined && videoEnabled && Visability.visible && !queueVisable)
 
     let beingResized = $state(false)
     let resizeTimeout: number | null = null
@@ -73,8 +88,56 @@
     function OnTouchEnd() {
         if (offset > window.innerHeight * 0.1) {
             Visability.Hide()
+            queueVisable = false
         }
         offset = 0
+    }
+
+    let queueOffset = $state(0)
+    let queueStartY = 0
+
+    function OnQueueTouchStart(e: TouchEvent) {
+        queueOffset = 0
+        queueStartY = e.touches[0].clientY
+    }
+    function OnQueueTouchMove(e: TouchEvent) {
+        if (editQueue) {
+            return
+        }
+
+
+        const y = e.touches[0].clientY
+        const diff = y - queueStartY
+
+        if (Math.abs(diff) > 20 || queueOffset != 0) {
+            queueOffset = diff
+        }
+        else {
+            queueOffset = 0
+        }
+    }
+    function OnQueueTouchEnd(e: TouchEvent) {
+        if (queueOffset != 0) {
+            e.stopImmediatePropagation()
+        }
+
+        
+        if (queueOffset > window.innerHeight * 0.1) {
+            if (largeQueue) {
+                largeQueue = false
+                if (queueOffset > window.innerHeight * 0.7) {
+                    queueVisable = false
+                }
+            }
+            else {
+                queueVisable = false
+            }
+            
+        }
+        else if (queueOffset < -window.innerHeight * 0.1) {
+            largeQueue = true
+        }
+        queueOffset = 0
     }
 
     function ShowContextMenu(event: MouseEvent|TouchEvent) {
@@ -181,10 +244,15 @@
                 {@render videoButton()}
             {/if}
         </div>
-        {#if !showVideo}
-            <h3>{info.singers}</h3>
+        {#if info.singers}
+            <div class="queue-info" ontouchend={() => queueVisable = true}>
+                <IconQueue />
+                <h3>{info.singers}</h3>
+                <b>{PlaybackState.loaded.length}</b>
+            </div>
         {/if}
     </div>
+
     <div class="info-container">
         <div class="info">
             <h1>{info.title}</h1>
@@ -201,17 +269,61 @@
     <div class="controls">
         <MediaControls iconSize={40} gap={Device.behavesMobile ? 15 : 5}/>
     </div>
+
+    {#if Device.behavesMobile && Device.looksMobile}
+        <div 
+            class="fullscreen-queue"
+            class:visible={queueVisable}
+            class:no-animate={queueOffset != 0 || beingResized}
+            class:large={largeQueue}
+    
+            style:--offset={`${queueOffset}px`}
+
+            ontouchstart={OnQueueTouchStart}
+            ontouchmove={e => {e.stopPropagation(); OnQueueTouchMove(e)}}
+            ontouchend={OnQueueTouchEnd}
+        >
+            <div 
+                class="dragger"
+                class:edit={editQueue}
+
+
+            ></div>
+            <button
+                class="icon-button edit-button"
+                onclick={() => editQueue = !editQueue}
+            >
+                {#if editQueue}
+                    <IconEditFilled size={30} />
+                {:else}
+                    <IconEdit size={30} />
+                {/if}
+            </button>
+            <div class="scroll">
+                <ItemList 
+                    items={PlaybackState.queue.slice(0, 20)}
+                    extraInfo={false} 
+                    animate={true}
+
+                    onItemClick={(song) => PlaybackState.SkipTo(song)}
+                    onReorder={editQueue ? ((songs) => PlaybackState.ReorderQueue(songs.map(s => s.id))) : undefined}
+                    
+                    --font-size="0.9rem" 
+                />
+            </div>
+        </div>
+    {/if}
 </div>
 
 <style>
     @property --c1 {
         syntax: "<color>";
-        inherits: false;
+        inherits: true;
         initial-value: #000;
     }
     @property --c2 {
         syntax: "<color>";
-        inherits: false;
+        inherits: true;
         initial-value: #000;
     }
 
@@ -225,7 +337,7 @@
         z-index: 5;
 
         padding: clamp(1rem, 5vw, 2rem);
-        gap: clamp(1rem, 5vh, 2rem);
+        gap: clamp(0.5rem, 3vh, 2rem);
 
         font-size: clamp(1rem, 3vmin, 2rem);
 
@@ -238,11 +350,12 @@
 
         transform: translateY(var(--offset));
 
-        grid-template-rows: auto 5fr auto auto 1fr;
+        grid-template-rows: auto 4fr auto auto auto 1fr;
         grid-template-columns: 1fr;
         grid-template-areas:
             "top"
             "content"
+            "queue-info"
             "info"
             "seek"
             "controls";
@@ -259,25 +372,86 @@
         color: white;
     }
 
-
     .dragger {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
+        display: flex;
 
+        width: 100%;
         padding: 12px;
     
-        &:after {
+        &::after {
             content: "";
             display: block;
             width: 20vw;
             height: 3px;
 
+            margin: auto;
+
             background-color: white;
             border-radius: 99px;
         }
     }
+    #fullscreen > .dragger {
+        position: absolute;
+        top: 0;
+    }
+
+    .fullscreen-queue {
+        position: absolute;
+        z-index: 6;
+
+        display: flex;
+        flex-direction: column;
+        
+        width: 100vw;
+        height: 100%;
+        padding: 0.5rem;
+        padding-bottom: 0;
+
+        background-color: color-mix(var(--c2), transparent 40%);
+        backdrop-filter: blur(6px);
+
+        border-radius: 20px 20px 0 0;
+
+        transform: translateY(calc(30dvh + var(--offset)));
+
+        transition: transform 0.2s ease, border-radius 0.2s ease;
+
+        &.large {
+            transform: translateY(var(--offset));
+            border-radius: 0;
+        }
+        &:not(.visible) {
+            transform: translateY(100dvh);
+        }
+        &.no-animate {
+            transition: none;
+        }
+
+        .dragger {
+            opacity: 1;
+            height: 2rem;
+
+            transition: opacity 0.2s ease;
+
+            &.edit {
+                opacity: 0;
+            }
+        }
+
+        .edit-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+
+        .scroll {
+            flex: 1;
+
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+    }
+
     .top {
         grid-area: top;
         
@@ -307,7 +481,7 @@
         align-items: center;
         justify-content: center;
 
-        gap: 5px;
+        gap: 10px;
 
         .content {
             position: relative;
@@ -331,8 +505,37 @@
                 z-index: 20;
             }
         }
-        h3 {
+        .queue-info {
+            width: calc(100% - 1rem);
+
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+
+            gap: 10px;
+
             font-size: 1rem;
+
+            & :global(:first-child) {
+                justify-self: start;
+            }
+            h3 {
+                align-self: center;
+                text-align: center;
+
+                overflow: hidden;
+                min-width: 0;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            & :global(:last-child) {
+                justify-self: end;
+            }
+
+
+            * {
+                height: 100%;
+            }
         }
     }
 
@@ -419,5 +622,6 @@
                 display: none;
             }
         }
+        
     }
 </style>

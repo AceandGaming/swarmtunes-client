@@ -60,6 +60,9 @@
         if (!draggable) {
             return
         }
+        if (sortable) {
+            return
+        }
 
         const Sortable = (await import("sortablejs")).default
 
@@ -67,20 +70,24 @@
             animation: animate ? 150 : 0,
             disabled: !draggable,
             onUpdate: (e) => {
-                // @ts-ignore
-                const ids: string[] = [...e.to.children].map((el: HTMLElement) => el.dataset.id)
-                items = ids.map(id => itemLookup.get(id)).filter(item => item !== undefined)
+                const ids = [...e.to.children]
+                    .filter(el => el !== e.clone)
+                    .map(el => (el as HTMLElement).dataset.id)
+                    .filter(id => id !== undefined);
 
-                onReorder?.(items)
+                items = ids
+                    .map(id => itemLookup.get(id))
+                    .filter(item => item !== undefined);
+
+                onReorder?.(items);
             }
         })
     }
 
     onMount(() => {
-        CreateSortable()
-
-        return () => {
-            sortable?.destroy()
+        if (sortable) {
+            sortable.option("disabled", !draggable);
+            sortable.option("animation", animate ? 150 : 0);
         }
     })
     $effect(() => {
