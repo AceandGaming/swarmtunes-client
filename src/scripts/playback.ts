@@ -5,6 +5,7 @@ import OggPlayer from "@ts/audio/ogg"
 import YoutubePlayer from "@ts/audio/youtube"
 import SwarmFMRadio from "@ts/audio/swarmfm"
 import StoredValue from "@ts/stored-value"
+import Neuro21Radio from "@ts/audio/neuro-21"
 
 type Callbacks = {
     loadedSong: (song: Song, iframe?: HTMLIFrameElement) => void
@@ -103,11 +104,11 @@ class PlaybackController {
 
         return this.player
     }
-    private SwarmfmPlayer() {
-        if (!this.player || this.player.constructor !== SwarmFMRadio) {
+    private RadioPlayer(playerClass: typeof Neuro21Radio | typeof SwarmFMRadio) {
+        if (!this.player || this.player.constructor !== playerClass) {
             this.player?.Destroy()
             // @ts-ignore
-            this.player = new SwarmFMRadio(
+            this.player = new playerClass(
                 () => this.Trigger("playPause", true),
                 () => this.Trigger("playPause", false),
                 () => this.OnTimeUpdate(),
@@ -137,7 +138,15 @@ class PlaybackController {
         player.Play()
     }
     private async PlaySwarmfm() {
-        const player = this.SwarmfmPlayer()
+        const player = this.RadioPlayer(SwarmFMRadio)
+        await player.Load(this.currentSong!)
+
+        player.SetVolume(this.volume)
+
+        player.Play()
+    }
+    private async PlayNeuro21() {
+        const player = this.RadioPlayer(Neuro21Radio)
         await player.Load(this.currentSong!)
 
         player.SetVolume(this.volume)
@@ -145,12 +154,18 @@ class PlaybackController {
         player.Play()
     }
 
-    public Play({ song, songs, swarmfm = false }: { song?: Song, songs?: Song[], swarmfm?: boolean } = {}) {
-        if (swarmfm) {
-            this.PlaySwarmfm()
-            return
+    public PlayRadio(type: "swarmfm" | "neuro21") {
+        switch (type) {
+            case "swarmfm":
+                this.PlaySwarmfm()
+                break
+            case "neuro21":
+                this.PlayNeuro21()
+                break
         }
+    }
 
+    public Play({ song, songs }: { song?: Song, songs?: Song[] } = {}) {
         if (songs) {
             this.queue.PopulateQueue(songs, this.shuffle)
         }

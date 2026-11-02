@@ -99,12 +99,14 @@
                 <div class="box">
                     <div class="text">
                         <h2>SwarmFM</h2>
+                        <!-- svelte-ignore a11y_missing_attribute -->
+                        <a class="sub-text" onclick={e => {e.preventDefault(); PlaybackState.PlayRadio("neuro21")}}>Play Neuro21 (experimental)</a>
                     </div>
                     <div class="swarmfm">
                         {const meta = $derived(GetSwarmFMMetadata())}
                         {const song = $derived(meta ? meta.current : undefined)}
                         
-                        <div class="cover" onclick={() => PlaybackState.Play({swarmfm: true})} role="button" tabindex="0">
+                        <div class="cover" onclick={() => PlaybackState.PlayRadio("swarmfm")} role="button" tabindex="0">
                             <img src="/swarmfm.png" alt="">
                             <div class="overlay"><IconPlayerPlayFilled size="unset" /></div>
                         </div>

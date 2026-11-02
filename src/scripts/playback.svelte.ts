@@ -68,6 +68,7 @@ function CreatePlaybackState() {
         },
 
         Play: (...args: Parameters<typeof Controller.Play>) => Controller.Play(...args),
+        PlayRadio: (...args: Parameters<typeof Controller.PlayRadio>) => Controller.PlayRadio(...args),
         Pause: () => Controller.Pause(),
         PlayPause: () => Controller.PlayPause(),
         Next: () => Controller.Next(),
