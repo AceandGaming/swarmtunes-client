@@ -129,7 +129,7 @@
                 
             {/if}
             {#if extraInfo}
-                <p class="sub-text duration">{FormatDuration(item.seconds, true)}</p>
+                <p class="sub-text duration">{FormatDuration(item.seconds)}</p>
             {/if}
             {#if contextMenu && extraInfo}
                 <button class="context-menu-button icon-button" style:--button-height={Device.behavesMobile ? "65%" : "50%"} onclick={(e) => {e.stopPropagation(); OpenContextMenu(e, item)}}>
@@ -174,9 +174,10 @@
     }
 
     li .cover-wrapper {
+        flex: 0 0 auto;
+
         position: relative;
         height: 100%;
-        width: auto;
         aspect-ratio: 1;
     }
     .cover-wrapper > :global(.cover) {
@@ -200,7 +201,8 @@
         white-space: nowrap;
     }
     .like-button, .duration {
-        min-width: 30px;
+        flex: 0.15;
+        min-width: 40px;
     }
 
     @media (hover: hover) {
@@ -233,7 +235,8 @@
         gap: 1px;
     }
     li .date-info {
-        margin-right: 10%;
+        flex: 0.5;
+        padding-right: 10%;
         text-align: right;
     }
 
