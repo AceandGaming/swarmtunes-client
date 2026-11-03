@@ -48,17 +48,13 @@ export function GetSwarmFMTime() {
 }
 
 async function UpdateSwarmfm() {
-    if (swarmfmInterval) {
-        clearInterval(swarmfmInterval)
-    }
-
     console.log("Fetching Swarmfm meta")
     const meta = await SwarmFM.FetchMetadata()
 
     swarmfmTime = meta.position
     swarmfm = meta
 
-    swarmfmInterval = setInterval(UpdateSwarmfm, Math.max((meta.current.duration - meta.position) * 1000, 30))
+    swarmfmInterval = setTimeout(UpdateSwarmfm, (meta.current.duration - meta.position) * 1000)
 }
 setInterval(() => {
     swarmfmTime++
