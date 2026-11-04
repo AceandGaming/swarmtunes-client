@@ -6,7 +6,7 @@ import { api as SwarmFM } from "@ts/api/external/swarmfm"
 
 
 let swarmfm: SwarmFMMetadata | undefined = $state.raw()
-let swarmfmInterval: number | null = null
+let swarmfmActive = $state(false)
 let swarmfmTime = $state(0)
 
 export function GetHome() {
@@ -37,7 +37,8 @@ export function GetHome() {
 }
 
 export function GetSwarmFMMetadata() {
-    if (!swarmfmInterval) {
+    if (!swarmfmActive) {
+        swarmfmActive = true
         UpdateSwarmfm()
     }
 
@@ -54,7 +55,7 @@ async function UpdateSwarmfm() {
     swarmfmTime = meta.position
     swarmfm = meta
 
-    swarmfmInterval = setTimeout(UpdateSwarmfm, (meta.current.duration - meta.position) * 1000)
+    setTimeout(UpdateSwarmfm, (meta.current.duration - meta.position) * 1000)
 }
 setInterval(() => {
     swarmfmTime++
