@@ -1,0 +1,86 @@
+import AudioPlayer from "@ts/features/playback/audio"
+import type { Song } from "@ts/features/song/model"
+import Device from "@ts/environment/device.svelte.ts"
+import { GetURLFromId } from "@ts/api/external/youtube"
+
+export default class YoutubePlayer extends AudioPlayer {
+    public get played(): number {
+        return this.audio.currentTime
+    }
+    public set played(value: number) {
+        this.audio.currentTime = value
+    }
+    public get duration(): number {
+        const duration = this.currentSong ? this.currentSong.seconds : this.audio.duration
+        return (duration > 0) ? duration : 0
+    }
+    public get isPlaying(): boolean {
+        return !this.audio.paused
+    }
+    public get volume(): number {
+        return this.audio.volume
+    }
+    public set volume(value: number) {
+        this.audio.volume = value
+    }
+
+
+    private audio: HTMLAudioElement
+    private currentSong: Song | undefined
+
+    constructor(onPlay: () => void, onPause: () => void, onUpdate: () => void, onEnded: () => void) {
+        super(onPlay, onPause, onUpdate, onEnded)
+
+        this.audio = new Audio()
+
+        this.audio.onplay = onPlay
+        this.audio.onpause = onPause
+        this.audio.onended = onEnded
+
+        this.audio.ontimeupdate = () => {
+            
+            if (this.currentSong && this.audio.currentTime > this.currentSong.seconds) {
+                onEnded()
+            }
+
+            onUpdate()
+        }
+    }
+
+    public async Load(song: Song) {
+        const info = song.audioInfo
+        if (info.type != "youtube") {
+            throw new Error("Song is not a youtube song")
+        }
+
+        const url = GetURLFromId(info.id)
+        this.currentSong = song
+
+        this.audio.src = url
+    }
+
+    public Play(): void {
+        if (this.audio.readyState === 4 || Device.behavesMobile) {
+            this.audio.play()
+        }
+        else {
+            this.audio.oncanplay = () => {
+                this.audio.play()
+            }
+        }
+    }
+    public Pause(): void {
+        this.audio.pause()
+    }
+    public SetVolume(volume: number): void {
+        this.audio.volume = volume
+    }
+
+    public Destroy(): void {
+        this.audio.src = ""
+
+        this.audio.remove()
+        // @ts-ignore
+        this.audio = null
+    }
+}

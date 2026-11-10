@@ -1,4 +1,4 @@
-import { Song } from "@ts/models/song"
+import { Song } from "@ts/features/song/model"
 import { Get, API_URL, Post, V1_API_URL, Put } from "./network"
 
 type SongType = "original" | "collab" | "cover" | "mashup"

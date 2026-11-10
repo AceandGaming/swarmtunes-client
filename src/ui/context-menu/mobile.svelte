@@ -1,0 +1,150 @@
+<script lang="ts">
+    import { state as MenuState } from "@ui/context-menu/state.svelte.ts"
+    import type { ContextMenuOption } from "@ui/context-menu/state.svelte.ts"
+
+    let menu: HTMLElement
+    let currentOptions: ContextMenuOption[] = $state([])
+    
+    $effect(() => {
+        currentOptions = MenuState.options
+    })
+
+    function OnClick(event: TouchEvent) {
+        if (menu.contains(event.target as Node)) {
+            return
+        }
+
+        MenuState.visible = false
+    }
+</script>
+
+<svelte:document on:touchstart|capture|nonpassive={OnClick}/>
+
+<menu 
+    id="context-menu"
+    class:visible={MenuState.visible}
+
+    bind:this={menu}
+>
+    {#each currentOptions as option, i}
+        {#if option.visible !== false}
+            {#if i > 0 && option.group !== currentOptions[i - 1].group}
+                <hr />
+            {/if}
+            <li 
+                role="menuitem"
+
+                ontouchend={async () => {
+                    if (option.options) {
+                        currentOptions = option.options
+                    }
+
+                    if (!option.Action) {
+                        return
+                    }
+                    MenuState.visible = false
+                    option.Action()
+                }}
+            >
+                <span>{option.label}</span>
+                {#if option.icon}
+                    <option.icon size="unset" />
+                {:else}
+                    <svg></svg>
+                {/if}
+            </li>
+        {/if}
+    {/each}
+</menu>
+
+<div class="background">
+
+</div>
+
+<style>
+    #context-menu {
+        position: fixed;
+        bottom: 0;
+
+        z-index: 100;
+
+        display: block;
+        width: 100vw;
+        min-height: 30dvh;
+        max-height: 50dvh;
+        padding-top: 5%;
+
+        border-radius: 20px 20px 0 0;
+        background-color: color-mix(var(--colour-surface-alt), transparent 70%);
+        backdrop-filter: blur(6px);
+        border: solid 2px var(--colour-border);
+        border-bottom: none;
+
+        overflow-y: scroll;
+
+        transform: translateY(100%);
+
+        transition: transform 0.2s ease;
+    }
+    #context-menu.visible {
+        transform: translateY(0);
+    }
+
+    .background {
+        position: fixed;
+        inset: 0;
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: all;
+
+        background-color: #00000055;
+        backdrop-filter: blur(2px);
+
+        transition:
+            opacity 0.2s ease,
+            visibility 0s linear 0.2s;
+    }
+
+    #context-menu.visible ~ .background {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+
+        transition:
+            opacity 0.2s ease,
+            visibility 0s linear 0s;
+    }
+
+    li {
+        height: 40px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: left;
+
+        gap: 5px;
+        padding: 5px;
+        border-radius: 10px;
+
+        list-style: none;
+    }
+    li:active {
+        background-color: #ffffff20;
+    }
+    li > :global(svg) {
+        height: 100%;
+        width: auto;
+        aspect-ratio: 1;
+    }
+    li > span {
+        flex: 1;
+    }
+
+    hr {
+        width: calc(100% - 10px);
+        margin: 4px auto;
+        color: var(--colour-text-muted);
+    }
+</style>

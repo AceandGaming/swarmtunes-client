@@ -1,0 +1,51 @@
+import { Collection } from "@ts/features/collection/model"
+import CollectionCache from "@ts/features/collection/cache"
+import { GetCollection, GetCollections } from "@ts/api/collection"
+
+export default class CollectionProvider {
+    public static async Get(id: id): Promise<Collection> {
+        let collection = CollectionCache.Get(id)
+        if (collection) {
+            return collection
+        }
+
+        collection = await GetCollection(id)
+        CollectionCache.Set(id, collection)
+        return collection
+    }
+    public static async GetMany(ids: id[], retainOrder = false): Promise<Collection[]> {
+        const collections = CollectionCache.GetMany(ids)
+        const storedIds = collections.map(collection => collection.id)
+
+        const missing = ids.filter(id => !storedIds.includes(id))
+        if (missing.length == 0) {
+            return collections
+        }
+
+        const newCollections = await GetCollections(missing)
+        for (const collection of newCollections) {
+            CollectionCache.Set(collection.id, collection)
+        }
+
+        const result = [...collections, ...newCollections]
+        if (retainOrder) {
+            return result.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id))
+        }
+
+        return result
+    }
+    public static async GetBatched(batches: id[][], retainCollectionOrder = false): Promise<Collection[][]> {
+        const merged = batches.flat()
+
+        const songs = await this.GetMany(merged, retainCollectionOrder)
+        const lookup = new Map(songs.map(song => [song.id, song]))
+
+        const result = batches.map(batch =>
+            batch
+                .map(id => lookup.get(id))
+                .filter((song): song is Collection => song !== undefined)
+        )
+
+        return result
+    }
+}

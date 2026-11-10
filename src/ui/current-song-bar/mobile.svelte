@@ -1,0 +1,96 @@
+<script lang="ts">
+    import PlaybackState from "@ts/features/playback/playback.svelte.ts"
+    import Seek from "@ui/components/seek.svelte"
+    import MediaControls from "@ui/components/media-controls.svelte"
+    import Ui from "@ts/state/ui.svelte.ts"
+    import Cover from "@ui/components/cover.svelte"
+
+    let controls: HTMLDivElement
+
+    function OnClick(event: TouchEvent | MouseEvent) {
+        if (controls.contains(event.target as Node)) {
+            return
+        }
+
+        Ui.fullscreen.Show()
+    }
+</script>
+
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<div class="current-song-bar" onclick={OnClick} ontouchmove={OnClick} role="presentation">
+    <div class="left">
+        <Cover item={PlaybackState.currentSong} />
+        
+        <div class="info">
+            <span>{PlaybackState.currentSong?.displayTitle || "Title"}</span>
+            <span class="sub-text">{PlaybackState.currentSong?.displayArtists || "Artists"}</span>
+        </div>
+    </div>
+    <div class="bottom">
+        <Seek played={PlaybackState.played} duration={PlaybackState.duration} showText={false} thinkness={4} />
+    </div>
+    <div class="right">
+        <div style="display: contents" bind:this={controls}><MediaControls extraButtons={false} iconSize={26} gap={10} /></div>
+    </div>
+</div>
+
+<style>
+    .current-song-bar {
+        background-color: var(--colour-surface-raised);
+
+        grid-template-columns: auto max-content;
+        grid-template-rows: calc(100% - 4px) 4px;
+
+        display: grid;
+        width: 100%;
+        height: 60px;
+    }
+    .left {
+        grid-column: 1;
+
+        display: flex;
+        flex-direction: row;
+
+        padding: 2px;
+        padding-right: 0;
+
+        justify-content: left;
+        align-items: center;
+
+        gap: 5px;
+        min-width: 0;
+    }
+    .left :global(.cover) {
+        height: 100%;
+    }
+    .left .info {
+        width: 80%;
+    }
+    .left .info > * {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .right {
+        grid-column: 2;
+
+        display: flex;
+        flex-direction: row;
+
+        padding: 2px;
+        padding-left: 0;
+        padding-right: 20px;
+
+        justify-content: right;
+        align-items: center;
+
+        gap: 2px;
+    }
+    .bottom {
+        pointer-events: none;
+
+        grid-column: 1 / 3;
+        grid-row: 2;
+    }
+</style>

@@ -7,6 +7,14 @@
   ],
   "permissions": [
     "core:default",
-    "os:default"
+    "os:default",
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [
+        {
+          "url": "https://**"
+        }
+      ]
+    }
   ]
 }

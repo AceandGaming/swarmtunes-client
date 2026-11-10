@@ -1,4 +1,4 @@
-import { Collection } from "@ts/models/collection"
+import { Collection } from "@ts/features/collection/model"
 import { Get, Post } from "./network"
 
 type CollectionType = "setlist" | "collection"
