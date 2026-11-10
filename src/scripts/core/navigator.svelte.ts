@@ -1,6 +1,8 @@
 import { url as currentUrl } from "@ts/environment/location.svelte.ts"
 import { IconLayoutGrid, IconWorld, IconSettings} from "@tabler/icons-svelte-runes";
 import type { Component } from "svelte";
+import { openUrl } from '@tauri-apps/plugin-opener';
+import { isTauri } from '@tauri-apps/api/core'
 
 export type Page = {
     name: string
@@ -76,7 +78,12 @@ export default {
     Navigate(href: string) {
         const url = new URL(href, currentUrl)
         if (url.host != currentUrl.host) {
-            window.open(url.href, "_blank")
+            if (isTauri()) {
+                openUrl(url.href)
+            }
+            else {
+                window.open(url.href, "_blank")
+            }
             return
         }
 

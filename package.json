@@ -25,6 +25,7 @@
     "@aceandgaming/swarmfm-api": "^1.0.2",
     "@tabler/icons-svelte-runes": "^3.46.0",
     "@tauri-apps/api": "^2.12.2",
+    "@tauri-apps/plugin-opener": "^2.7.2",
     "@tauri-apps/plugin-os": "^2.4.0",
     "@tauri-apps/plugin-process": "^2.4.0",
     "@tauri-apps/plugin-updater": "^2.14.0",
