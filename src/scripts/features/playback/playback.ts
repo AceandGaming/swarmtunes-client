@@ -1,11 +1,11 @@
-import type AudioPlayer from "@ts/audio/audio"
-import SongQueue from "@ts/song-queue"
-import type { Song } from "@ts/models/song"
-import OggPlayer from "@ts/audio/ogg"
-import YoutubePlayer from "@ts/audio/youtube"
-import SwarmFMRadio from "@ts/audio/swarmfm"
-import StoredValue from "@ts/stored-value"
-import Neuro21Radio from "@ts/audio/neuro-21"
+import type AudioPlayer from "@ts/features/playback/audio"
+import SongQueue from "@ts/features/playback/song-queue"
+import type { Song } from "@ts/features/song/model"
+import OggPlayer from "@ts/features/playback/audio/ogg"
+import YoutubePlayer from "@ts/features/playback/audio/youtube"
+import SwarmFMRadio from "@ts/features/playback/radio/swarmfm"
+import StoredValue from "@ts/utils/stored-value"
+import Neuro21Radio from "@ts/features/playback/radio/neuro-21"
 
 type Callbacks = {
     loadedSong: (song: Song, iframe?: HTMLIFrameElement) => void

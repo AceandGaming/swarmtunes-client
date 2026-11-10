@@ -1,5 +1,5 @@
-import { Collection } from "@ts/models/collection"
-import CollectionCache from "@ts/collection-cache"
+import { Collection } from "@ts/features/collection/model"
+import CollectionCache from "@ts/features/collection/cache"
 import { GetCollection, GetCollections } from "@ts/api/collection"
 
 export default class CollectionProvider {

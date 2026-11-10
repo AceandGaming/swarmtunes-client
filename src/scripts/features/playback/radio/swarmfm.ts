@@ -1,9 +1,9 @@
 import SwarmFMApi from '@aceandgaming/swarmfm-api'
 import type { SwarmFMMetadata, SwarmFMSong } from '@aceandgaming/swarmfm-api'
-import AudioPlayer from '@ts/audio/audio'
-import { Song } from '@ts/models/song'
+import AudioPlayer from '@ts/features/playback/audio'
+import { Song } from '@ts/features/song/model'
 import { GetCoverUrl } from '@ts/api/song'
-import Toasts from "@ts/toast.svelte.ts"
+import Toasts from "@ui/toasts/state.svelte.ts"
 
 export default class SwarmFMRadio extends AudioPlayer {
     public get played(): number {

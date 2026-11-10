@@ -1,14 +1,18 @@
 <script lang="ts">
-    import { Collection, Playlist, Song } from "@ts/models"
-    import Cover from "@ts/ui/cover.svelte"
+    import { Collection } from "@ts/features/collection/model"
+    import { Playlist } from "@ts/features/playlist/model"
+    import { Song } from "@ts/features/song/model"
+    import Cover from "@ui/components/cover.svelte"
     import type { Color } from "colorthief"
-    import MediaView  from "@ts/ui/content/media-view.svelte.ts"
+    import MediaView  from "@ui/views/media-view/media-view.svelte.ts"
     import { IconDisc, IconPlaylist } from "@tabler/icons-svelte-runes"
     import IconNote from "@assets/note.svelte"
-    import ContextMenu from "@ts/context-menu.svelte.ts"
-    import { CreateSongContextMenu, CreateCollectionContextMenu, CreatePlaylistContextMenu } from "@ts/context-menus"
-    import { MobileHoldSvelte } from "@ts/mobile-hold"
-    import EmoteText from "@ts/ui/emote-text.svelte"
+    import ContextMenu from "@ui/context-menu/state.svelte.ts"
+    import { CreateSongContextMenu } from "@ts/features/song/context-menu"
+    import { CreateCollectionContextMenu } from "@ts/features/collection/context-menu"
+    import { CreatePlaylistContextMenu } from "@ts/features/playlist/context-menu"
+    import { MobileHoldSvelte } from "@ts/utils/mobile-hold"
+    import EmoteText from "@ui/components/emote-text.svelte"
 
     type item = Song | Collection | Playlist
 

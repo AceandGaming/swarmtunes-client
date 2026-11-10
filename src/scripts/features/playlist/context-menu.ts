@@ -1,9 +1,9 @@
-import PlaybackController from "@ts/playback"
-import PlaylistProvider from "@ts/playlist-provider"
-import { ContextMenuGroup, type ContextMenuOption } from "@ts/context-menu.svelte"
-import type { Playlist } from "@ts/models/playlist"
+import PlaybackController from "@ts/features/playback/playback"
+import PlaylistProvider from "@ts/features/playlist/provider"
+import { ContextMenuGroup, type ContextMenuOption } from "@ui/context-menu/state.svelte.ts"
+import type { Playlist } from "@ts/features/playlist/model"
 import { IconPlus, IconPlaylistAdd, IconTrash, IconEdit, IconPlayerPlayFilled } from "@tabler/icons-svelte-runes"
-import * as Popups from "@ts/ui/popup.svelte.ts"
+import * as Popups from "@ui/popup/state.svelte.ts"
 
 
 export function CreatePlaylistContextMenu(playlist: Playlist): ContextMenuOption[] {

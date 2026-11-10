@@ -1,5 +1,5 @@
-import Controller from "@ts/playback"
-import type { Song } from "@ts/models/song"
+import Controller from "@ts/features/playback/playback"
+import type { Song } from "@ts/features/song/model"
 
 function CreatePlaybackState() {
     let playing: boolean = $state(false)

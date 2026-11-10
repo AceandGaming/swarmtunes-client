@@ -1,10 +1,9 @@
-import type { Network } from "@ts/network"
-import type { Login } from "@ts/ui/popups/login"
-import type { PlaybackController } from "@ts/playback"
-import type { PlayState } from "@ts/playback"
-import type { SongQueue } from "@ts/playback"
-import type { SongRequester } from "@ts/song-requester"
-import type { MediaView } from "@ts/ui/content/media-view"
+import type { Network } from "@ts/api/network"
+import type { Login } from "@ui/popup/dialogs/login.svelte"
+import type { PlaybackController } from "@ts/features/playback/playback"
+import type { PlayState } from "@ts/features/playback/playback"
+import type { SongQueue } from "@ts/features/playback/playback"
+import type { MediaView } from "@ui/views/media-view/media-view.svelte"
 
 declare global {
     type id = string

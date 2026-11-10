@@ -1,8 +1,8 @@
-import { Sync } from "@ts/song-downloads.svelte"
-import { GetDownloadedPlaylistIds, DownloadPlaylist as Download, RemovePlaylist as Remove, PlaylistDownloaded as Exists } from "@ts/playlist-downloads.ts"
-import SongProvider from "@ts/song-provider"
+import { Sync } from "@ts/features/song/downloads.svelte.ts"
+import { GetDownloadedPlaylistIds, DownloadPlaylist as Download, RemovePlaylist as Remove, PlaylistDownloaded as Exists } from "@ts/features/playlist/downloads.ts"
+import SongProvider from "@ts/features/song/provider"
 import { GetItemsOfPlaylist } from "@ts/api/playlist"
-import { auth } from "@ts/login.svelte"
+import { auth } from "@ts/state/auth.svelte.ts"
 import { untrack } from "svelte"
 
 let syncPromise: Promise<void> | undefined = $state()

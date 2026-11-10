@@ -1,16 +1,17 @@
 import type { Component } from "svelte"
-import { Playlist, type Song } from "@ts/models"
+import { Playlist } from "@ts/features/playlist/model"
+import type { Song } from "@ts/features/song/model"
 
-import LoginPopup from "@ts/ui/popups/login.svelte"
-import ConfirmPopup from "@ts/ui/popups/confirm-action.svelte"
-import SelectPlaylistPopup from "@ts/ui/popups/select-playlist.svelte"
-import CopyLinkPopup from "@ts/ui/popups/copy-link.svelte"
-import CreatePlaylistPopup from "@ts/ui/popups/create-playlist.svelte"
-import RenamePlaylistPopup from "@ts/ui/popups/rename-playlist.svelte"
-import AddToPlaylistPopup from "@ts/ui/popups/add-to-playlist.svelte"
-import EditSongPopup from "@ts/ui/popups/edit-song.svelte"
+import LoginPopup from "@ui/popup/dialogs/login.svelte"
+import ConfirmPopup from "@ui/popup/dialogs/confirm-action.svelte"
+import SelectPlaylistPopup from "@ui/popup/dialogs/select-playlist.svelte"
+import CopyLinkPopup from "@ui/popup/dialogs/copy-link.svelte"
+import CreatePlaylistPopup from "@ui/popup/dialogs/create-playlist.svelte"
+import RenamePlaylistPopup from "@ui/popup/dialogs/rename-playlist.svelte"
+import AddToPlaylistPopup from "@ui/popup/dialogs/add-to-playlist.svelte"
+import EditSongPopup from "@ui/popup/dialogs/edit-song.svelte"
 
-import Toasts from "@ts/toast.svelte.ts"
+import Toasts from "@ui/toasts/state.svelte.ts"
 
 
 type PopupRequest = {

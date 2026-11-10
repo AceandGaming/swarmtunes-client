@@ -1,9 +1,9 @@
-import { Song } from "@ts/models/song"
-import { Database } from "@ts/indexed-db.svelte"
+import { Song } from "@ts/features/song/model"
+import { Database } from "@ts/utils/indexed-db.svelte.ts"
 import { GetSongAudioUrl as NetworkAudioUrl } from "@ts/api/song"
 import { SvelteSet } from "svelte/reactivity"
-import { auth } from "@ts/login.svelte"
-import Toasts from "@ts/toast.svelte"
+import { auth } from "@ts/state/auth.svelte.ts"
+import Toasts from "@ui/toasts/state.svelte.ts"
 
 type Item = {
     id: string,

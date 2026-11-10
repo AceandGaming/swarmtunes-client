@@ -17,35 +17,35 @@
     AddPage({
         name: "library",
         icon: IconLayoutGrid,
-        import: () => import("@ts/ui/content/playlists-tab.svelte"),
+        import: () => import("@ui/pages/playlists.svelte"),
         label: "Playlists",
         hidden: false
     })
     AddPage({
         name: "home",
         icon: IconWorld,
-        import: () => import("@ts/ui/content/home.svelte"),
+        import: () => import("@ui/pages/home/ui.svelte"),
         label: "Home",
         hidden: false
     })
     AddPage({
         name: "settings",
         icon: IconSettings,
-        import: () => import("@ts/ui/content/settings.svelte"),
+        import: () => import("@ui/pages/settings.svelte"),
         label: "Settings",
         hidden: false
     })
     AddPage({
         name: "about",
         icon: IconSettings,
-        import: () => import("@ts/ui/content/about.svelte"),
+        import: () => import("@ui/pages/credits.svelte"),
         label: "Credits",
         hidden: true
     })
     AddPage({
         name: "setlists",
         icon: IconSettings,
-        import: () => import("@ts/ui/content/setlists.svelte"),
+        import: () => import("@ui/pages/setlists.svelte"),
         label: "Setlists",
         hidden: true
     })
@@ -54,19 +54,20 @@
 
 
 <script lang="ts">
-    import NowPlaying from "@ts/ui/now-playing.svelte"
-    import CurrentSongBar from "@ts/ui/controls/current-song-bar/index.svelte"
-    import Fullscreen from "@ts/ui/content/fullscreen.svelte"
-    import { GetPopup } from "@ts/ui/popup.svelte.ts"
-    import MediaView from "@ts/ui/content/media-view.svelte"
-    import MediaViewState from "@ts/ui/content/media-view.svelte.ts"
-    import { auth, Logout } from "@ts/login.svelte.ts"
-    import { ConfirmAction, ShowLogin } from "@ts/ui/popup.svelte.ts";
-    import ContextMenu from "@ts/ui/context-menu/index.svelte"
-    import Toast from "@ts/ui/toast.svelte"
-    import { url, Navigate } from "@ts/urlbar.svelte.ts"
-    import Link from "@ts/ui/components/link.svelte"
-    import Device from "@ts/device.svelte"
+    import NowPlaying from "@ui/now-playing.svelte"
+    import CurrentSongBar from "@ui/current-song-bar/index.svelte"
+    import Fullscreen from "@ui/views/fullscreen/fullscreen.svelte"
+    import { GetPopup } from "@ui/popup/state.svelte.ts"
+    import MediaView from "@ui/views/media-view/media-view.svelte"
+    import MediaViewState from "@ui/views/media-view/media-view.svelte.ts"
+    import { auth, Logout } from "@ts/state/auth.svelte.ts"
+    import { ConfirmAction, ShowLogin } from "@ui/popup/state.svelte.ts";
+    import ContextMenu from "@ui/context-menu/index.svelte"
+    import Toast from "@ui/toasts/ui.svelte"
+    import { url } from "@ts/environment/location.svelte.ts"
+    import { Navigate } from "@ts/core/navigation"
+    import Link from "@ui/components/link.svelte"
+    import Device from "@ts/environment/device.svelte.ts"
 
     let currentPage: Page = $state(pages.home)
     $effect(() => {

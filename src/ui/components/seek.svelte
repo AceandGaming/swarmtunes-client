@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { FormatDuration } from "@ts/misc"
+    import { FormatDuration } from "@ts/utils/misc"
 
     type Props = {
         played: number

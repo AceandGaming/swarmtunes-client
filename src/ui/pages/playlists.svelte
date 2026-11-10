@@ -1,10 +1,10 @@
 <script lang="ts">
-    import PlaylistStore from "@ts/playlist-store.svelte.ts"
-    import ItemCards from "@ts/ui/item-cards.svelte"
-    import { auth } from "@ts/login.svelte.ts"
-    import { ShowLogin, CreatePlaylist } from "@ts/ui/popup.svelte.ts"
-    import { session } from "@ts/session.svelte";
-    import ErrorScreen from "@ts/ui/error-screen.svelte"
+    import PlaylistStore from "@ts/features/playlist/store.svelte.ts"
+    import ItemCards from "@ui/components/item-cards.svelte"
+    import { auth } from "@ts/state/auth.svelte.ts"
+    import { ShowLogin, CreatePlaylist } from "@ui/popup/state.svelte.ts"
+    import { session } from "@ts/state/session.svelte.ts";
+    import ErrorScreen from "@ui/components/error-screen.svelte"
 
 </script>
 

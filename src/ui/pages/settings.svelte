@@ -1,15 +1,15 @@
 <script lang="ts">
-    import Toggle from "@ts/ui/components/toggle.svelte"
-    import { auth, Logout } from "@ts/login.svelte.ts"
-    import { ShowLogin } from "@ts/ui/popup.svelte.ts"
-    import Settings from "@ts/settings.svelte.ts"
+    import Toggle from "@ui/components/toggle.svelte"
+    import { auth, Logout } from "@ts/state/auth.svelte.ts"
+    import { ShowLogin } from "@ui/popup/state.svelte.ts"
+    import Settings from "@ts/state/settings.svelte.ts"
 
-    import Theme from "@ts/theme.svelte.ts"
-    import Device from "@ts/device.svelte.ts"
+    import Theme from "@ts/state/theme.svelte.ts"
+    import Device from "@ts/environment/device.svelte.ts"
 
     async function OnDebugButtonClick() {
-        const { CreateDebugDump } = await import("@ts/debug.ts")
-        const { CopyToClipboard } = await import("@ts/ui/popup.svelte.ts")
+        const { CreateDebugDump } = await import("@ts/core/debug.ts")
+        const { CopyToClipboard } = await import("@ui/popup/state.svelte.ts")
 
         const dump = await CreateDebugDump()
         CopyToClipboard(dump)

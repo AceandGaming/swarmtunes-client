@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Popup from "@ts/ui/popups/popup.svelte"
+    import Popup from "@ui/popup/ui.svelte"
     import { untrack } from "svelte"
 
     const { message, resolve }: {message?: string, resolve: (result: boolean) => any} = $props()

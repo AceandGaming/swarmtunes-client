@@ -1,6 +1,6 @@
 import { GetHomePage } from "@ts/api/pages"
-import SongProvider from "@ts/song-provider"
-import CollectionProvider from "@ts/collection-provider"
+import SongProvider from "@ts/features/song/provider"
+import CollectionProvider from "@ts/features/collection/provider"
 import { type SwarmFMMetadata } from "@aceandgaming/swarmfm-api"
 import { api as SwarmFM } from "@ts/api/external/swarmfm"
 

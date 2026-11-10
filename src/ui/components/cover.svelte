@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Color } from "colorthief"
-    import ColourCache from "@ts/colour-cache"
+    import ColourCache from "@ts/core/colour-cache"
     import { untrack, onMount } from 'svelte';
 
     interface WithCover {

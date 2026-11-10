@@ -1,8 +1,9 @@
 <script lang="ts">
-    import type { Playlist, Song } from "@ts/models"
-    import Popup from "@ts/ui/popups/popup.svelte"
-    import PlaylistProvider from "@ts/playlist-provider"
-    import ItemList from "@ts/ui/item-list.svelte"
+    import type { Playlist } from "@ts/features/playlist/model"
+    import type { Song } from "@ts/features/song/model"
+    import Popup from "@ui/popup/ui.svelte"
+    import PlaylistProvider from "@ts/features/playlist/provider"
+    import ItemList from "@ui/components/item-list.svelte"
     import { IconCirclePlus, IconCircleCheckFilled } from "@tabler/icons-svelte-runes"
     import { onMount } from "svelte"
     import { SvelteMap } from "svelte/reactivity"

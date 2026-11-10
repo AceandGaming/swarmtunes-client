@@ -1,5 +1,5 @@
-import AudioPlayer from '@ts/audio/audio'
-import { Song } from '@ts/models/song'
+import AudioPlayer from '@ts/features/playback/audio'
+import { Song } from '@ts/features/song/model'
 
 export default class Neuro21Radio extends AudioPlayer {
     public get played(): number {

@@ -1,4 +1,4 @@
-import { url } from "@ts/reactive/location.svelte"
+import { url } from "@ts/environment/location.svelte.ts"
 
 export function Navigate(path: string) {
     window.history.pushState({}, "", path)

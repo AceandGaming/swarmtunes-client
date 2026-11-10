@@ -1,5 +1,5 @@
-import { Playlist } from "@ts/models/playlist"
-import PlaylistStore from "@ts/playlist-store.svelte.ts"
+import { Playlist } from "@ts/features/playlist/model"
+import PlaylistStore from "@ts/features/playlist/store.svelte.ts"
 import { GetPlaylist, AddSongsToPlaylist, RemoveSongsFromPlaylist, RenamePlaylist, DeletePlaylist, CreatePlaylist, GetPlaylists } from "@ts/api/playlist"
 import { GetPlaylistsWithSong } from "@ts/api/song"
 

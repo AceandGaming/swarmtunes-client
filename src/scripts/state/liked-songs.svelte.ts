@@ -1,5 +1,5 @@
-import type { Playlist } from "@ts/models"
-import PlaylistProvider from "@ts/playlist-provider"
+import type { Playlist } from "@ts/features/playlist/model"
+import PlaylistProvider from "@ts/features/playlist/provider"
 import { SvelteSet } from "svelte/reactivity"
 
 let likedSongs: Set<id> = new SvelteSet<id>()

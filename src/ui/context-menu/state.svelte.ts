@@ -1,5 +1,5 @@
 import type { Component } from "svelte"
-import { auth } from "@ts/login.svelte"
+import { auth } from "@ts/state/auth.svelte.ts"
 
 export const ContextMenuGroup = {
     Default: 0,

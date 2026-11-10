@@ -1,6 +1,6 @@
-import AudioPlayer from "@ts/audio/audio"
-import type { Song } from "@ts/models/song"
-import Device from "@ts/device.svelte"
+import AudioPlayer from "@ts/features/playback/audio"
+import type { Song } from "@ts/features/song/model"
+import Device from "@ts/environment/device.svelte.ts"
 import { GetURLFromId } from "@ts/api/external/youtube"
 
 export default class YoutubePlayer extends AudioPlayer {

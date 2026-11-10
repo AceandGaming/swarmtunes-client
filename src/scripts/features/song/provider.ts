@@ -1,7 +1,7 @@
 import { GetSongs, GetSongAudioUrl } from "@ts/api/song"
-import { Song } from "@ts/models/song"
-import SongCache from "@ts/song-cache"
-import * as SongDatabase from "@ts/song-downloads.svelte"
+import { Song } from "@ts/features/song/model"
+import SongCache from "@ts/features/song/cache"
+import * as SongDatabase from "@ts/features/song/downloads.svelte.ts"
 
 type AudioSource = {
     readonly url: string

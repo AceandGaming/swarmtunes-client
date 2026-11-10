@@ -1,8 +1,8 @@
 import { GetSongsOfCollection } from "@ts/api/collection"
 import { GetCoverUrl } from "@ts/api/song"
-import type { Song } from "@ts/models/song"
-import SongProvider from "@ts/song-provider"
-import Settings from "@ts/settings.svelte.ts"
+import type { Song } from "@ts/features/song/model"
+import SongProvider from "@ts/features/song/provider"
+import Settings from "@ts/state/settings.svelte.ts"
 
 type CollectionDict = {
     id: id,

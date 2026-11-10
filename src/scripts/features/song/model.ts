@@ -1,5 +1,5 @@
 import { GetCoverUrl } from "@ts/api/song"
-import Settings from "@ts/settings.svelte"
+import Settings from "@ts/state/settings.svelte.ts"
 
 interface Artist {
     name: string,

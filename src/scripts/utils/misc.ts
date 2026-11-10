@@ -1,7 +1,7 @@
 import { quintOut } from 'svelte/easing'
 import type { AnimationConfig, FlipParams } from 'svelte/animate'
-import type { Song } from '@ts/models'
-import ColourCache from '@ts/colour-cache'
+import type { Song } from '@ts/features/song/model'
+import ColourCache from '@ts/core/colour-cache'
 import type { Color } from 'colorthief'
 
 export function flipNoScale(node: Element, { from, to }: { from: DOMRect; to: DOMRect }, params: FlipParams = {}): AnimationConfig {

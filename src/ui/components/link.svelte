@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Navigate } from "@ts/urlbar.svelte.ts"
+    import { Navigate } from "@ts/core/navigation"
     import type { Snippet } from "svelte"
 
     let { href = "", children, ...props }: { href?: string, children: Snippet, [prop: string]: any } = $props()

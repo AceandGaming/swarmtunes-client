@@ -1,6 +1,6 @@
 <script lang="ts">
     import { IconVolume, IconVolume2, IconVolumeOff } from "@tabler/icons-svelte-runes";
-    import PlaybackState from "@ts/playback.svelte"
+    import PlaybackState from "@ts/features/playback/playback.svelte.ts"
 
     let volumeButton: HTMLElement
     let showSlider = $state(false)

@@ -1,4 +1,4 @@
-import type { Song } from "@ts/models/song"
+import type { Song } from "@ts/features/song/model"
 
 class SongCache {
     private songs = new Map<string, Song>()

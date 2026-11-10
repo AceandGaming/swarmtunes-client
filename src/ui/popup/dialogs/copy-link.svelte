@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Popup from "@ts/ui/popups/popup.svelte"
-    import Toasts from "@ts/toast.svelte.ts"
+    import Popup from "@ui/popup/ui.svelte"
+    import Toasts from "@ui/toasts/state.svelte.ts"
 
     const { link }: {link: string} = $props()
 

@@ -18,6 +18,9 @@
       "@ts/*": [
         "src/scripts/*"
       ],
+      "@ui/*": [
+        "src/ui/*"
+      ],
       "@assets/*": [
         "src/assets/*"
       ]

@@ -3,13 +3,12 @@ import "@css/styles.css"
 import "@css/components.css"
 import "@css/custom.css"
 
-import App from "@ts/app.svelte"
+import App from "./app.svelte"
 import { mount } from "svelte"
-import { Initialize as InitializeLogin } from "@ts/login.svelte.ts"
-import { InitMediaSession } from "@ts/media-session.ts"
-import { ClearParams, GetSongId } from "@ts/urlbar.svelte"
-import PlaybackController from "@ts/playback"
-import SongProvider from "@ts/song-provider"
+import { Initialize as InitializeLogin } from "@ts/state/auth.svelte.ts"
+import { InitMediaSession } from "@ts/features/playback/media-session.ts"
+import PlaybackController from "@ts/features/playback/playback"
+import SongProvider from "@ts/features/song/provider"
 import { LoadEmotes } from "@ts/emotes.ts"
 
 import { isTauri } from '@tauri-apps/api/core'
@@ -55,7 +54,7 @@ async function Update() {
         return Main()
     }
 
-    const {default: UpdateScreen} = await import("@ts/update-screen.svelte")
+    const {default: UpdateScreen} = await import("./update-screen.svelte")
     mount(UpdateScreen, { target: document.body })
 
     const { relaunch } = await import("@tauri-apps/plugin-process")

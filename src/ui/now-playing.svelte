@@ -1,9 +1,9 @@
 <script lang="ts">
-    import PlaybackState from "@ts/playback.svelte"
-    import ItemList from "@ts/ui/item-list.svelte"
-    import { CreateSongContextMenu } from "@ts/context-menus";
-    import type { Song } from "@ts/models"
-    import { ContextMenuGroup } from "@ts/context-menu.svelte"
+    import PlaybackState from "@ts/features/playback/playback.svelte.ts"
+    import ItemList from "@ui/components/item-list.svelte"
+    import { CreateSongContextMenu } from "@ts/features/song/context-menu";
+    import type { Song } from "@ts/features/song/model"
+    import { ContextMenuGroup } from "@ui/context-menu/state.svelte.ts"
     import { IconX } from "@tabler/icons-svelte-runes"
 
     function ContextMenu(song: Song) {

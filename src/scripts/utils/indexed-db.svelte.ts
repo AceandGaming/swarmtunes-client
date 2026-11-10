@@ -1,4 +1,4 @@
-import { auth } from "@ts/login.svelte.ts"
+import { auth } from "@ts/state/auth.svelte.ts"
 
 const personalDBs: Database<any>[] = []
 

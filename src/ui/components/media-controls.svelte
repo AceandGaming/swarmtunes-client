@@ -1,5 +1,5 @@
 <script lang="ts">
-    import PlaybackState from "@ts/playback.svelte"
+    import PlaybackState from "@ts/features/playback/playback.svelte.ts"
     import { IconPlayerTrackNextFilled, IconPlayerTrackPrevFilled, IconPlayerPlayFilled, IconPlayerPauseFilled, IconPlaylistAdd, IconRepeat, IconArrowsShuffle } from "@tabler/icons-svelte-runes";
 
     let { extraButtons = true, iconSize = 24, gap = 5, class: className = "media-controls"} = $props()

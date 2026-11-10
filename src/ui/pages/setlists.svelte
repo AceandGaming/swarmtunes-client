@@ -1,7 +1,7 @@
 <script>
-    import ItemList from "@ts/ui/item-list.svelte"
+    import ItemList from "@ui/components/item-list.svelte"
     import { GetAllCollections } from "@ts/api/collection"
-    import MediaView from "@ts/ui/content/media-view.svelte.ts"
+    import MediaView from "@ui/views/media-view/media-view.svelte.ts"
 
 </script>
 

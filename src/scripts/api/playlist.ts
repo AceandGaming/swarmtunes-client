@@ -1,4 +1,4 @@
-import { Playlist } from "@ts/models/playlist"
+import { Playlist } from "@ts/features/playlist/model"
 import { Get, Post, Patch, Delete } from "./network"
 
 export async function GetPlaylist(id: id): Promise<Playlist> {

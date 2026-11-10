@@ -1,6 +1,6 @@
-import PlaybackController from "@ts/playback"
-import type { Song } from "@ts/models/song"
-import Device from "@ts/device.svelte"
+import PlaybackController from "@ts/features/playback/playback"
+import type { Song } from "@ts/features/song/model"
+import Device from "@ts/environment/device.svelte.ts"
 import { isTauri, invoke } from '@tauri-apps/api/core'
 
 function UpdateTauriMetadata(song: Song) {

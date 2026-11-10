@@ -25,8 +25,8 @@
 </script>
 
 <script lang="ts">
-    import Popup from "@ts/ui/popups/popup.svelte"
-    import { Login, Signup } from "@ts/login.svelte.ts"
+    import Popup from "@ui/popup/ui.svelte"
+    import { Login, Signup } from "@ts/state/auth.svelte.ts"
     import { HttpError } from "@ts/api/network"
 
     let usernameError = $state(false)

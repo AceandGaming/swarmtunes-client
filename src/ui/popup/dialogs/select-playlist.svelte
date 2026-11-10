@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { Playlist } from "@ts/models"
-    import Popup from "@ts/ui/popups/popup.svelte"
-    import PlaylistProvider from "@ts/playlist-provider"
+    import type { Playlist } from "@ts/features/playlist/model"
+    import Popup from "@ui/popup/ui.svelte"
+    import PlaylistProvider from "@ts/features/playlist/provider"
     import { untrack } from "svelte"
-    import ItemList from "@ts/ui/item-list.svelte"
+    import ItemList from "@ui/components/item-list.svelte"
 
     const { resolve }: {resolve: (playlist: Playlist|undefined) => any} = $props()
 

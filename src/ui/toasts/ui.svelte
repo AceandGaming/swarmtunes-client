@@ -1,9 +1,9 @@
 <script lang="ts">
     import { IconXboxXFilled as IconFail, IconCircleCheckFilled as IconSuccess} from '@tabler/icons-svelte-runes';
     import { fade, fly } from 'svelte/transition';
-    import { GetToasts } from "@ts/toast.svelte.ts"
+    import { GetToasts } from "@ui/toasts/state.svelte.ts"
     import { flip } from 'svelte/animate';
-    import Device from "@ts/device.svelte"
+    import Device from "@ts/environment/device.svelte.ts"
 </script>
 
 <ol id="toasts">

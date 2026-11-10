@@ -1,7 +1,7 @@
-import { auth } from "@ts/login.svelte.ts"
-import PlaylistProvider from "@ts/playlist-provider"
-import playlistStore from "@ts/playlist-store.svelte"
-import { Init as InitLiked } from "@ts/liked-songs.svelte"
+import { auth } from "@ts/state/auth.svelte.ts"
+import PlaylistProvider from "@ts/features/playlist/provider"
+import playlistStore from "@ts/features/playlist/store.svelte.ts"
+import { Init as InitLiked } from "@ts/state/liked-songs.svelte.ts"
 
 let loading = $state(false)
 

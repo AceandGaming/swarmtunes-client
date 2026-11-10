@@ -1,9 +1,11 @@
 <script lang="ts">
-    import { type Collection, type Playlist, Song } from "@ts/models"
-    import Cover from "@ts/ui/cover.svelte"
+    import type { Collection } from "@ts/features/collection/model"
+    import type { Playlist } from "@ts/features/playlist/model"
+    import { Song } from "@ts/features/song/model"
+    import Cover from "@ui/components/cover.svelte"
     import type { Color } from "colorthief"
-    import EmoteText from "@ts/ui/emote-text.svelte"
-    import MediaView from "@ts/ui/content/media-view.svelte.ts"
+    import EmoteText from "@ui/components/emote-text.svelte"
+    import MediaView from "@ui/views/media-view/media-view.svelte.ts"
 
     type item = Song | Collection | Playlist
 

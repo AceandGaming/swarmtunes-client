@@ -1,4 +1,4 @@
-import type { Collection } from "@ts/models"
+import type { Collection } from "@ts/features/collection/model"
 
 class CollectionCache {
     private collections = new Map<string, Collection>()

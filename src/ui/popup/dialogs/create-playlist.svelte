@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Popup from "@ts/ui/popups/popup.svelte"
-    import PlaylistProvider from "@ts/playlist-provider"
+    import Popup from "@ui/popup/ui.svelte"
+    import PlaylistProvider from "@ts/features/playlist/provider"
     import { HttpError } from "@ts/api/network"
 
     let visible = $state(true)

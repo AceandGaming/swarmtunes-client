@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { state as MenuState } from "@ts/context-menu.svelte"
-    import type { ContextMenuOption } from "@ts/context-menu.svelte"
+    import { state as MenuState } from "@ui/context-menu/state.svelte.ts"
+    import type { ContextMenuOption } from "@ui/context-menu/state.svelte.ts"
 
     let menu: HTMLElement
 

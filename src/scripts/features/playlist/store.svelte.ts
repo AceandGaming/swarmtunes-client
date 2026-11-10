@@ -1,6 +1,6 @@
-import type { Playlist } from "@ts/models/playlist"
+import type { Playlist } from "@ts/features/playlist/model"
 import { SvelteMap } from "svelte/reactivity"
-import "@ts/session.svelte"
+import "@ts/state/session.svelte.ts"
 
 class PlaylistStore {
     private playlists = new SvelteMap<string, Playlist>()

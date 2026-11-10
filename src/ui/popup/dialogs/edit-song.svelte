@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { Song } from "@ts/models/song"
+    import { Song } from "@ts/features/song/model"
     import { GetCoverUrl, type PutData, PutSong } from "@ts/api/song"
-    import "@ts/ui/cover.svelte"
-    import Popup from "@ts/ui/popups/popup.svelte"
-    import Cover from "@ts/ui/cover.svelte"
+    import "@ui/components/cover.svelte"
+    import Popup from "@ui/popup/ui.svelte"
+    import Cover from "@ui/components/cover.svelte"
     import { IconUpload, IconX, IconTrash } from "@tabler/icons-svelte-runes"
     import { UploadCover } from "@ts/api/song"
 

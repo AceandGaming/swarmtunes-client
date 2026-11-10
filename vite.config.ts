@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
         resolve: {
             alias: {
                 '@ts': path.resolve(__dirname, 'src/scripts'),
+                '@ui': path.resolve(__dirname, 'src/ui'),
                 '@css': path.resolve(__dirname, 'src/styles'),
                 '@assets': path.resolve(__dirname, 'src/assets'),
             },

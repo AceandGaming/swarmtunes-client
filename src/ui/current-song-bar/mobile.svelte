@@ -1,9 +1,9 @@
 <script lang="ts">
-    import PlaybackState from "@ts/playback.svelte"
-    import Seek from "@ts/ui/controls/seek.svelte"
-    import MediaControls from "@ts/ui/controls/media-controls.svelte"
-    import SongFullscreen from "@ts/ui/content/fullscreen.svelte.ts";
-    import Cover from "@ts/ui/cover.svelte"
+    import PlaybackState from "@ts/features/playback/playback.svelte.ts"
+    import Seek from "@ui/components/seek.svelte"
+    import MediaControls from "@ui/components/media-controls.svelte"
+    import SongFullscreen from "@ui/views/fullscreen/fullscreen.svelte.ts";
+    import Cover from "@ui/components/cover.svelte"
 
     let controls: HTMLDivElement
 

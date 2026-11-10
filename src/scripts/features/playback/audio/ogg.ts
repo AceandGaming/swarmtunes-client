@@ -1,7 +1,7 @@
-import AudioPlayer from "@ts/audio/audio"
-import type { Song } from "@ts/models/song"
-import SongProvider from "@ts/song-provider"
-import Device from "@ts/device.svelte"
+import AudioPlayer from "@ts/features/playback/audio"
+import type { Song } from "@ts/features/song/model"
+import SongProvider from "@ts/features/song/provider"
+import Device from "@ts/environment/device.svelte.ts"
 
 export default class OggPlayer extends AudioPlayer {
     public get played(): number {

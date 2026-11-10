@@ -1,11 +1,11 @@
-import PlaybackController from "@ts/playback"
+import PlaybackController from "@ts/features/playback/playback"
 import { ShareSongV1, ExportSong } from "@ts/api/song"
-import { ContextMenuGroup, type ContextMenuOption } from "@ts/context-menu.svelte"
+import { ContextMenuGroup, type ContextMenuOption } from "@ui/context-menu/state.svelte.ts"
 import { IconPlus, IconShare3, IconPlaylistAdd, IconFileExport, IconEdit } from "@tabler/icons-svelte-runes"
-import type { Song } from "@ts/models/song"
-import { AddToPlaylist, CopyToClipboard, EditSong  } from "@ts/ui/popup.svelte.ts"
-import { auth } from "@ts/login.svelte"
-import Toasts from "@ts/toast.svelte.ts"
+import type { Song } from "@ts/features/song/model"
+import { AddToPlaylist, CopyToClipboard, EditSong  } from "@ui/popup/state.svelte.ts"
+import { auth } from "@ts/state/auth.svelte.ts"
+import Toasts from "@ui/toasts/state.svelte.ts"
 
 export function CreateSongContextMenu(song: Song): ContextMenuOption[] {
     if (song.id == "swarmfm") {

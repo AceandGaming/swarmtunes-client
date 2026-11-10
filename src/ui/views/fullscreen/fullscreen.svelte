@@ -1,10 +1,10 @@
 <script lang="ts">
     import Visability from "./fullscreen.svelte.ts"
-    import PlaybackState from "@ts/playback.svelte.ts"
-    import MediaControls from "@ts/ui/controls/media-controls.svelte"
-    import Seek from "@ts/ui/controls/seek.svelte"
-    import Cover from "@ts/ui/cover.svelte"
-    import Device from "@ts/device.svelte.ts"
+    import PlaybackState from "@ts/features/playback/playback.svelte.ts"
+    import MediaControls from "@ui/components/media-controls.svelte"
+    import Seek from "@ui/components/seek.svelte"
+    import Cover from "@ui/components/cover.svelte"
+    import Device from "@ts/environment/device.svelte.ts"
     import { 
         IconDots, 
         IconPlaylistAdd,
@@ -16,15 +16,15 @@
         IconEdit,
         IconEditFilled
     } from "@tabler/icons-svelte-runes"
-    import { ColourCss, GetSongColour } from "@ts/misc"
+    import { ColourCss, GetSongColour } from "@ts/utils/misc"
     import type { Color } from "colorthief"
-    import { auth } from "@ts/login.svelte.ts"
-    import { DockIFrame } from "@ts/iframe-dock.svelte.ts"
-    import { CreateSongContextMenu } from "@ts/context-menus/song.ts"
-    import ContextMenu, { ContextMenuGroup } from "@ts/context-menu.svelte.ts"
-    import { AddToPlaylist, CopyToClipboard } from "@ts/ui/popup.svelte.ts"
+    import { auth } from "@ts/state/auth.svelte.ts"
+    import { DockIFrame } from "@ts/features/playback/iframe-dock.svelte.ts"
+    import { CreateSongContextMenu } from "@ts/features/song/context-menu"
+    import ContextMenu, { ContextMenuGroup } from "@ui/context-menu/state.svelte.ts"
+    import { AddToPlaylist, CopyToClipboard } from "@ui/popup/state.svelte.ts"
     import { ShareSongV1 } from "@ts/api/song.ts"
-    import ItemList from "@ts/ui/item-list.svelte"
+    import ItemList from "@ui/components/item-list.svelte"
 
     let queueVisable = $state(false)
     let largeQueue = $state(false)
