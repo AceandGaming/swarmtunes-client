@@ -4,7 +4,7 @@
     import { GetHome, GetSwarmFMMetadata, GetSwarmFMTime } from "@ui/pages/home/state.svelte.ts"
     import Cover from "@ui/components/cover.svelte"
     import EmoteText from "@ui/components/emote-text.svelte"
-    import MediaView from "@ui/views/media-view/media-view.svelte.ts"
+    import Ui from "@ts/state/ui.svelte.ts"
     import ItemCards from "@ui/components/item-cards.svelte"
     import ItemList from "@ui/components/item-list.svelte"
     import Link from "@ui/components/link.svelte"
@@ -91,7 +91,7 @@
                             {#if recent}
                                 <div class="buttons">
                                     <button class="primary" onclick={async () => PlaybackState.Play({songs: await recent.GetSongs()})}>Play</button>
-                                    <button onclick={() => MediaView.Show(recent)}>View</button>
+                                    <button onclick={() => Ui.media.Show(recent)}>View</button>
                                 </div>
                             {/if}
                         {/await}
@@ -152,7 +152,7 @@
                     {#await discs}
                         <div class="loading-text"></div>
                     {:then discs}
-                        <ItemList items={discs} onItemClick={(collection) => MediaView.Show(collection)} contextMenu={CreateCollectionContextMenu}  />
+                        <ItemList items={discs} onItemClick={(collection) => Ui.media.Show(collection)} contextMenu={CreateCollectionContextMenu}  />
                     {/await}
                 </div>
             </div>

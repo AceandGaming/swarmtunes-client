@@ -1,85 +1,15 @@
-<script lang="ts" module>
-    import { IconLayoutGrid, IconWorld, IconSettings} from "@tabler/icons-svelte-runes";
-    import type { Component } from "svelte";
-    type Page = {
-        name: string
-        icon: Component,
-        import: () => Promise<{default: any}>,
-        label: string,
-        hidden: boolean
-    }
-
-    const pages: {[key: string]: Page} = {}
-    function AddPage(page: Page) {
-        pages[page.name] = page
-    }
-
-    AddPage({
-        name: "library",
-        icon: IconLayoutGrid,
-        import: () => import("@ui/pages/playlists.svelte"),
-        label: "Playlists",
-        hidden: false
-    })
-    AddPage({
-        name: "home",
-        icon: IconWorld,
-        import: () => import("@ui/pages/home/ui.svelte"),
-        label: "Home",
-        hidden: false
-    })
-    AddPage({
-        name: "settings",
-        icon: IconSettings,
-        import: () => import("@ui/pages/settings.svelte"),
-        label: "Settings",
-        hidden: false
-    })
-    AddPage({
-        name: "about",
-        icon: IconSettings,
-        import: () => import("@ui/pages/credits.svelte"),
-        label: "Credits",
-        hidden: true
-    })
-    AddPage({
-        name: "setlists",
-        icon: IconSettings,
-        import: () => import("@ui/pages/setlists.svelte"),
-        label: "Setlists",
-        hidden: true
-    })
-    
-</script>
-
-
 <script lang="ts">
     import NowPlaying from "@ui/now-playing.svelte"
     import CurrentSongBar from "@ui/current-song-bar/index.svelte"
-    import Fullscreen from "@ui/views/fullscreen/fullscreen.svelte"
+    import Fullscreen from "@ui/views/fullscreen.svelte"
     import { GetPopup } from "@ui/popup/state.svelte.ts"
-    import MediaView from "@ui/views/media-view/media-view.svelte"
-    import MediaViewState from "@ui/views/media-view/media-view.svelte.ts"
     import { auth, Logout } from "@ts/state/auth.svelte.ts"
     import { ConfirmAction, ShowLogin } from "@ui/popup/state.svelte.ts";
     import ContextMenu from "@ui/context-menu/index.svelte"
     import Toast from "@ui/toasts/ui.svelte"
-    import { url } from "@ts/environment/location.svelte.ts"
-    import { Navigate } from "@ts/core/navigation"
+    import Navigator from "@ts/core/navigator.svelte"
     import Link from "@ui/components/link.svelte"
     import Device from "@ts/environment/device.svelte.ts"
-
-    let currentPage: Page = $state(pages.home)
-    $effect(() => {
-        const name = url.pathname.split("/")[1]
-        console.log(name)
-        if (name in pages) {
-            currentPage = pages[name]
-        }
-        else {
-            url.pathname = "/home"
-        }
-    })
 
     const popup = $derived(GetPopup())
 
@@ -98,11 +28,11 @@
 
 {#snippet tabs()}
     <div class="tabs">
-        {#each Object.values(pages) as page}
+        {#each Object.values(Navigator.pages) as page}
             {#if !page.hidden}
                 <button 
-                    class:active={currentPage.name === page.name} 
-                    onclick={() => {MediaViewState.Hide(); Navigate("/" + page.name)}}
+                    class:active={Navigator.current.name === page.name} 
+                    onclick={() => {Navigator.Goto(page)}}
                 >
                     <page.icon />
                     <p>{page.label}</p>
@@ -113,7 +43,7 @@
 {/snippet}
 {#snippet headerButtons()}
     <div class="buttons">
-        <Link style="font-size: 1rem" class="about" href="about">Credits</Link>
+        <Link style="font-size: 1rem" class="about" href="/about">Credits</Link>
         <button onclick={OnLoginButtonClick}>{auth.loggedIn ? "Logout" : "Login"}</button>
     </div>
 {/snippet}
@@ -136,13 +66,9 @@
     {/if}
     <NowPlaying />
     <div class="content">
-        {#if MediaViewState.visible}
-            <MediaView />
-        {:else}
-            {#await currentPage.import() then page}
-                <page.default />
-            {/await}
-        {/if}
+        {#await Navigator.current.import() then page}
+            <page.default />
+        {/await}
     </div>
 </main>
 

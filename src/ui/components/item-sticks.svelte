@@ -5,14 +5,14 @@
     import Cover from "@ui/components/cover.svelte"
     import type { Color } from "colorthief"
     import EmoteText from "@ui/components/emote-text.svelte"
-    import MediaView from "@ui/views/media-view/media-view.svelte.ts"
+    import Ui from "@ts/state/ui.svelte.ts"
 
     type item = Song | Collection | Playlist
 
     let { items }: {items: item[], grid?: boolean} = $props()
 
     async function OnCardClick(item: item) {
-        MediaView.Show(item)
+        Ui.media.Show(item)
     }
 </script>
 

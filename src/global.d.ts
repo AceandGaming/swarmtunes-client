@@ -3,7 +3,7 @@ import type { Login } from "@ui/popup/dialogs/login.svelte"
 import type { PlaybackController } from "@ts/features/playback/playback"
 import type { PlayState } from "@ts/features/playback/playback"
 import type { SongQueue } from "@ts/features/playback/playback"
-import type { MediaView } from "@ui/views/media-view/media-view.svelte"
+import type { MediaView } from "@ui/pages/media-view.svelte"
 
 declare global {
     type id = string

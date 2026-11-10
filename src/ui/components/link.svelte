@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Navigate } from "@ts/core/navigation"
+    import Navigator from "@ts/core/navigator.svelte.ts"
     import type { Snippet } from "svelte"
 
     let { href = "", children, ...props }: { href?: string, children: Snippet, [prop: string]: any } = $props()
@@ -19,7 +19,7 @@
         }
 
         e.preventDefault()
-        Navigate(href)
+        Navigator.Navigate(href)
     }}
     {...props}
 >

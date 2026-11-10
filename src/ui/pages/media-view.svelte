@@ -4,7 +4,7 @@
     import SongList from "@ui/components/item-list.svelte"
     import Cover from "@ui/components/cover.svelte"
     import PlaybackController from "@ts/features/playback/playback"
-    import MediaView from "./media-view.svelte.ts"
+    import Ui from "@ts/state/ui.svelte"
     import { CreateSongContextMenu } from "@ts/features/song/context-menu"
     import { ContextMenuGroup } from "@ui/context-menu/state.svelte.ts"
     import PlaylistProvider from "@ts/features/playlist/provider"
@@ -20,7 +20,7 @@
     let loading = $state(true)
 
     let songs: Song[] = $state([])
-    let media = $derived(MediaView.media)
+    let media = $derived(Ui.media.current)
 
     let query: string = $state("")
     let currentSongs: Song[] = $state([])
@@ -53,18 +53,18 @@
     })
 
     $effect(() => {
-        if (!MediaView.media) {
+        if (!media) {
             return
         }
 
         loading = true
-        if (MediaView.media instanceof Song) {
-            songs = [MediaView.media]
+        if (media instanceof Song) {
+            songs = [media]
             loading = false
             return
         }
 
-        MediaView.media.GetSongs().then(s => {
+        media.GetSongs().then(s => {
             loading = false
             songs = s
         })
@@ -107,11 +107,11 @@
 <div 
     id="media-view"
 
-    style:--artwork-url = {MediaView.media?.GetArtwork() ? `url("${MediaView.media.GetArtwork()}")` : undefined}
+    style:--artwork-url = {media?.GetArtwork() ? `url("${media.GetArtwork()}")` : undefined}
 >
     <header>
         <div class="cover" onclick={OnCoverClick} role="button" tabindex="0">
-            <Cover item={MediaView.media} class="cover-image"/>
+            <Cover item={media} class="cover-image"/>
             <div class="overlay"><IconPlayerPlayFilled size="unset" /></div>
         </div>
         <div class="text-container">
@@ -152,7 +152,7 @@
                 {/key}
             {/if}
         </nav>
-        <button class="close icon-button" onclick={() => MediaView.Hide()}><IconX size="unset" /></button>
+        <button class="close icon-button" onclick={() => Ui.media.Hide()}><IconX size="unset" /></button>
     </header>
     <div class="content">
         {#if loading}

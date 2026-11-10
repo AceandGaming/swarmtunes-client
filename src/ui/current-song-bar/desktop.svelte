@@ -4,7 +4,7 @@
     import PlaybackState from "@ts/features/playback/playback.svelte.ts"
     import Seek from "@ui/components/seek.svelte"
     import MediaControls from "@ui/components/media-controls.svelte"
-    import SongFullscreen from "@ui/views/fullscreen/fullscreen.svelte.ts"
+    import Ui from "@ts/state/ui.svelte.ts"
     import VolumeButton from "@ui/components/volume-button.svelte";
     import Cover from "@ui/components/cover.svelte"
     import Device from "@ts/environment/device.svelte.ts"
@@ -17,7 +17,7 @@
         <div>
             <span>Covered By:</span>
             {#if (PlaybackState.currentSong)} 
-                <span class="sub-text">{PlaybackState.currentSong.singers.map((singer) => singer.name).join("\n")}</span>
+                <span class="sub-text">{PlaybackState.currentSong.singers.map((singer: any) => singer.name).join("\n")}</span>
             {/if}
         </div>
     </div>
@@ -35,7 +35,7 @@
                 <VolumeButton />
             {/if}
         </div>
-        <button class="icon-button fullscreen" onclick={() => SongFullscreen.Show()}><IconMaximize /></button>
+        <button class="icon-button fullscreen" onclick={() => Ui.fullscreen.Show()}><IconMaximize /></button>
     </div>
 </div>
 

@@ -17,16 +17,9 @@ import { url } from "@ts/environment/location.svelte"
 
 document.cookie = "cookie=A cookie for Neuro-sama; max-age=260000; secure; samesite=none; path=/"
 
-export function GetSongId() {
-    return url.searchParams.get("song")
-}
-export function ClearParams() {
-    window.history.replaceState({}, "", url.href)
-}
-
 function Main() {
-    const songId = GetSongId()
-    ClearParams()
+    const songId = url.searchParams.get("song")
+    window.history.replaceState({}, "", url.href)
 
     InitializeLogin()
     InitMediaSession()

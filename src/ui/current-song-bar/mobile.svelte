@@ -2,7 +2,7 @@
     import PlaybackState from "@ts/features/playback/playback.svelte.ts"
     import Seek from "@ui/components/seek.svelte"
     import MediaControls from "@ui/components/media-controls.svelte"
-    import SongFullscreen from "@ui/views/fullscreen/fullscreen.svelte.ts";
+    import Ui from "@ts/state/ui.svelte.ts"
     import Cover from "@ui/components/cover.svelte"
 
     let controls: HTMLDivElement
@@ -12,7 +12,7 @@
             return
         }
 
-        SongFullscreen.Show()
+        Ui.fullscreen.Show()
     }
 </script>
 

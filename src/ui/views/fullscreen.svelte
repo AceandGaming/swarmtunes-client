@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Visability from "./fullscreen.svelte.ts"
+    import Ui from "@ts/state/ui.svelte"
     import PlaybackState from "@ts/features/playback/playback.svelte.ts"
     import MediaControls from "@ui/components/media-controls.svelte"
     import Seek from "@ui/components/seek.svelte"
@@ -25,6 +25,8 @@
     import { AddToPlaylist, CopyToClipboard } from "@ui/popup/state.svelte.ts"
     import { ShareSongV1 } from "@ts/api/song.ts"
     import ItemList from "@ui/components/item-list.svelte"
+
+    let Visability = $derived(Ui.fullscreen)
 
     let queueVisable = $state(false)
     let largeQueue = $state(false)
