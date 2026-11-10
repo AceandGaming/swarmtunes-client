@@ -6,21 +6,8 @@ window.addEventListener('popstate', () => {
     url.href = window.location.href
 })
 
-
 $effect.root(() => {
     $effect(() => {
         window.history.replaceState({}, "", url.href)
     })
 })
-
-export function GetSongId() {
-    return url.searchParams.get("song")
-}
-export function ClearParams() {
-    window.history.replaceState({}, "", url.href)
-}
-
-export function Navigate(path: string) {
-    window.history.pushState({}, "", path)
-    url.href = window.location.href
-}
