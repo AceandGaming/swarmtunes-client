@@ -25,6 +25,7 @@
     import { AddToPlaylist, CopyToClipboard } from "@ui/popup/state.svelte.ts"
     import { ShareSongV1 } from "@ts/api/song.ts"
     import ItemList from "@ui/components/item-list.svelte"
+    import { Wakelock } from "@ts/utils/wakelock.svelte.ts"
 
     let Visability = $derived(Ui.fullscreen)
 
@@ -209,6 +210,8 @@
     ontouchend={OnTouchEnd}
 
     oncontextmenu={ShowContextMenu}
+
+    {@attach Wakelock(Visability.visible)}
 >
     {#if Device.behavesMobile}
         <div class="dragger"></div>
