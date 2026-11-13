@@ -57,11 +57,26 @@ AddPage({
     hidden: true
 })
 
+function UpdatePage(url: URL) {
+    const name = url.pathname.split("/")[1]
+    console.log(name)
+    if (name in pages) {
+        currentPage = pages[name]
+    }
+    else {
+        console.warn(`Page ${name} not found`)
+        currentPage = pages.home
+    }
+}
+
 let currentPage: Page = $state(pages.home)
 
 $effect.root(() => {
     $effect(() => {
         window.history.pushState({}, "", currentPage.name)
+    })
+    $effect(() => {
+        UpdatePage(currentUrl)
     })
 })
 
@@ -87,15 +102,7 @@ export default {
             return
         }
 
-        const name = url.pathname.split("/")[1]
-        console.log(name)
-        if (name in pages) {
-            currentPage = pages[name]
-        }
-        else {
-            console.warn(`Page ${name} not found`)
-            currentPage = pages.home
-        }
+        UpdatePage(url)
     },
     Goto(page: Page) {
         currentPage = page
