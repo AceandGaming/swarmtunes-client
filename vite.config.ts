@@ -29,7 +29,7 @@ export default defineConfig(({ mode }) => {
         server: {
             proxy: {
                 "/api": {
-                    target: "https://api.swarmtunes.com",
+                    target: process.env.SERVER ?? "https://api.swarmtunes.com",
                     changeOrigin: true,
                     secure: false,
                     rewrite: (path) => path.replace(/^\/api/, ""),
