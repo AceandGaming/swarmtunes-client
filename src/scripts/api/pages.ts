@@ -11,7 +11,7 @@ export async function GetDiscoverPage() {
 }
 
 export async function GetHomePage() {
-    const json = await Get("/home")
+    const json = await Get("/home?originalType=collection")
     return {
         recentlyPlayed: json.recentlyPlayed as id[],
         setlists: json.setlists as id[],

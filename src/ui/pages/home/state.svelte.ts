@@ -14,14 +14,14 @@ export function GetHome() {
 
     const collectionsPromise = contentPromise.then(content =>
         CollectionProvider.GetBatched(
-            [content.setlists, content.discs, content.recentlyPlayed],
+            [content.setlists, content.discs, content.recentlyPlayed, content.originals],
             true
         )
     )
 
     const songsPromise = contentPromise.then(content =>
         SongProvider.GetBatched(
-            [content.originals, content.mashups],
+            [content.mashups],
             true
         )
     )
@@ -31,8 +31,8 @@ export function GetHome() {
         discs: collectionsPromise.then(([, discs]) => discs),
         recentlyPlayed: collectionsPromise.then(([, , recentlyPlayed]) => recentlyPlayed),
 
-        originals: songsPromise.then(([originals]) => originals),
-        mashups: songsPromise.then(([, mashups]) => mashups)
+        originals: collectionsPromise.then(([, , , originals]) => originals),
+        mashups: songsPromise.then(([mashups]) => mashups)
     }
 }
 

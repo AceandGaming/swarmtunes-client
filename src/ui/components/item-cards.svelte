@@ -64,7 +64,7 @@
             <div class="icon"><Icon size=20/></div>
             <Cover item={item} --size="100%" bind:colour />
         </div>
-        <h1><EmoteText content={"shortTitle" in item ? item.shortTitle : item.displayTitle} /></h1>
+        <h1><EmoteText content={item.displayTitle} /></h1>
     </div>
 {/snippet}
 
