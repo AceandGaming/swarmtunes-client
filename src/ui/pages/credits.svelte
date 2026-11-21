@@ -82,7 +82,6 @@
 
     <h2>Extras</h2>
     <ul>
-        <li>The Neuro and Evil <Link href="https://images.swarmtunes.com/">covers</Link> were made by me.</li>
         <li><Link href="https://www.makeship.com/shop/creator/vedal">Plush Images</Link></li>
     </ul>
 
@@ -104,8 +103,8 @@
     </ul>
 
     <h1>Special Thanks</h1>
-    <img src="https://images.swarmtunes.com/neuro_plush.png" alt="A plush of Neuro-sama">
-    <img src="https://images.swarmtunes.com/evil_plush.png" alt="A plush of Evil Neuro">
+    <img src="/neuro_plush.png" alt="A plush of Neuro-sama">
+    <img src="/evil_plush.png" alt="A plush of Evil Neuro">
 </div>
 
 <style>
