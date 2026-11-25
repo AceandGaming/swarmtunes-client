@@ -1,4 +1,3 @@
-import { url as currentUrl } from "@ts/environment/location.svelte.ts"
 import { IconLayoutGrid, IconWorld, IconSettings} from "@tabler/icons-svelte-runes";
 import type { Component } from "svelte";
 import { openUrl } from '@tauri-apps/plugin-opener';
@@ -59,7 +58,6 @@ AddPage({
 
 function UpdatePage(url: URL) {
     const name = url.pathname.split("/")[1]
-    console.log(name)
     if (name in pages) {
         currentPage = pages[name]
     }
@@ -69,16 +67,32 @@ function UpdatePage(url: URL) {
     }
 }
 
+
 let currentPage: Page = $state(pages.home)
 
 $effect.root(() => {
     $effect(() => {
-        window.history.pushState({}, "", currentPage.name)
-    })
-    $effect(() => {
-        UpdatePage(currentUrl)
+        console.log(`Navigated to ${currentPage.label}`)
+
+        const url = `/${currentPage.name}`
+        if (url === new URL(location.href).pathname) {
+            return
+        }
+
+        window.history.pushState({}, "", url)
     })
 })
+window.addEventListener("popstate", () => {
+    UpdatePage(new URL(location.href))
+})
+{
+    const url = new URL(location.href)
+    if (url.pathname === "/mediaview") {
+        url.pathname = "/home"
+    }
+    UpdatePage(url)
+}
+
 
 export const mediaviewPage = $state(pages.mediaview)
 
@@ -91,6 +105,8 @@ export default {
     },
 
     Navigate(href: string) {
+        const currentUrl = new URL(location.href)
+
         const url = new URL(href, currentUrl)
         if (url.host != currentUrl.host) {
             if (isTauri()) {

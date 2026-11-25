@@ -13,13 +13,14 @@ import { LoadEmotes } from "@ts/emotes.ts"
 
 import { isTauri } from '@tauri-apps/api/core'
 import { platform } from '@tauri-apps/plugin-os';
-import { url } from "@ts/environment/location.svelte"
 
 document.cookie = "cookie=A cookie for Neuro-sama; max-age=260000; secure; samesite=none; path=/"
 
 function Main() {
-    const songId = url.searchParams.get("song")
-    window.history.replaceState({}, "", url.href)
+    const currentUrl = new URL(window.location.href)
+
+    const songId = currentUrl.searchParams.get("song")
+    window.history.replaceState({}, "", location.href)
 
     InitializeLogin()
     InitMediaSession()
