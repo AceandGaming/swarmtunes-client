@@ -14,6 +14,8 @@
     import { CreateSongContextMenu } from "@ts/features/song/context-menu"
     import { CreateCollectionContextMenu } from "@ts/features/collection/context-menu"
     import type { Song } from "@ts/features/song/model"
+    import playbackController from "@ts/features/playback/playback"
+    import { GetAllSongsOfCollections } from "@ts/utils/misc"
 
     let query: string = $state("")
     let searching = $derived(query.length > 0)
@@ -125,8 +127,18 @@
                 </div>
             </div>
         </section>
-        <section>
-            <h1 class="neuro-text">Originals</h1>
+        <section class="originals">
+            <div style="position: relative;">
+                <h1 class="neuro-text">Originals</h1>
+                <button 
+                    class="primary"
+                    onclick={async () => {
+                        const songs = await GetAllSongsOfCollections(await originals)
+
+                        playbackController.Play({ songs })
+                    }}
+                >Play</button>
+            </div>
             {#await originals}
                 <div class="box" style="height: 200px">
                     <div class="loading-text"></div>
@@ -134,13 +146,24 @@
             {:then originals} 
                 <ItemCards items={originals} />
             {/await}
-            
         </section>
         <section>
             <h1 class="neuro-text">Explore</h1>
+            
             <div class="more">
                 <div class="box">
-                    <h2>Mashups</h2>
+                    <div style="position: relative;">
+                        <h2>Mashups</h2>
+                        <button 
+                            class="primary"
+                            onclick={async () => {
+                                const mashupSongs = await mashups
+                                playbackController.Play({ songs: mashupSongs })
+                            }}
+                        
+                        >Play</button>
+                    </div>
+            
                     {#await mashups }
                         <div class="loading-text"></div>
                     {:then mashups}
@@ -148,7 +171,19 @@
                     {/await}
                 </div>
                 <div class="box">
-                    <h2>Discs</h2>
+                    <div style="position: relative;">
+                        <h2>Discs</h2>
+                        <button 
+                            class="primary"
+                            onclick={async () => {
+                                const songs = await GetAllSongsOfCollections(await discs)
+
+                                playbackController.Play({ songs })
+                            }}
+                            
+                        >Play</button>
+                    </div>
+    
                     {#await discs}
                         <div class="loading-text"></div>
                     {:then discs}
@@ -189,7 +224,7 @@
     section:not(:first-child) {
         margin-top: 2rem;
     }
-    section > h1 {
+    section > h1, .originals > * > h1 {
         font-size: 2rem;
         margin-bottom: 0.5rem;
     }
@@ -336,6 +371,16 @@
         min-width: 0;
     }
 
+    .originals button.primary {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+
+        height: 25px;
+        padding: 0 10px;
+    }
+
     .more {
         display: grid;
         gap: 1rem;
@@ -347,6 +392,15 @@
     .more h2 {
         margin-left: 5px;
         margin-bottom: 0.5rem;
+    }
+    .more button.primary {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+
+        height: 25px;
+        padding: 0 10px;
     }
 
     @media (max-width: 1200px) {

@@ -3,6 +3,9 @@ import type { AnimationConfig, FlipParams } from 'svelte/animate'
 import type { Song } from '@ts/features/song/model'
 import ColourCache from '@ts/core/colour-cache'
 import type { Color } from 'colorthief'
+import type { Collection } from '@ts/features/collection/model'
+import { GetSongsOfCollection } from '@ts/api/collection'
+import SongProvider from '@ts/features/song/provider'
 
 export function flipNoScale(node: Element, { from, to }: { from: DOMRect; to: DOMRect }, params: FlipParams = {}): AnimationConfig {
     const dx = from.left - to.left
@@ -69,4 +72,18 @@ export function ColourCss(colour: Color, func?: (h: number, s: number, l: number
         [h, s, l] = func(h, s, l)
     }
     return `hsl(${h}, ${s}%, ${l}%)`
+}
+
+export async function GetAllSongsOfCollections(collections: Collection[]) {
+    const ids = (
+        await Promise.all(
+            collections.map(
+                (collection) => GetSongsOfCollection(collection.id)
+            )
+        )
+    ).flat()
+
+    const songs = await SongProvider.GetMany(ids, true)
+
+    return songs
 }
