@@ -31,11 +31,9 @@ export async function GetAllSongs(ids?: id[], options: { title?: string, type?: 
     return json.map(Song.FromDict)
 }
 
-export async function ExportSong(id: id) {
-    const a = document.createElement("a")
-    a.href = `${API_URL}/songs/${id}/gdrive`
-    a.click()
-    a.remove()
+export async function GetSongExportUrl(id: id) {
+    const json = await Get(`/songs/${id}/gdrive?returnType=json`)
+    return json.url
 }
 
 export async function ShareSongV1(id: id) {

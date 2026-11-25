@@ -1,11 +1,12 @@
 import PlaybackController from "@ts/features/playback/playback"
-import { ShareSongV1, ExportSong } from "@ts/api/song"
+import { ShareSongV1 } from "@ts/api/song"
 import { ContextMenuGroup, type ContextMenuOption } from "@ui/context-menu/state.svelte.ts"
 import { IconPlus, IconShare3, IconPlaylistAdd, IconFileExport, IconEdit } from "@tabler/icons-svelte-runes"
 import type { Song } from "@ts/features/song/model"
 import { AddToPlaylist, CopyToClipboard, EditSong  } from "@ui/popup/state.svelte.ts"
 import { auth } from "@ts/state/auth.svelte.ts"
 import Toasts from "@ui/toasts/state.svelte.ts"
+import { ExportSong } from "@ts/utils/export"
 
 export function CreateSongContextMenu(song: Song): ContextMenuOption[] {
     if (song.id == "swarmfm") {
@@ -42,7 +43,7 @@ export function CreateSongContextMenu(song: Song): ContextMenuOption[] {
             Action: () => {
                 const RemoveToast = Toasts.AddPersistent("Exporting...")
                 try {
-                    ExportSong(song.id)
+                    ExportSong(song)
                 }
                 finally {
                     RemoveToast()
