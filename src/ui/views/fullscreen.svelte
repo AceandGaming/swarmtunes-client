@@ -253,7 +253,7 @@
             <div class="queue-info" ontouchend={() => queueVisable = true}>
                 <IconQueue />
                 <h3>{info.singers}</h3>
-                <b>{PlaybackState.loaded.length}</b>
+                <b>{PlaybackState.queue.length}</b>
             </div>
         {/if}
     </div>
