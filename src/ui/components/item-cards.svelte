@@ -11,7 +11,7 @@
     import { CreateSongContextMenu } from "@ts/features/song/context-menu"
     import { CreateCollectionContextMenu } from "@ts/features/collection/context-menu"
     import { CreatePlaylistContextMenu } from "@ts/features/playlist/context-menu"
-    import { MobileHoldSvelte } from "@ts/utils/mobile-hold"
+    import { Interaction } from "@ts/utils/interaction"
     import EmoteText from "@ui/components/emote-text.svelte"
 
     type item = Song | Collection | Playlist
@@ -21,7 +21,7 @@
     function OnCardClick(item: item) {
         Ui.media.Show(item)
     }
-    function ShowContextMenu(event: MouseEvent|TouchEvent, item: item) {
+    function ShowContextMenu(event: PointerEvent, item: item) {
         let menu
         if (item instanceof Song) {
             menu = CreateSongContextMenu(item)
@@ -34,10 +34,7 @@
             return
         }
 
-        const x = event instanceof MouseEvent ? event.clientX : event.changedTouches[0].clientX
-        const y = event instanceof MouseEvent ? event.clientY : event.changedTouches[0].clientY
-
-        ContextMenu.Show({ options: menu, x: x, y: y })
+        ContextMenu.ShowWithEvent(event, menu)
     }
 </script>
 
@@ -55,9 +52,10 @@
         class="card" 
         style:--colour={colourCss}
 
-        onclick={() => OnCardClick(item)}
-        oncontextmenu={(e) => ShowContextMenu(e, item)}
-        {@attach MobileHoldSvelte((e) => ShowContextMenu(e, item))}
+        {@attach Interaction({ 
+            onContextMenu: (e) => ShowContextMenu(e, item),
+            onClick: () => OnCardClick(item)
+        })}
     >
         {const Icon = item instanceof Song ? IconNote : item instanceof Collection ? IconDisc : IconPlaylist}
         <div class="art-container">

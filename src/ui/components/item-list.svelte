@@ -5,7 +5,7 @@
     import Cover from "@ui/components/cover.svelte"
     import { flipNoScale, FormatDuration } from "@ts/utils/misc"
     import { IconDotsVertical, IconDots, IconCircleArrowDownFilled as IconDown, IconHeart, IconHeartFilled } from "@tabler/icons-svelte-runes"
-    import { MobileHoldSvelte } from "@ts/utils/mobile-hold"
+    import { Interaction } from "@ts/utils/interaction"
     import { GetDownloads } from "@ts/features/song/downloads.svelte.ts"
     import type Sortable from "sortablejs"
     import { onMount, type Snippet } from "svelte"
@@ -45,18 +45,6 @@
     let sortable: Sortable | undefined
 
     let itemLookup = $derived(new Map(items.map(item => [item.id, item])))
-
-    function OpenContextMenu(event: MouseEvent | TouchEvent, item: T) {
-        if (!contextMenu) {
-            return
-        }
-        const menu = contextMenu(item)
-
-        const x = event instanceof MouseEvent ? event.clientX : event.changedTouches[0].clientX
-        const y = event instanceof MouseEvent ? event.clientY : event.changedTouches[0].clientY
-
-        ContextMenu.Show({ options: menu, x: x, y: y })
-    }
 
     async function CreateSortable() {
         if (!draggable) {
@@ -102,13 +90,19 @@
     {#each items as item (item.id)}
         <li 
             animate:toggledFlip={{ duration: 300}}
-            onclick={() => onItemClick?.(item)}
             class:unavailable={"playable" in item && !item.audioInfo.playable}
 
             data-id={item.id}
             
-            oncontextmenu={(e) => OpenContextMenu(e, item)} 
-            {@attach MobileHoldSvelte((e) => OpenContextMenu(e, item))}
+            {@attach Interaction({ 
+                onContextMenu: (e) => {
+                    if (!contextMenu) {
+                        return
+                    }
+                    ContextMenu.ShowWithEvent(e, contextMenu(item))
+                },
+                onClick: () => onItemClick?.(item)
+            })}
         >
             <div class="cover-wrapper">
                 <Cover {item} />
@@ -141,7 +135,11 @@
                 <p class="sub-text duration">{FormatDuration(item.seconds)}</p>
             {/if}
             {#if contextMenu && extraInfo}
-                <button class="context-menu-button icon-button" style:--button-height={Device.behavesMobile ? "65%" : "50%"} onclick={(e) => {e.stopPropagation(); OpenContextMenu(e, item)}}>
+                <button 
+                    class="context-menu-button icon-button" 
+                    style:--button-height={Device.behavesMobile ? "65%" : "50%"} 
+                    onclick={(e) => {e.stopPropagation(); ContextMenu.ShowWithEvent(e, contextMenu(item))}}
+                >
                     <IconDotsVertical size="100%" />
                 </button>
             {/if}

@@ -40,6 +40,12 @@ export default class ContextMenu {
         state.x = x
         state.y = y
     }
+    public static ShowWithEvent(event: PointerEvent | MouseEvent | TouchEvent, options: ContextMenuOption[]) {
+        const x = event instanceof MouseEvent ? event.clientX : event.changedTouches[0].clientX
+        const y = event instanceof MouseEvent ? event.clientY : event.changedTouches[0].clientY
+
+        ContextMenu.Show({ options, x, y })
+    }
     public static Hide() {
         state.visible = false
     }

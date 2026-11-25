@@ -18,7 +18,7 @@
     }
 </script>
 
-<svelte:document on:touchstart|capture|nonpassive={OnClick}/>
+<svelte:document ontouchstart={OnClick}/>
 
 <menu 
     id="context-menu"

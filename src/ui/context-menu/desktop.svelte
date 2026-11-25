@@ -5,6 +5,10 @@
     let menu: HTMLElement
 
     function OnClick(event: MouseEvent) {
+        if (event.button === 2) {
+            return
+        }
+
         if (menu.contains(event.target as Node)) {
             return
         }
@@ -13,7 +17,7 @@
     }
 </script>
 
-<svelte:document onmousedown={OnClick} onscroll={() => MenuState.visible = false}></svelte:document>
+<svelte:document onmouseup={OnClick} onscroll={() => MenuState.visible = false}></svelte:document>
 
 {#snippet CreateMenu(options: ContextMenuOption[], depth = 0)}
     {#each options as option, i}
@@ -62,6 +66,10 @@
     {@render CreateMenu(MenuState.options)}
 </menu>
 
+<div class="background">
+
+</div>
+
 <style>
     .context-anchor {
         position: fixed;
@@ -107,6 +115,22 @@
         transform: scale(1);
         display: block;
     }
+
+    .background {
+        position: fixed;
+        inset: 0;
+
+        visibility: hidden;
+        pointer-events: all;
+
+        background-color: transparent;
+
+    }
+
+    #context-menu.visible ~ .background {
+        visibility: visible;
+    }
+
 
     @starting-style {
         #context-menu.visible, li:hover > menu {
