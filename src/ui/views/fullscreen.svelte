@@ -291,10 +291,10 @@
             <div 
                 class="dragger"
                 class:edit={editQueue}
-
-
             ></div>
-            <button
+
+            <!-- TODO: FIX. The editing system is kinda stupiud and buggy-->
+            <!-- <button
                 class="icon-button edit-button"
                 onclick={() => editQueue = !editQueue}
             >
@@ -303,14 +303,14 @@
                 {:else}
                     <IconEdit size={30} />
                 {/if}
-            </button>
+            </button> -->
             <div class="scroll">
                 <ItemList 
                     items={PlaybackState.queue.slice(0, 20)}
                     extraInfo={false} 
                     animate={true}
 
-                    onItemClick={(song) => PlaybackState.SkipTo(song)}
+                    onItemClick={(song) => PlaybackState.SkipTo(song)} 
                     onReorder={editQueue ? ((songs) => PlaybackState.ReorderQueue(songs.map(s => s.id))) : undefined}
                     
                     --font-size="0.9rem" 
