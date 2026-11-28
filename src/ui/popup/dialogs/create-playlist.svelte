@@ -71,7 +71,7 @@
         position: relative;
         margin-bottom: 20px;
 
-        width: fit-content;
+        width: 100%;
 
         > :global(.select-emote) {
             position: absolute;
@@ -83,6 +83,7 @@
         }
     }
     input {
+        width: 100%;
         padding-right: 40px;
     }
 </style>

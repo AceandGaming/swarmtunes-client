@@ -19,7 +19,6 @@
 
 <script lang="ts">
     import { GetEmoteByName } from "@ts/emotes"
-    import { GetEmoteUrl } from "@ts/api/external/7tv"
     import type { Emote as EmoteType } from "@ts/api/external/7tv"
     import Emote from "@ui/components/emote.svelte"
 
