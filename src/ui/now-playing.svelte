@@ -37,7 +37,10 @@
 
             onItemClick={(song) => PlaybackState.SkipTo(song)}
             contextMenu={ContextMenu}
-            onReorder={(songs) => PlaybackState.ReorderQueue(songs.map(s => s.id))}
+            onReorder={(songs) => PlaybackState.ReorderQueue([
+                ...songs.map(s => s.id),
+                ...PlaybackState.queue.slice(songs.length).map(s => s.id)
+            ])}
             
             --font-size="0.9rem" 
         />

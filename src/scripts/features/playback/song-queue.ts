@@ -50,7 +50,27 @@ export default class SongQueue {
         this.songs.splice(index, 1)
     }
     public Reorder(ids: id[]) {
-        this.songs = this.songs.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id))
+        const start = this.queuePointer
+        const queueLength = this.songs.length - start
+
+        if (ids.length !== queueLength) {
+            console.error(`Cannot reorder queue: expected ${queueLength} ids, got ${ids.length}`)
+            return
+        }
+
+        const songsById = new Map(this.songs.slice(start).map((song) => [song.id, song]))
+        const reordered: Song[] = []
+
+        for (const id of ids) {
+            const song = songsById.get(id)
+            if (!song) {
+                console.error(`Cannot reorder queue: song ${id} is not in the queue`)
+                return
+            }
+            reordered.push(song)
+        }
+
+        this.songs = [...this.songs.slice(0, start), ...reordered]
     }
 
 

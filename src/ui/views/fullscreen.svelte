@@ -311,7 +311,10 @@
                     animate={true}
 
                     onItemClick={(song) => PlaybackState.SkipTo(song)} 
-                    onReorder={editQueue ? ((songs) => PlaybackState.ReorderQueue(songs.map(s => s.id))) : undefined}
+                    onReorder={editQueue ? ((songs) => PlaybackState.ReorderQueue([
+                        ...songs.map(s => s.id),
+                        ...PlaybackState.queue.slice(songs.length).map(s => s.id)
+                    ])) : undefined}
                     
                     --font-size="0.9rem" 
                 />
