@@ -87,3 +87,7 @@ export async function GetAllSongsOfCollections(collections: Collection[]) {
 
     return songs
 }
+
+export function RandomFrom<t>(input: t[]): t {
+    return input[Math.floor(Math.random() * input.length)]
+}

@@ -2,6 +2,7 @@
     import Popup from "@ui/popup/ui.svelte"
     import PlaylistProvider from "@ts/features/playlist/provider"
     import { HttpError } from "@ts/api/network"
+    import EmoteSelector from "@ui/components/emote-selector.svelte";
 
     let visible = $state(true)
     let busy = $state(false)
@@ -35,14 +36,20 @@
 </script>
 
 <Popup title="Create Playlist" bind:visible bind:busy>
-    <input 
-        class:error={errorMessage} 
-        type="text" 
-        placeholder="Playlist Name" 
-        
-        bind:value={name}
-        onkeydown={(e) => e.key === "Enter" && Submit()}
-    >
+    <div class="input-wrapper">
+        <input 
+            class:error={errorMessage} 
+            type="text" 
+            placeholder="Playlist Name" 
+            
+            bind:value={name}
+
+    
+            onkeydown={(e) => e.key === "Enter" && Submit()}
+        >
+        <EmoteSelector onEmoteSelect={(emote) => {name += `:${emote.name}`}} />
+    </div>
+    
     {#if errorMessage}
         <p class="error">{errorMessage}</p>
     {/if}
@@ -58,5 +65,24 @@
     }
     input.error {
         border-color: red;
+    }
+
+    .input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+
+        width: fit-content;
+
+        > :global(.select-emote) {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            height: 70%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    }
+    input {
+        padding-right: 40px;
     }
 </style>

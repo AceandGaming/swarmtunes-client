@@ -7,7 +7,7 @@
     }
     type EmoteNode = {
         type: "emote"
-        url: string
+        emote: EmoteType
     }
     type MarkupNode = TextNode | EmoteNode
 
@@ -20,6 +20,8 @@
 <script lang="ts">
     import { GetEmoteByName } from "@ts/emotes"
     import { GetEmoteUrl } from "@ts/api/external/7tv"
+    import type { Emote as EmoteType } from "@ts/api/external/7tv"
+    import Emote from "@ui/components/emote.svelte"
 
     const { content }: { content: string } = $props()
 
@@ -45,9 +47,9 @@
             buffer = ""
         }
 
-        function PushEmote(url: string) {
+        function PushEmote(emote: EmoteType) {
             Pop()
-            Segment().nodes.push({ type: "emote", url })
+            Segment().nodes.push({ type: "emote", emote })
         }
 
         for (let i = 0; i < content.length; i++) {
@@ -71,7 +73,7 @@
 
                 const emote = GetEmoteByName(content.slice(i + 1, end))
                 if (emote) {
-                    PushEmote(GetEmoteUrl(emote))
+                    PushEmote(emote)
                     i = end - 1
                     continue
                 }
@@ -89,7 +91,7 @@
 {#snippet inline(nodes: MarkupNode[])}
     {#each nodes as node}
         {#if node.type === "emote"}
-            <img src={node.url} alt="" aria-hidden="true">
+            <Emote emote={node.emote} />
         {:else}
             {node.text}
         {/if}
@@ -106,13 +108,4 @@
     {/if}
 {/each}
 
-<style>
-    img {
-        height: 1em;
-        max-height: 100%;
-        width: auto;
-        aspect-ratio: 1;
 
-        margin-left: 0.2em;
-    }
-</style>

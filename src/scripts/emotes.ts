@@ -18,3 +18,6 @@ export async function LoadEmotes() {
 export function GetEmoteByName(name: string): Emote | undefined {
     return emotes.get(name)
 }
+export function GetAllEmotes(): Emote[] {
+    return Array.from(emotes.values())
+}
