@@ -7,11 +7,11 @@ export function Interaction({onClick, onHeld, onContextMenu, holdSeconds = 0.5, 
 }) {
     let timeout: ReturnType<typeof setTimeout> | undefined
     let startPos: { x: number, y: number } | undefined
+
     let fired = false
+    let moved = false
 
     function clear() {
-        console.log("CLEAR")
-
         if (timeout) {
             clearTimeout(timeout)
         }
@@ -20,9 +20,9 @@ export function Interaction({onClick, onHeld, onContextMenu, holdSeconds = 0.5, 
     }
 
     function pointerDown(e: PointerEvent) {
-        console.log(e.pointerType, e.button)
-
         fired = false
+        moved = false
+
         if (e.pointerType === "mouse") {
             if (e.button === 2) {
                 onContextMenu?.(e)
@@ -36,7 +36,6 @@ export function Interaction({onClick, onHeld, onContextMenu, holdSeconds = 0.5, 
             clearTimeout(timeout)
         }
         timeout = setTimeout(() => {
-            console.log("HELD")
 
             fired = true
 
@@ -53,7 +52,7 @@ export function Interaction({onClick, onHeld, onContextMenu, holdSeconds = 0.5, 
             return
         }
 
-        if (!fired) {
+        if (!fired && !moved) {
             onClick?.(e)
         }
         clear()
@@ -68,6 +67,7 @@ export function Interaction({onClick, onHeld, onContextMenu, holdSeconds = 0.5, 
         let distance = Math.sqrt((x - startPos.x) ** 2 + (y - startPos.y) ** 2)
         if (distance > maxDistance) {
             clear()
+            moved = true
         }
     }
     function pointerLeave(e: PointerEvent) {
