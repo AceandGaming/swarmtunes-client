@@ -4,6 +4,7 @@
     import { GetToasts } from "@ui/toasts/state.svelte.ts"
     import { flip } from 'svelte/animate';
     import Device from "@ts/environment/device.svelte.ts"
+    import Markup from '@ui/components/markup.svelte';
 </script>
 
 <ol id="toasts">
@@ -18,7 +19,11 @@
             {:else if toast.type == "success"}
                 <IconSuccess style="color: lime;"/>
             {/if}
-            <p>{toast.message}</p>
+            {#if toast.markup}
+                <p><Markup content={toast.message} /></p>
+            {:else}
+                <p>{toast.message}</p>
+            {/if}
         </li>
     {/each}
 </ol>

@@ -3,7 +3,6 @@
     import ItemSticks from "@ui/components/item-sticks.svelte"
     import { GetHome, GetSwarmFMMetadata, GetSwarmFMTime } from "@ui/pages/home/state.svelte.ts"
     import Cover from "@ui/components/cover.svelte"
-    import EmoteText from "@ui/components/emote-text.svelte"
     import Ui from "@ts/state/ui.svelte.ts"
     import ItemCards from "@ui/components/item-cards.svelte"
     import ItemList from "@ui/components/item-list.svelte"
@@ -16,6 +15,7 @@
     import type { Song } from "@ts/features/song/model"
     import playbackController from "@ts/features/playback/playback"
     import { GetAllSongsOfCollections } from "@ts/utils/misc"
+    import Markup from "@ui/components/markup.svelte"
 
     let query: string = $state("")
     let searching = $derived(query.length > 0)
@@ -83,8 +83,8 @@
                             <Cover item={recent} />
                             <div class="info">
                                 {#if recent}
-                                    <h1><EmoteText content={recent.displayTitle} /></h1>
-                                    <h2><EmoteText content={recent.displayDate!} /></h2>
+                                    <h1><Markup content={recent.displayTitle} /></h1>
+                                    <h2>{recent.displayDate!}</h2>
                                     <h2>{recent.subtitle}</h2>
                                 {:else}
                                     <h1>No new setlist</h1>

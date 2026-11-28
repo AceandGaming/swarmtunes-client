@@ -21,11 +21,11 @@ export function CreateCollectionContextMenu(collection: Collection): ContextMenu
                 await collection.LoadSongs()
                 try {
                     await PlaylistProvider.CreatePlaylist(collection.title, collection.GetSongIds())
-                    Toasts.Add(`Added ${collection.title} to library`, "success")
+                    Toasts.Add(`Added *${collection.title}* to library`, "success", true)
                 }
                 catch (e) {
                     console.error(e)
-                    Toasts.Add(`Failed to add ${collection.title} to library`, "failure")
+                    Toasts.Add(`Failed to add *${collection.title}* to library`, "failure", true)
                 }
             },
             visible: auth.loggedIn

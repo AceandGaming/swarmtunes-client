@@ -10,6 +10,8 @@ import CreatePlaylistPopup from "@ui/popup/dialogs/create-playlist.svelte"
 import RenamePlaylistPopup from "@ui/popup/dialogs/rename-playlist.svelte"
 import AddToPlaylistPopup from "@ui/popup/dialogs/add-to-playlist.svelte"
 import EditSongPopup from "@ui/popup/dialogs/edit-song.svelte"
+import DeletePlaylistPopup from "@ui/popup/dialogs/delete-playlist.svelte"
+
 
 import Toasts from "@ui/toasts/state.svelte.ts"
 
@@ -71,6 +73,14 @@ export async function CopyToClipboard(link: string) {
 export function CreatePlaylist() {
     currentPopup = {
         component: CreatePlaylistPopup
+    }
+}
+export function DeletePlaylist(playlist: Playlist) {
+    currentPopup = {
+        component: DeletePlaylistPopup,
+        props: {
+            playlist
+        }
     }
 }
 export function RenamePlaylist(playlist: Playlist) {

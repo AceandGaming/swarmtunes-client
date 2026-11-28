@@ -10,7 +10,7 @@
     import PlaylistProvider from "@ts/features/playlist/provider"
     import { Playlist } from "@ts/features/playlist/model.ts"
     import { PlaylistDownloaded, AddPlaylist, RemovePlaylist, Downloading } from "@ts/core/downloads.svelte.ts"
-    import EmoteText from "@ui/components/emote-text.svelte"
+    import Markup from "@ui/components/markup.svelte"
     import { FormatDuration } from "@ts/utils/misc.ts"
     import { SearchSongsOfCollection } from "@ts/api/collection.ts"
     import { SearchItemsOfPlaylist } from "@ts/api/playlist.ts"
@@ -116,7 +116,7 @@
         </div>
         <div class="text-container">
             {#if media}
-                <h1><EmoteText content={media.displayTitle} /></h1>
+                <h1><Markup content={media.displayTitle} /></h1>
                 <h2>{media.displayDate}</h2>
                 <h3>{`${media.subtitle} - ${FormatDuration(media.seconds)}`}</h3>
             {/if}

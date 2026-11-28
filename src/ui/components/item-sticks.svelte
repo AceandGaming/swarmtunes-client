@@ -4,8 +4,8 @@
     import { Song } from "@ts/features/song/model"
     import Cover from "@ui/components/cover.svelte"
     import type { Color } from "colorthief"
-    import EmoteText from "@ui/components/emote-text.svelte"
     import Ui from "@ts/state/ui.svelte.ts"
+    import Markup from "@ui/components/markup.svelte"
 
     type item = Song | Collection | Playlist
 
@@ -38,7 +38,7 @@
     >
         <Cover item={item} bind:colour />
         <div class="info">
-            <h1><EmoteText content={item.displayTitle} /></h1>
+            <h1><Markup content={item.displayTitle} /></h1>
             <h2 class="sub-text">{item.subtitle}</h2>
         </div>
         

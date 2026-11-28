@@ -12,7 +12,7 @@
     import { CreateCollectionContextMenu } from "@ts/features/collection/context-menu"
     import { CreatePlaylistContextMenu } from "@ts/features/playlist/context-menu"
     import { Interaction } from "@ts/utils/interaction"
-    import EmoteText from "@ui/components/emote-text.svelte"
+    import Markup from "@ui/components/markup.svelte"
 
     type item = Song | Collection | Playlist
 
@@ -62,7 +62,7 @@
             <div class="icon"><Icon size=20/></div>
             <Cover item={item} --size="100%" bind:colour />
         </div>
-        <h1><EmoteText content={item.displayTitle} /></h1>
+        <h1><Markup content={item.displayTitle} /></h1>
     </div>
 {/snippet}
 
